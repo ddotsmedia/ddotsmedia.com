@@ -117,9 +117,20 @@ docker run -d --name ddotsmedia-web --restart unless-stopped \
   -v ddotsmedia_media:/app/media \
   ddotsmedia-web
 
-# ─────────── 5. Nginx reverse proxy ───────────
-log "Configuring nginx"
-cat > "/etc/nginx/sites-available/${DOMAIN}" <<EOF
+# ─────────── 5. Nginx reverse proxy (SSL-preserving) ───────────
+NGINX_CONF="/etc/nginx/sites-available/${DOMAIN}"
+if [ -f "$NGINX_CONF" ] && grep -q "listen 443" "$NGINX_CONF"; then
+  # Existing certbot-managed vhost: only repoint the upstream port, keep SSL intact.
+  log "Repointing existing nginx vhost -> 127.0.0.1:${HOST_PORT} (SSL preserved)"
+  cp "$NGINX_CONF" "${NGINX_CONF}.bak.$(date +%s)"
+  sed -i -E "s#proxy_pass http://(localhost|127\.0\.0\.1):[0-9]+;#proxy_pass http://127.0.0.1:${HOST_PORT};#g" "$NGINX_CONF"
+  grep -q "client_max_body_size" "$NGINX_CONF" || \
+    sed -i "0,/server_name/s//client_max_body_size 25M;\n    server_name/" "$NGINX_CONF"
+  ln -sf "$NGINX_CONF" "/etc/nginx/sites-enabled/${DOMAIN}"
+  nginx -t && systemctl reload nginx
+else
+  log "Writing fresh nginx vhost (HTTP) + issuing cert"
+  cat > "$NGINX_CONF" <<EOF
 server {
     listen 80;
     server_name ${DOMAIN} ${WWW_DOMAIN};
@@ -137,17 +148,11 @@ server {
     }
 }
 EOF
-ln -sf "/etc/nginx/sites-available/${DOMAIN}" "/etc/nginx/sites-enabled/${DOMAIN}"
-nginx -t && systemctl reload nginx
-
-# ─────────── 6. SSL (Certbot) ───────────
-log "Obtaining/renewing TLS cert"
-if certbot certificates 2>/dev/null | grep -q "$DOMAIN"; then
-  echo "Cert exists — skipping issuance (auto-renew handles it)."
-else
+  ln -sf "$NGINX_CONF" "/etc/nginx/sites-enabled/${DOMAIN}"
+  nginx -t && systemctl reload nginx
   certbot --nginx --non-interactive --agree-tos -m "$CERTBOT_EMAIL" \
     -d "$DOMAIN" -d "$WWW_DOMAIN" --redirect || \
-    echo "WARNING: certbot failed (check DNS A-records point to this VPS), site still on HTTP."
+    echo "WARNING: certbot failed (check DNS A-records), site still on HTTP."
 fi
 
 log "Done. App: https://${DOMAIN}  •  Admin: https://${DOMAIN}/admin"
