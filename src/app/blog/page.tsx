@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { getPayloadClient } from "@/lib/payload";
+import { getPayloadClient, safeQuery } from "@/lib/payload";
+import type { Post } from "@/payload-types";
 import { PostCard } from "@/components/blog/PostCard";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { Reveal } from "@/components/shared/Reveal";
@@ -13,13 +14,16 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogPage() {
-  const payload = await getPayloadClient();
-  const { docs: posts } = await payload.find({
-    collection: "posts",
-    sort: "-publishedDate",
-    limit: 50,
-    depth: 1,
-  });
+  const posts = await safeQuery(async () => {
+    const payload = await getPayloadClient();
+    const res = await payload.find({
+      collection: "posts",
+      sort: "-publishedDate",
+      limit: 50,
+      depth: 1,
+    });
+    return res.docs;
+  }, [] as Post[]);
 
   return (
     <main className="min-h-screen bg-navy pt-28">

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { getPayloadClient } from "@/lib/payload";
+import { getPayloadClient, safeQuery } from "@/lib/payload";
+import type { Project } from "@/payload-types";
 import { PortfolioGrid } from "@/components/portfolio/PortfolioGrid";
 
 export const revalidate = 60; // ISR
@@ -11,13 +12,16 @@ export const metadata: Metadata = {
 };
 
 export default async function PortfolioPage() {
-  const payload = await getPayloadClient();
-  const { docs: projects } = await payload.find({
-    collection: "projects",
-    sort: ["order", "-createdAt"],
-    limit: 100,
-    depth: 1,
-  });
+  const projects = await safeQuery(async () => {
+    const payload = await getPayloadClient();
+    const res = await payload.find({
+      collection: "projects",
+      sort: ["order", "-createdAt"],
+      limit: 100,
+      depth: 1,
+    });
+    return res.docs;
+  }, [] as Project[]);
 
   return (
     <main className="min-h-screen bg-navy pt-28">
