@@ -103,12 +103,10 @@ log "Waiting for Postgres"
 until docker exec ddotsmedia-postgres pg_isready -U "$DB_USER" >/dev/null 2>&1; do sleep 1; done
 
 # ─────────── 4. Build + run app ───────────
-log "Building image (on docker network so SSG can reach Postgres)"
-# Legacy builder honors --network; BuildKit rejects custom networks for docker build.
-DOCKER_BUILDKIT=0 docker build --network ddotsmedia-net \
-  --build-arg DATABASE_URL="$DATABASE_URL" \
-  --build-arg PAYLOAD_SECRET="$PAYLOAD_SECRET" \
-  -t ddotsmedia-web "$APP_DIR"
+log "Building image"
+# Build does NOT need the DB: generateStaticParams/sitemap tolerate an unreachable
+# DB and pages render on-demand via ISR at runtime. Keeps the image portable.
+docker build -t ddotsmedia-web "$APP_DIR"
 
 log "(Re)starting app container"
 docker rm -f ddotsmedia-web >/dev/null 2>&1 || true

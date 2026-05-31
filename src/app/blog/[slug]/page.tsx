@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getPayloadClient } from "@/lib/payload";
+import { getPayloadClient, safeQuery } from "@/lib/payload";
 import { RichText } from "@/components/shared/RichText";
 import { mediaAlt, mediaUrl, mediaDims } from "@/lib/media";
 import { formatDate } from "@/lib/format";
@@ -23,14 +23,16 @@ async function getPost(slug: string) {
 }
 
 export async function generateStaticParams() {
-  const payload = await getPayloadClient();
-  const { docs } = await payload.find({
-    collection: "posts",
-    limit: 100,
-    depth: 0,
-    select: { slug: true },
-  });
-  return docs.filter((d) => d.slug).map((d) => ({ slug: d.slug as string }));
+  return safeQuery(async () => {
+    const payload = await getPayloadClient();
+    const { docs } = await payload.find({
+      collection: "posts",
+      limit: 100,
+      depth: 0,
+      select: { slug: true },
+    });
+    return docs.filter((d) => d.slug).map((d) => ({ slug: d.slug as string }));
+  }, [] as { slug: string }[]);
 }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {

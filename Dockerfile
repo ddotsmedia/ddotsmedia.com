@@ -12,12 +12,8 @@ RUN npm ci
 FROM base AS builder
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-# next build prerenders pages + generateStaticParams, which query Postgres.
-# Pass a reachable DATABASE_URL (build runs on the docker network) so SSG works.
-ARG DATABASE_URL
-ARG PAYLOAD_SECRET
-ENV DATABASE_URL=$DATABASE_URL
-ENV PAYLOAD_SECRET=$PAYLOAD_SECRET
+# Build needs no DB: generateStaticParams/sitemap tolerate an unreachable DB and
+# pages render on-demand via ISR at runtime. Real secrets are injected at run.
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 

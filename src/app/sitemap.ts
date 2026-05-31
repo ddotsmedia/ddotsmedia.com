@@ -1,16 +1,19 @@
 import type { MetadataRoute } from "next";
-import { getPayloadClient } from "@/lib/payload";
+import { getPayloadClient, safeQuery } from "@/lib/payload";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
 export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const payload = await getPayloadClient();
-  const [projects, posts] = await Promise.all([
-    payload.find({ collection: "projects", limit: 500, depth: 0, select: { slug: true, updatedAt: true } }),
-    payload.find({ collection: "posts", limit: 500, depth: 0, select: { slug: true, updatedAt: true } }),
-  ]);
+  const empty = { docs: [] as { slug?: string | null; updatedAt: string }[] };
+  const [projects, posts] = await safeQuery(async () => {
+    const payload = await getPayloadClient();
+    return Promise.all([
+      payload.find({ collection: "projects", limit: 500, depth: 0, select: { slug: true, updatedAt: true } }),
+      payload.find({ collection: "posts", limit: 500, depth: 0, select: { slug: true, updatedAt: true } }),
+    ]);
+  }, [empty, empty]);
 
   const staticRoutes: MetadataRoute.Sitemap = [
     "",
