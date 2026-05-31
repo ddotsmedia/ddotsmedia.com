@@ -104,7 +104,8 @@ until docker exec ddotsmedia-postgres pg_isready -U "$DB_USER" >/dev/null 2>&1; 
 
 # ─────────── 4. Build + run app ───────────
 log "Building image (on docker network so SSG can reach Postgres)"
-docker build --network ddotsmedia-net \
+# Legacy builder honors --network; BuildKit rejects custom networks for docker build.
+DOCKER_BUILDKIT=0 docker build --network ddotsmedia-net \
   --build-arg DATABASE_URL="$DATABASE_URL" \
   --build-arg PAYLOAD_SECRET="$PAYLOAD_SECRET" \
   -t ddotsmedia-web "$APP_DIR"
