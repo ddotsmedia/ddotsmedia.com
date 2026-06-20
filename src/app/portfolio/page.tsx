@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { getPayloadClient, safeQuery } from "@/lib/payload";
 import type { Project } from "@/payload-types";
 import { PortfolioGrid } from "@/components/portfolio/PortfolioGrid";
+import { ScreenshotCard } from "@/components/portfolio/ScreenshotCard";
+import { PORTFOLIO } from "@/lib/data/portfolio";
 
 export const revalidate = 60; // ISR
 
@@ -39,7 +41,15 @@ export default async function PortfolioPage() {
 
       <section className="py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <PortfolioGrid projects={projects} />
+          {projects.length > 0 ? (
+            <PortfolioGrid projects={projects} />
+          ) : (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {PORTFOLIO.map((item, i) => (
+                <ScreenshotCard key={item.name} item={item} index={i} />
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </main>

@@ -4,6 +4,7 @@ import { getStats } from "@/lib/stats";
 import { Hero } from "@/components/home/Hero";
 import { StatsRow } from "@/components/home/StatsRow";
 import { FeaturedProjects } from "@/components/home/FeaturedProjects";
+import { FeaturedScreenshots } from "@/components/home/FeaturedScreenshots";
 
 export const revalidate = 60; // ISR
 
@@ -27,7 +28,11 @@ export default async function Home() {
     <main className="min-h-screen bg-navy">
       <Hero />
       <StatsRow stats={stats} />
-      <FeaturedProjects projects={featured} />
+      {featured.length > 0 ? (
+        <FeaturedProjects projects={featured} />
+      ) : (
+        <FeaturedScreenshots />
+      )}
     </main>
   );
 }
