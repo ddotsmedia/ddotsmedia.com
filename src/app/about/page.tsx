@@ -1,6 +1,19 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Eye, Heart, MapPin, Target, type LucideIcon } from "lucide-react";
+import {
+  Award,
+  BadgeCheck,
+  BookOpen,
+  CalendarCheck,
+  Globe2,
+  Handshake,
+  Lightbulb,
+  MapPin,
+  MessagesSquare,
+  Rocket,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
 import { Reveal } from "@/components/shared/Reveal";
 import { CountUp } from "@/components/home/CountUp";
 import { cn } from "@/lib/utils";
@@ -14,32 +27,72 @@ export const metadata: Metadata = {
 const CARD =
   "h-full rounded-2xl border border-[#1e2d42] bg-[#111827] transition-all duration-300 hover:border-[var(--brand-teal)] hover:shadow-[0_0_36px_-12px_var(--brand-teal)]";
 
-const PILLARS: { icon: LucideIcon; title: string; body: string; accent: string }[] = [
+const STORY = [
+  "Ddotsmedia began in Dubai in 2016 as a one-person freelance practice — a single developer taking on web projects for local businesses who needed something better than an off-the-shelf template.",
+  "Word spread. As the projects grew more ambitious, so did the team: designers, mobile developers, and ERP specialists came on board, and what started as a freelance habit became a proper software studio.",
+  "What set us apart was a focus on what UAE businesses actually need — WPS-compliant payroll, VAT-ready invoicing, Arabic-friendly interfaces, and systems that respect local compliance from day one.",
+  "Today that same studio ships web, mobile, and ERP products for clients in 12+ countries — but we still build every project the way we built the very first one: carefully, and like it's our own.",
+];
+
+const VALUES: { icon: LucideIcon; title: string; body: string; accent: string }[] = [
   {
-    icon: Target,
-    title: "Mission",
-    body: "To help UAE businesses grow by building reliable, high-performance software they can depend on.",
+    icon: Award,
+    title: "Quality First",
+    body: "We treat every line of code as if it carries our name — because it does. Rigorous reviews and testing keep our work dependable. We'd rather ship a little later than ship something fragile.",
     accent: "var(--brand-teal)",
   },
   {
-    icon: Eye,
-    title: "Vision",
-    body: "To be the GCC's most trusted partner for digital products — from web to ERP.",
-    accent: "#3dbac6",
+    icon: MessagesSquare,
+    title: "Transparent Communication",
+    body: "No jargon, no surprises, no disappearing acts. You get clear timelines, honest progress updates, and direct access to the people building your product. If something changes, you hear it from us first.",
+    accent: "var(--brand-accent-orange)",
   },
   {
-    icon: Heart,
-    title: "Values",
-    body: "Craftsmanship, transparency, and long-term partnerships over quick wins.",
+    icon: Handshake,
+    title: "Client Partnership",
+    body: "We're not a vendor you brief and forget — we're a partner invested in your outcome. We learn your business, challenge assumptions, and stay long after launch. Your success is how we measure ours.",
     accent: "var(--brand-accent-green)",
+  },
+  {
+    icon: Lightbulb,
+    title: "Continuous Innovation",
+    body: "Technology never stands still, and neither do we. We continually adopt better tools, patterns, and practices so your product stays modern. Curiosity is part of the job description here.",
+    accent: "#3dbac6",
   },
 ];
 
-const STATS = [
-  { value: 150, suffix: "+", label: "Projects Delivered" },
-  { value: 80, suffix: "+", label: "Happy Clients" },
-  { value: 8, suffix: "+", label: "Years of Experience" },
-  { value: 12, suffix: "+", label: "Countries Served" },
+const ACHIEVEMENTS: { value?: number; suffix?: string; text?: string; label: string }[] = [
+  { value: 150, suffix: "+", label: "Projects" },
+  { value: 80, suffix: "+", label: "Clients" },
+  { value: 50, suffix: "+", label: "Enterprise Apps" },
+  { value: 9, suffix: "+", label: "Years" },
+  { value: 12, suffix: "+", label: "Countries" },
+  { text: "24/7", label: "Support" },
+];
+
+const PARTNERS = [
+  "SHAMS Free Zone Licensed",
+  "UAE Corporate Tax Compliant",
+  "ISO-aligned Processes",
+  "Certified Developers",
+];
+
+const CULTURE: { icon: LucideIcon; title: string; body: string }[] = [
+  {
+    icon: Globe2,
+    title: "Remote-First Team",
+    body: "Our team works across the Emirates and beyond, collaborating online so we can hire the best people regardless of location.",
+  },
+  {
+    icon: CalendarCheck,
+    title: "Weekly Sprint Reviews",
+    body: "Every week we demo progress, gather feedback, and re-plan — keeping projects transparent and on track.",
+  },
+  {
+    icon: BookOpen,
+    title: "Continuous Learning",
+    body: "We set aside time for learning, experiments, and knowledge-sharing, keeping our skills — and your product — current.",
+  },
 ];
 
 const TEAM = [
@@ -105,25 +158,42 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 2. MISSION / VISION / VALUES */}
-      <section className="py-16">
+      {/* 2. COMPANY STORY */}
+      <section className="py-20">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+          <SectionHead overline="Our Story" title="From freelance roots to a full studio" />
+          <div className="mt-10 space-y-5">
+            {STORY.map((p, i) => (
+              <Reveal key={i} delay={i * 0.05}>
+                <p className="text-base leading-relaxed text-white/65">{p}</p>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 3. CORE VALUES */}
+      <section className="border-t border-white/5 py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {PILLARS.map((p, i) => (
-              <Reveal key={p.title} delay={i * 0.08}>
-                <article className={cn(CARD, "p-6")}>
+          <SectionHead overline="Our Values" title="What we stand for" />
+          <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2">
+            {VALUES.map((v, i) => (
+              <Reveal key={v.title} delay={i * 0.08}>
+                <article className={cn(CARD, "flex gap-5 p-6")}>
                   <span
-                    className="inline-flex h-11 w-11 items-center justify-center rounded-xl border"
+                    className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border"
                     style={{
-                      color: p.accent,
-                      backgroundColor: `color-mix(in srgb, ${p.accent} 12%, transparent)`,
-                      borderColor: `color-mix(in srgb, ${p.accent} 32%, transparent)`,
+                      color: v.accent,
+                      backgroundColor: `color-mix(in srgb, ${v.accent} 12%, transparent)`,
+                      borderColor: `color-mix(in srgb, ${v.accent} 32%, transparent)`,
                     }}
                   >
-                    <p.icon className="h-5 w-5" />
+                    <v.icon className="h-6 w-6" />
                   </span>
-                  <h3 className="mt-4 text-lg font-semibold text-white">{p.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-white/60">{p.body}</p>
+                  <div>
+                    <h3 className="text-lg font-semibold text-white">{v.title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-white/60">{v.body}</p>
+                  </div>
                 </article>
               </Reveal>
             ))}
@@ -131,16 +201,35 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 3. STATS STRIP */}
-      <section className="border-y border-white/10 bg-white/[0.02]">
-        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-8 px-4 py-14 sm:px-6 lg:grid-cols-4 lg:px-8">
-          {STATS.map((s, i) => (
-            <Reveal key={s.label} delay={i * 0.08} className="text-center">
-              <div className="text-4xl font-bold text-[var(--brand-teal)] md:text-5xl">
-                <CountUp value={s.value} />
-                {s.suffix}
+      {/* 4. ACHIEVEMENTS / NUMBERS */}
+      <section
+        className="relative overflow-hidden border-y border-[var(--brand-teal)]/20"
+        style={{
+          background:
+            "linear-gradient(135deg, color-mix(in srgb, var(--brand-teal) 30%, var(--brand-navy)), var(--brand-navy))",
+        }}
+      >
+        <div
+          className="pointer-events-none absolute inset-0 opacity-60"
+          style={{
+            background:
+              "radial-gradient(60% 100% at 50% 0%, color-mix(in srgb, var(--brand-teal) 26%, transparent), transparent)",
+          }}
+        />
+        <div className="relative mx-auto grid max-w-7xl grid-cols-2 gap-8 px-4 py-16 sm:px-6 md:grid-cols-3 lg:grid-cols-6 lg:px-8">
+          {ACHIEVEMENTS.map((a, i) => (
+            <Reveal key={a.label} delay={i * 0.06} className="text-center">
+              <div className="text-4xl font-bold text-white md:text-5xl">
+                {typeof a.value === "number" ? (
+                  <>
+                    <CountUp value={a.value} />
+                    {a.suffix}
+                  </>
+                ) : (
+                  a.text
+                )}
               </div>
-              <div className="mt-2 text-sm text-white/60">{s.label}</div>
+              <div className="mt-2 text-sm text-white/80">{a.label}</div>
             </Reveal>
           ))}
         </div>
@@ -217,30 +306,84 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 7. CTA BANNER */}
+      {/* 7. PARTNERS & CERTIFICATIONS */}
+      <section className="py-20">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <SectionHead overline="Trust" title="Partners & Certifications" />
+          <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {PARTNERS.map((p, i) => (
+              <Reveal key={p} delay={i * 0.06}>
+                <div className="flex h-full items-center gap-3 rounded-xl border border-[#1e2d42] bg-[#111827] px-5 py-4">
+                  <BadgeCheck className="h-6 w-6 shrink-0 text-[var(--brand-teal)]" />
+                  <span className="text-sm font-medium text-white/80">{p}</span>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 8. OFFICE / CULTURE */}
+      <section className="border-t border-white/5 py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <SectionHead overline="Culture" title="How we work, day to day" />
+          <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-3">
+            {CULTURE.map((c, i) => (
+              <Reveal key={c.title} delay={i * 0.08}>
+                <article className={cn(CARD, "p-6")}>
+                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-[var(--brand-teal)]/30 bg-[var(--brand-teal)]/10 text-[var(--brand-teal)]">
+                    <c.icon className="h-5 w-5" />
+                  </span>
+                  <h3 className="mt-4 text-lg font-semibold text-white">{c.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-white/60">{c.body}</p>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 9. CALL TO ACTION */}
       <section className="px-4 pb-24 sm:px-6 lg:px-8">
-        <div className="relative mx-auto max-w-5xl overflow-hidden rounded-3xl border border-[#1e2d42] bg-[#111827] px-6 py-14 text-center sm:px-12">
-          <div
-            className="pointer-events-none absolute inset-0 opacity-50"
-            style={{
-              background:
-                "radial-gradient(60% 80% at 50% 0%, color-mix(in srgb, var(--brand-teal) 22%, transparent), transparent)",
-            }}
-          />
-          <div className="relative">
-            <h2 className="text-3xl font-bold text-white sm:text-4xl">
-              Let&apos;s build what&apos;s next, together.
-            </h2>
-            <p className="mx-auto mt-4 max-w-xl text-white/60">
-              Tell us about your project — we&apos;ll help you scope, design, and ship it.
-            </p>
+        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-5 md:grid-cols-2">
+          <Reveal>
+            <Link
+              href="/careers"
+              className="group flex h-full flex-col items-start rounded-3xl border border-[#1e2d42] bg-[#111827] p-8 transition-all duration-300 hover:border-[var(--brand-teal)] hover:shadow-[0_0_40px_-12px_var(--brand-teal)]"
+            >
+              <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl border border-[var(--brand-teal)]/30 bg-[var(--brand-teal)]/10 text-[var(--brand-teal)]">
+                <Users className="h-6 w-6" />
+              </span>
+              <h2 className="mt-5 text-2xl font-bold text-white">Want to join our team?</h2>
+              <p className="mt-2 text-sm text-white/60">
+                We&apos;re always looking for talented people who care about their craft.
+              </p>
+              <span className="mt-5 text-sm font-semibold text-[var(--brand-teal)] group-hover:underline">
+                View Careers →
+              </span>
+            </Link>
+          </Reveal>
+          <Reveal delay={0.1}>
             <Link
               href="/contact"
-              className="mt-8 inline-flex rounded-full bg-[var(--brand-teal)] px-7 py-3 font-semibold text-white shadow-lg shadow-[var(--brand-teal)]/25 transition-transform hover:-translate-y-0.5"
+              className="group relative flex h-full flex-col items-start overflow-hidden rounded-3xl border border-[var(--brand-teal)]/30 p-8 transition-transform duration-300 hover:-translate-y-1"
+              style={{
+                background:
+                  "linear-gradient(135deg, color-mix(in srgb, var(--brand-teal) 26%, var(--brand-navy)), var(--brand-navy))",
+              }}
             >
-              Get in Touch
+              <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl border border-white/20 bg-white/10 text-white">
+                <Rocket className="h-6 w-6" />
+              </span>
+              <h2 className="mt-5 text-2xl font-bold text-white">Want to work with us?</h2>
+              <p className="mt-2 text-sm text-white/70">
+                Tell us about your project and we&apos;ll help you bring it to life.
+              </p>
+              <span className="mt-5 text-sm font-semibold text-white group-hover:underline">
+                Get in Touch →
+              </span>
             </Link>
-          </div>
+          </Reveal>
         </div>
       </section>
     </main>
