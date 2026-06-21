@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google";
 import { OrganizationJsonLd } from "@/components/shared/OrganizationJsonLd";
+import { TopBar } from "@/components/layout/TopBar";
+import { Footer } from "@/components/layout/Footer";
 import "./globals.css";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -32,7 +34,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} ${display.variable} grain bg-navy text-white antialiased`}>
+        <TopBar />
         {children}
+        <Footer />
         <OrganizationJsonLd />
       </body>
     </html>

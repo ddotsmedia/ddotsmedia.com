@@ -8,7 +8,7 @@ import { HeroSlideshow } from "./HeroSlideshow";
 
 export function Hero({ stats }: { stats: Stat[] }) {
   return (
-    <section className="relative overflow-hidden pt-32 pb-20 md:pt-40 md:pb-28">
+    <section className="relative overflow-hidden pt-24 pb-20 md:pt-32 md:pb-28">
       {/* Background gradient blobs */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div
