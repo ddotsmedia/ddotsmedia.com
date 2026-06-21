@@ -21,6 +21,9 @@ export function Hero({ stats }: { stats: Stat[] }) {
     <section className="relative overflow-hidden pt-36 pb-28">
       {/* ── Animated background ── */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        {/* Base navy vignette — sits BEHIND the decorations so it never covers them */}
+        <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_0%,transparent,var(--brand-navy)_85%)]" />
+
         <div className="hero-grid absolute inset-0" />
 
         {/* Teal glow (right) + amber glow (left) for depth — both breathe */}
@@ -83,9 +86,6 @@ export function Hero({ stats }: { stats: Stat[] }) {
             </div>
           </div>
         </div>
-
-        {/* Navy vignette keeps text legible */}
-        <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_0%,transparent,var(--brand-navy)_80%)]" />
       </div>
 
       {/* ── Content ── */}
