@@ -3,8 +3,8 @@ import type { Project } from "@/payload-types";
 import { getStats } from "@/lib/stats";
 import { getServices, getTrustNames, getTestimonials } from "@/lib/content";
 import { Hero } from "@/components/home/Hero";
+// StatsRow is now consolidated into the Hero (stats below the CTAs).
 import { TrustBar } from "@/components/home/TrustBar";
-import { StatsRow } from "@/components/home/StatsRow";
 import { ServicesOverview } from "@/components/home/ServicesOverview";
 import { FeaturedProjects } from "@/components/home/FeaturedProjects";
 import { FeaturedScreenshots } from "@/components/home/FeaturedScreenshots";
@@ -36,9 +36,8 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen bg-navy">
-      <Hero />
+      <Hero stats={stats} />
       {trustNames.length > 0 && <TrustBar names={trustNames} />}
-      <StatsRow stats={stats} />
       {services.length > 0 && <ServicesOverview services={services} />}
       {featured.length > 0 ? (
         <FeaturedProjects projects={featured} />

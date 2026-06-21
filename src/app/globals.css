@@ -234,3 +234,108 @@
     }
   }
 }
+
+/* ─────────── Hero animations (CSS-only, GPU-friendly) ─────────── */
+@layer utilities {
+  /* Animated teal grid */
+  .hero-grid {
+    background-image:
+      linear-gradient(to right, color-mix(in srgb, var(--brand-teal) 14%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--brand-teal) 14%, transparent) 1px, transparent 1px);
+    background-size: 46px 46px;
+    -webkit-mask-image: radial-gradient(120% 85% at 50% 0%, black, transparent 72%);
+    mask-image: radial-gradient(120% 85% at 50% 0%, black, transparent 72%);
+    animation: hero-grid-pulse 6s ease-in-out infinite;
+  }
+  @keyframes hero-grid-pulse {
+    0%, 100% { opacity: 0.25; }
+    50% { opacity: 0.5; }
+  }
+
+  /* Breathing radial glow */
+  .hero-glow { animation: hero-breathe 9s ease-in-out infinite; will-change: transform, opacity; }
+  @keyframes hero-breathe {
+    0%, 100% { transform: scale(1); opacity: 0.55; }
+    50% { transform: scale(1.15); opacity: 0.85; }
+  }
+
+  /* Floating decorative shapes */
+  .hero-float { animation: hero-float 14s ease-in-out infinite; will-change: transform; }
+  .hero-float-slow { animation: hero-float 22s ease-in-out infinite; will-change: transform; }
+  @keyframes hero-float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-22px) rotate(9deg); }
+  }
+
+  /* Badge breathing glow */
+  .badge-glow { animation: badge-glow 3.6s ease-in-out infinite; }
+  @keyframes badge-glow {
+    0%, 100% {
+      box-shadow: 0 0 0 0 transparent;
+      border-color: color-mix(in srgb, var(--brand-teal) 28%, transparent);
+    }
+    50% {
+      box-shadow: 0 0 22px -4px color-mix(in srgb, var(--brand-teal) 60%, transparent);
+      border-color: color-mix(in srgb, var(--brand-teal) 70%, transparent);
+    }
+  }
+
+  /* Button shimmer sweep */
+  .btn-shimmer { position: relative; overflow: hidden; }
+  .btn-shimmer::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -150%;
+    height: 100%;
+    width: 55%;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+    transform: skewX(-20deg);
+    animation: btn-shimmer 4.5s ease-in-out infinite;
+  }
+  @keyframes btn-shimmer {
+    0% { left: -150%; }
+    35%, 100% { left: 160%; }
+  }
+
+  /* Typing cursor */
+  .type-cursor { animation: type-blink 1s steps(1) infinite; }
+  @keyframes type-blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+
+  /* Animated gradient text: teal → cyan → teal */
+  .text-gradient-anim {
+    background-image: linear-gradient(90deg, var(--brand-teal), #3dbac6, var(--brand-teal));
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: text-gradient 5s linear infinite;
+  }
+  @keyframes text-gradient {
+    to { background-position: 200% center; }
+  }
+
+  /* Scroll indicator bounce */
+  .scroll-bounce { animation: scroll-bounce 1.8s ease-in-out infinite; }
+  @keyframes scroll-bounce {
+    0%, 100% { transform: translateY(0); opacity: 0.5; }
+    50% { transform: translateY(6px); opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-grid,
+    .hero-glow,
+    .hero-float,
+    .hero-float-slow,
+    .badge-glow,
+    .btn-shimmer::after,
+    .type-cursor,
+    .text-gradient-anim,
+    .scroll-bounce {
+      animation: none;
+    }
+  }
+}
