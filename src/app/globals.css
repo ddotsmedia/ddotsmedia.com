@@ -237,26 +237,37 @@
 
 /* ─────────── Hero animations (CSS-only, GPU-friendly) ─────────── */
 @layer utilities {
-  /* Animated teal grid */
+  /* Animated teal grid — drifts slowly upward + pulses */
   .hero-grid {
     background-image:
-      linear-gradient(to right, color-mix(in srgb, var(--brand-teal) 14%, transparent) 1px, transparent 1px),
-      linear-gradient(to bottom, color-mix(in srgb, var(--brand-teal) 14%, transparent) 1px, transparent 1px);
-    background-size: 46px 46px;
-    -webkit-mask-image: radial-gradient(120% 85% at 50% 0%, black, transparent 72%);
-    mask-image: radial-gradient(120% 85% at 50% 0%, black, transparent 72%);
-    animation: hero-grid-pulse 6s ease-in-out infinite;
+      linear-gradient(to right, rgba(42, 154, 164, 0.15) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(42, 154, 164, 0.15) 1px, transparent 1px);
+    background-size: 48px 48px;
+    -webkit-mask-image: radial-gradient(125% 90% at 50% 0%, black, transparent 78%);
+    mask-image: radial-gradient(125% 90% at 50% 0%, black, transparent 78%);
+    animation: hero-grid-drift 16s linear infinite, hero-grid-pulse 6s ease-in-out infinite;
+  }
+  @keyframes hero-grid-drift {
+    from { background-position: 0 0, 0 0; }
+    to { background-position: 0 -48px, 0 -48px; }
   }
   @keyframes hero-grid-pulse {
-    0%, 100% { opacity: 0.25; }
-    50% { opacity: 0.5; }
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 0.9; }
   }
 
   /* Breathing radial glow */
   .hero-glow { animation: hero-breathe 9s ease-in-out infinite; will-change: transform, opacity; }
   @keyframes hero-breathe {
-    0%, 100% { transform: scale(1); opacity: 0.55; }
-    50% { transform: scale(1.15); opacity: 0.85; }
+    0%, 100% { transform: scale(1); opacity: 0.65; }
+    50% { transform: scale(1.2); opacity: 1; }
+  }
+
+  /* Floating code mockup — keeps its 3D tilt across the drift */
+  .hero-mockup { animation: hero-mockup 10s ease-in-out infinite; will-change: transform; }
+  @keyframes hero-mockup {
+    0%, 100% { transform: perspective(1200px) rotateY(-16deg) rotateX(6deg) translateY(0); }
+    50% { transform: perspective(1200px) rotateY(-16deg) rotateX(6deg) translateY(-14px); }
   }
 
   /* Floating decorative shapes */
@@ -286,16 +297,16 @@
     content: "";
     position: absolute;
     top: 0;
-    left: -150%;
+    left: -160%;
     height: 100%;
-    width: 55%;
-    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+    width: 85%;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.6), transparent);
     transform: skewX(-20deg);
-    animation: btn-shimmer 4.5s ease-in-out infinite;
+    animation: btn-shimmer 6s ease-in-out infinite;
   }
   @keyframes btn-shimmer {
-    0% { left: -150%; }
-    35%, 100% { left: 160%; }
+    0% { left: -160%; }
+    45%, 100% { left: 170%; }
   }
 
   /* Typing cursor */
@@ -321,13 +332,14 @@
   /* Scroll indicator bounce */
   .scroll-bounce { animation: scroll-bounce 1.8s ease-in-out infinite; }
   @keyframes scroll-bounce {
-    0%, 100% { transform: translateY(0); opacity: 0.5; }
-    50% { transform: translateY(6px); opacity: 1; }
+    0%, 100% { transform: translateY(0); opacity: 0.85; }
+    50% { transform: translateY(8px); opacity: 1; }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .hero-grid,
     .hero-glow,
+    .hero-mockup,
     .hero-float,
     .hero-float-slow,
     .badge-glow,

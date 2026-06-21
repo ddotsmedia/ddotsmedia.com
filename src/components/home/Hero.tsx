@@ -1,11 +1,20 @@
 import Link from "next/link";
-import { ChevronDown, Code2 } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import type { Stat } from "@/lib/stats";
 import { FourDotLogo } from "@/components/shared/FourDotLogo";
 import { Reveal } from "@/components/shared/Reveal";
 import { CountUp } from "./CountUp";
 import { TypingWords } from "./TypingWords";
-import { cn } from "@/lib/utils";
+
+const CODE_BARS = [
+  { w: "55%", c: "var(--brand-accent-orange)" },
+  { w: "82%", c: "var(--brand-teal)", indent: true },
+  { w: "44%", c: "var(--brand-accent-green)", indent: true },
+  { w: "68%", c: "rgba(255,255,255,0.3)" },
+  { w: "50%", c: "var(--brand-accent-yellow)", indent: true },
+  { w: "76%", c: "var(--brand-teal)" },
+  { w: "38%", c: "var(--brand-accent-orange)", indent: true },
+];
 
 export function Hero({ stats }: { stats: Stat[] }) {
   return (
@@ -13,26 +22,70 @@ export function Hero({ stats }: { stats: Stat[] }) {
       {/* ── Animated background ── */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="hero-grid absolute inset-0" />
+
+        {/* Teal glow (right) + amber glow (left) for depth — both breathe */}
         <div
-          className="hero-glow absolute -right-[12%] -top-[14%] h-[620px] w-[620px] rounded-full"
+          className="hero-glow absolute -right-[10%] -top-[12%] h-[760px] w-[760px] rounded-full"
           style={{
             background:
-              "radial-gradient(circle, color-mix(in srgb, var(--brand-teal) 38%, transparent), transparent 70%)",
+              "radial-gradient(circle, color-mix(in srgb, var(--brand-teal) 55%, transparent), transparent 68%)",
+          }}
+        />
+        <div
+          className="hero-glow absolute -left-[14%] top-[30%] h-[600px] w-[600px] rounded-full [animation-delay:-4.5s]"
+          style={{
+            background:
+              "radial-gradient(circle, color-mix(in srgb, var(--brand-accent-orange) 42%, transparent), transparent 70%)",
           }}
         />
 
-        {/* Floating decorative shapes (hidden on small screens) */}
-        <Code2
-          className="hero-float absolute left-[8%] top-[26%] hidden h-16 w-16 text-[var(--brand-teal)] opacity-[0.14] sm:block"
-          strokeWidth={1.2}
+        {/* Floating tech shapes (≥6, hidden on mobile, more on large) */}
+        <span className="hero-float absolute left-[7%] top-[28%] hidden font-mono text-7xl font-bold text-[var(--brand-teal)] opacity-30 sm:block">
+          {"{ }"}
+        </span>
+        <span className="hero-float-slow absolute left-[14%] bottom-[16%] hidden font-mono text-6xl font-bold text-[var(--brand-accent-orange)] opacity-30 sm:block">
+          {"</>"}
+        </span>
+        <span className="hero-float absolute right-[12%] top-[12%] hidden font-mono text-7xl font-bold text-[var(--brand-accent-green)] opacity-[0.35] sm:block">
+          {"+"}
+        </span>
+        <span className="hero-float-slow absolute right-[9%] bottom-[15%] hidden h-20 w-20 rotate-12 rounded-xl border-2 border-[var(--brand-accent-yellow)] opacity-30 sm:block" />
+        <span className="hero-float absolute left-[24%] top-[58%] hidden h-28 w-28 rounded-full border-2 border-[var(--brand-teal)] opacity-30 lg:block" />
+        <span
+          className="hero-float-slow absolute right-[30%] top-[46%] hidden opacity-30 lg:block"
+          style={{
+            width: 0,
+            height: 0,
+            borderLeft: "34px solid transparent",
+            borderRight: "34px solid transparent",
+            borderBottom: "58px solid var(--brand-accent-orange)",
+          }}
         />
-        <span className="hero-float-slow absolute right-[12%] top-[20%] hidden h-20 w-20 rotate-12 rounded-2xl border border-[var(--brand-accent-orange)] opacity-[0.12] sm:block" />
-        <span className="hero-float absolute left-[18%] bottom-[16%] hidden h-3 w-3 rounded-full bg-[var(--brand-accent-green)] opacity-20 sm:block" />
-        <span className="hero-float-slow absolute right-[20%] bottom-[22%] hidden h-12 w-12 rotate-45 border-2 border-[var(--brand-accent-yellow)] opacity-[0.12] sm:block" />
-        <span className="hero-float absolute right-[30%] top-[40%] hidden h-2.5 w-2.5 rounded-full bg-[var(--brand-teal)] opacity-25 lg:block" />
+
+        {/* Tilted code mockup (desktop only) — colored bars suggesting code */}
+        <div className="absolute right-[-3%] top-1/2 hidden w-[380px] -translate-y-1/2 lg:block">
+          <div className="hero-mockup rounded-xl border border-white/10 bg-[#0d1626]/85 opacity-90 shadow-2xl shadow-black/60">
+            <div className="flex items-center gap-1.5 border-b border-white/10 px-4 py-3">
+              <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
+              <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
+              <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
+            </div>
+            <div className="space-y-3 p-6">
+              {CODE_BARS.map((b, i) => (
+                <div key={i} className="flex items-center gap-2">
+                  {b.indent && <span className="h-2.5 w-5 shrink-0" />}
+                  <span
+                    className="h-2.5 rounded-full"
+                    style={{ width: b.w, backgroundColor: b.c, opacity: 0.7 }}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
 
         {/* Navy vignette keeps text legible */}
-        <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_0%,transparent,var(--brand-navy)_78%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_0%,transparent,var(--brand-navy)_80%)]" />
       </div>
 
       {/* ── Content ── */}
@@ -68,20 +121,20 @@ export function Hero({ stats }: { stats: Stat[] }) {
           </Link>
         </div>
 
-        {/* ── Stats row (staggered count-up, separators) ── */}
+        {/* ── Stats row (teal accent bar, large numbers, staggered count-up) ── */}
         {stats.length > 0 && (
-          <div className="mx-auto mt-16 grid max-w-3xl grid-cols-2 gap-y-8 sm:grid-cols-4">
+          <div className="mx-auto mt-16 grid max-w-3xl grid-cols-2 gap-6 sm:grid-cols-4">
             {stats.map((s, i) => (
               <Reveal
                 key={s.label}
                 delay={i * 0.1}
-                className={cn("text-center", i > 0 && "sm:border-l sm:border-white/10")}
+                className="border-l-2 border-[var(--brand-teal)]/50 pl-4 text-left"
               >
-                <div className="text-3xl font-bold text-[var(--brand-teal)] md:text-4xl">
+                <div className="text-4xl font-bold text-[var(--brand-teal)] md:text-5xl">
                   <CountUp value={s.value} />
                   {s.suffix}
                 </div>
-                <div className="mt-1 text-xs text-white/55 sm:text-sm">{s.label}</div>
+                <div className="mt-1 text-xs text-white/60 sm:text-sm">{s.label}</div>
               </Reveal>
             ))}
           </div>
@@ -90,7 +143,7 @@ export function Hero({ stats }: { stats: Stat[] }) {
 
       {/* ── Scroll indicator ── */}
       <div className="absolute inset-x-0 bottom-6 flex justify-center">
-        <ChevronDown aria-hidden className="scroll-bounce h-6 w-6 text-white/40" />
+        <ChevronDown aria-hidden className="scroll-bounce h-8 w-8 text-white" />
       </div>
     </section>
   );
