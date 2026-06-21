@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { Reveal } from "@/components/shared/Reveal";
 import { CountUp } from "@/components/home/CountUp";
+import { getTeam, getAchievements } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -128,7 +129,11 @@ function SectionHead({ overline, title, subtext }: { overline: string; title: st
   );
 }
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const [dbTeam, dbAchievements] = await Promise.all([getTeam(), getAchievements()]);
+  const teamData = dbTeam.length ? dbTeam : TEAM;
+  const achData = dbAchievements.length ? dbAchievements : ACHIEVEMENTS;
+
   return (
     <main className="min-h-screen bg-navy">
       {/* 1. HERO */}
@@ -217,7 +222,7 @@ export default function AboutPage() {
           }}
         />
         <div className="relative mx-auto grid max-w-7xl grid-cols-2 gap-8 px-4 py-16 sm:px-6 md:grid-cols-3 lg:grid-cols-6 lg:px-8">
-          {ACHIEVEMENTS.map((a, i) => (
+          {achData.map((a, i) => (
             <Reveal key={a.label} delay={i * 0.06} className="text-center">
               <div className="text-4xl font-bold text-white md:text-5xl">
                 {typeof a.value === "number" ? (
@@ -240,7 +245,7 @@ export default function AboutPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHead overline="Our Team" title="The people behind the work" />
           <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {TEAM.map((m, i) => (
+            {teamData.map((m, i) => (
               <Reveal key={m.name} delay={i * 0.07}>
                 <article className={cn(CARD, "flex flex-col items-center p-6 text-center")}>
                   <span

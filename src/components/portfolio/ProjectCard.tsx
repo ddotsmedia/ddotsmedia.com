@@ -3,7 +3,7 @@ import Link from "next/link";
 import type { Project } from "@/payload-types";
 import { mediaAlt, mediaUrl } from "@/lib/media";
 
-const categoryColor: Record<Project["category"], string> = {
+const categoryColor: Record<string, string> = {
   Web: "var(--brand-teal)",
   iOS: "var(--brand-accent-orange)",
   Android: "var(--brand-accent-green)",
@@ -26,7 +26,7 @@ export function ProjectCard({ project }: { project: Project }) {
         {cover ? (
           <Image
             src={cover}
-            alt={mediaAlt(project.coverImage) || project.title}
+            alt={mediaAlt(project.coverImage) || project.title || "Project"}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover object-left-top origin-top-left transition-transform duration-500 group-hover:scale-105"
@@ -34,12 +34,12 @@ export function ProjectCard({ project }: { project: Project }) {
           />
         ) : (
           <div className="flex h-full items-center justify-center text-4xl font-bold text-white/15">
-            {project.title.slice(0, 2).toUpperCase()}
+            {(project.title ?? "Project").slice(0, 2).toUpperCase()}
           </div>
         )}
         <span
           className="absolute left-3 top-3 rounded-full px-2.5 py-1 text-xs font-semibold text-white backdrop-blur"
-          style={{ backgroundColor: categoryColor[project.category] }}
+          style={{ backgroundColor: categoryColor[project.category ?? "Web"] ?? "var(--brand-teal)" }}
         >
           {project.category}
         </span>

@@ -73,6 +73,11 @@ export interface Config {
     testimonials: Testimonial;
     clients: Client;
     media: Media;
+    services: Service;
+    'team-members': TeamMember;
+    'faq-items': FaqItem;
+    industries: Industry;
+    'pricing-tiers': PricingTier;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -86,6 +91,11 @@ export interface Config {
     testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
     clients: ClientsSelect<false> | ClientsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    services: ServicesSelect<false> | ServicesSelect<true>;
+    'team-members': TeamMembersSelect<false> | TeamMembersSelect<true>;
+    'faq-items': FaqItemsSelect<false> | FaqItemsSelect<true>;
+    industries: IndustriesSelect<false> | IndustriesSelect<true>;
+    'pricing-tiers': PricingTiersSelect<false> | PricingTiersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -95,8 +105,18 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'company-settings': CompanySetting;
+    stats: Stat;
+    'trust-bar': TrustBar;
+    'process-steps': ProcessStep;
+  };
+  globalsSelect: {
+    'company-settings': CompanySettingsSelect<false> | CompanySettingsSelect<true>;
+    stats: StatsSelect<false> | StatsSelect<true>;
+    'trust-bar': TrustBarSelect<false> | TrustBarSelect<true>;
+    'process-steps': ProcessStepsSelect<false> | ProcessStepsSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
@@ -151,13 +171,19 @@ export interface User {
   collection: 'users';
 }
 /**
+ * Paste a live URL and save — the title, description, slug, and screenshot are auto-filled. Everything else is optional.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "projects".
  */
 export interface Project {
   id: number;
-  title: string;
-  category: 'Web' | 'iOS' | 'Android' | 'Desktop' | 'ERP';
+  /**
+   * Public URL of the site/app. Everything else is optional.
+   */
+  liveUrl: string;
+  title?: string | null;
+  category?: ('Web' | 'iOS' | 'Android' | 'Desktop' | 'ERP') | null;
   slug?: string | null;
   shortDescription?: string | null;
   fullDescription?: {
@@ -179,7 +205,6 @@ export interface Project {
   year?: string | null;
   duration?: string | null;
   status?: ('Live' | 'In Progress') | null;
-  liveUrl?: string | null;
   appStoreUrl?: string | null;
   playStoreUrl?: string | null;
   githubUrl?: string | null;
@@ -368,6 +393,121 @@ export interface Client {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services".
+ */
+export interface Service {
+  id: number;
+  title: string;
+  order?: number | null;
+  slug?: string | null;
+  icon?: ('Globe' | 'Smartphone' | 'Code' | 'Palette' | 'Cloud' | 'LayoutDashboard') | null;
+  category?: ('web' | 'mobile' | 'software' | 'design' | 'devops' | 'erp') | null;
+  /**
+   * CSS color, e.g. var(--brand-teal) or #3dbac6
+   */
+  color?: string | null;
+  shortDescription?: string | null;
+  longDescription?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  features?:
+    | {
+        value?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  techStack?:
+    | {
+        value?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  screenshot?: (number | null) | Media;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "team-members".
+ */
+export interface TeamMember {
+  id: number;
+  name: string;
+  order?: number | null;
+  role?: string | null;
+  linkedin?: string | null;
+  avatar?: (number | null) | Media;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "faq-items".
+ */
+export interface FaqItem {
+  id: number;
+  question: string;
+  answer: string;
+  /**
+   * Which page this FAQ appears on
+   */
+  page?: ('services' | 'about' | 'general') | null;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "industries".
+ */
+export interface Industry {
+  id: number;
+  title: string;
+  order?: number | null;
+  icon?: ('HeartPulse' | 'Building2' | 'ShoppingCart' | 'Landmark' | 'GraduationCap' | 'Truck') | null;
+  description?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pricing-tiers".
+ */
+export interface PricingTier {
+  id: number;
+  name: string;
+  order?: number | null;
+  /**
+   * e.g. "AED 5,000"
+   */
+  price?: string | null;
+  priceLabel?: string | null;
+  features?:
+    | {
+        value?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  highlighted?: boolean | null;
+  ctaText?: string | null;
+  ctaLink?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -413,6 +553,26 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'services';
+        value: number | Service;
+      } | null)
+    | ({
+        relationTo: 'team-members';
+        value: number | TeamMember;
+      } | null)
+    | ({
+        relationTo: 'faq-items';
+        value: number | FaqItem;
+      } | null)
+    | ({
+        relationTo: 'industries';
+        value: number | Industry;
+      } | null)
+    | ({
+        relationTo: 'pricing-tiers';
+        value: number | PricingTier;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -483,6 +643,7 @@ export interface UsersSelect<T extends boolean = true> {
  * via the `definition` "projects_select".
  */
 export interface ProjectsSelect<T extends boolean = true> {
+  liveUrl?: T;
   title?: T;
   category?: T;
   slug?: T;
@@ -492,7 +653,6 @@ export interface ProjectsSelect<T extends boolean = true> {
   year?: T;
   duration?: T;
   status?: T;
-  liveUrl?: T;
   appStoreUrl?: T;
   playStoreUrl?: T;
   githubUrl?: T;
@@ -629,6 +789,93 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services_select".
+ */
+export interface ServicesSelect<T extends boolean = true> {
+  title?: T;
+  order?: T;
+  slug?: T;
+  icon?: T;
+  category?: T;
+  color?: T;
+  shortDescription?: T;
+  longDescription?: T;
+  features?:
+    | T
+    | {
+        value?: T;
+        id?: T;
+      };
+  techStack?:
+    | T
+    | {
+        value?: T;
+        id?: T;
+      };
+  screenshot?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "team-members_select".
+ */
+export interface TeamMembersSelect<T extends boolean = true> {
+  name?: T;
+  order?: T;
+  role?: T;
+  linkedin?: T;
+  avatar?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "faq-items_select".
+ */
+export interface FaqItemsSelect<T extends boolean = true> {
+  question?: T;
+  answer?: T;
+  page?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "industries_select".
+ */
+export interface IndustriesSelect<T extends boolean = true> {
+  title?: T;
+  order?: T;
+  icon?: T;
+  description?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pricing-tiers_select".
+ */
+export interface PricingTiersSelect<T extends boolean = true> {
+  name?: T;
+  order?: T;
+  price?: T;
+  priceLabel?: T;
+  features?:
+    | T
+    | {
+        value?: T;
+        id?: T;
+      };
+  highlighted?: T;
+  ctaText?: T;
+  ctaLink?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv_select".
  */
 export interface PayloadKvSelect<T extends boolean = true> {
@@ -666,6 +913,159 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "company-settings".
+ */
+export interface CompanySetting {
+  id: number;
+  companyName?: string | null;
+  tagline?: string | null;
+  heroHeading?: string | null;
+  heroSubtext?: string | null;
+  phone?: string | null;
+  email?: string | null;
+  whatsappNumber?: string | null;
+  address?: string | null;
+  socialLinks?: {
+    linkedin?: string | null;
+    twitter?: string | null;
+    instagram?: string | null;
+    github?: string | null;
+  };
+  officeHours?: string | null;
+  responseTime?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "stats".
+ */
+export interface Stat {
+  id: number;
+  items?:
+    | {
+        label?: string | null;
+        value?: number | null;
+        /**
+         * e.g. "+"
+         */
+        suffix?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "trust-bar".
+ */
+export interface TrustBar {
+  id: number;
+  items?:
+    | {
+        name?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "process-steps".
+ */
+export interface ProcessStep {
+  id: number;
+  items?:
+    | {
+        title?: string | null;
+        description?: string | null;
+        icon?: ('Search' | 'Palette' | 'Code' | 'Rocket') | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "company-settings_select".
+ */
+export interface CompanySettingsSelect<T extends boolean = true> {
+  companyName?: T;
+  tagline?: T;
+  heroHeading?: T;
+  heroSubtext?: T;
+  phone?: T;
+  email?: T;
+  whatsappNumber?: T;
+  address?: T;
+  socialLinks?:
+    | T
+    | {
+        linkedin?: T;
+        twitter?: T;
+        instagram?: T;
+        github?: T;
+      };
+  officeHours?: T;
+  responseTime?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "stats_select".
+ */
+export interface StatsSelect<T extends boolean = true> {
+  items?:
+    | T
+    | {
+        label?: T;
+        value?: T;
+        suffix?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "trust-bar_select".
+ */
+export interface TrustBarSelect<T extends boolean = true> {
+  items?:
+    | T
+    | {
+        name?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "process-steps_select".
+ */
+export interface ProcessStepsSelect<T extends boolean = true> {
+  items?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        icon?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

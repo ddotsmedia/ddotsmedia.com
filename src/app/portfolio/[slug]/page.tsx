@@ -43,11 +43,12 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const project = await getProject(slug);
   if (!project) return { title: "Project not found" };
   const desc = project.shortDescription ?? undefined;
+  const projectTitle = project.title ?? "Project";
   return {
-    title: project.title,
+    title: projectTitle,
     description: desc,
     openGraph: {
-      title: project.title,
+      title: projectTitle,
       description: desc,
       type: "article",
       images: [{ url: `/portfolio/${slug}/opengraph-image` }],
@@ -231,7 +232,7 @@ export default async function ProjectPage({ params }: Params) {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "CreativeWork",
-            name: project.title,
+            name: project.title ?? "Project",
             description: project.shortDescription ?? undefined,
             url: `${siteUrl}/portfolio/${slug}`,
             image: cover ? ext(cover) : undefined,

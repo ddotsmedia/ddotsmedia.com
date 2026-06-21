@@ -10,6 +10,15 @@ import { Projects } from "./collections/Projects";
 import { Testimonials } from "./collections/Testimonials";
 import { Clients } from "./collections/Clients";
 import { Posts } from "./collections/Posts";
+import { Services } from "./collections/Services";
+import { TeamMembers } from "./collections/TeamMembers";
+import { FaqItems } from "./collections/FaqItems";
+import { Industries } from "./collections/Industries";
+import { PricingTiers } from "./collections/PricingTiers";
+import { CompanySettings } from "./globals/CompanySettings";
+import { Stats } from "./globals/Stats";
+import { TrustBar } from "./globals/TrustBar";
+import { ProcessSteps } from "./globals/ProcessSteps";
 import { migrations } from "./migrations";
 
 const filename = fileURLToPath(import.meta.url);
@@ -29,7 +38,13 @@ export default buildConfig({
     Testimonials,
     Clients,
     Media,
+    Services,
+    TeamMembers,
+    FaqItems,
+    Industries,
+    PricingTiers,
   ],
+  globals: [CompanySettings, Stats, TrustBar, ProcessSteps],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "",
   typescript: { outputFile: path.resolve(dirname, "payload-types.ts") },

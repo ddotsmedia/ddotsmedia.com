@@ -18,7 +18,8 @@ const INDUSTRIES: { icon: LucideIcon; title: string; body: string }[] = [
   { icon: Truck, title: "Trading & Logistics", body: "Supply-chain, fleet, and warehouse management tools." },
 ];
 
-export function Industries() {
+export function Industries({ items }: { items?: { icon: LucideIcon; title: string; body: string }[] }) {
+  const data = items && items.length ? items : INDUSTRIES;
   return (
     <section className="border-t border-white/5 py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -31,7 +32,7 @@ export function Industries() {
           </h2>
         </div>
         <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {INDUSTRIES.map((ind, i) => (
+          {data.map((ind, i) => (
             <Reveal key={ind.title} delay={i * 0.06}>
               <article className="flex h-full flex-col rounded-2xl border border-[#1e2d42] bg-[#111827] p-6 transition-all duration-300 hover:border-[var(--brand-teal)] hover:shadow-[0_0_36px_-12px_var(--brand-teal)]">
                 <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-[var(--brand-teal)]/30 bg-[var(--brand-teal)]/10 text-[var(--brand-teal)]">

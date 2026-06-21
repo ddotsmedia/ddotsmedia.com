@@ -3,13 +3,17 @@ import { Check } from "lucide-react";
 import { Reveal } from "@/components/shared/Reveal";
 import { cn } from "@/lib/utils";
 
-const TIERS: {
+type Tier = {
   name: string;
   price: string;
   blurb: string;
   features: string[];
   popular?: boolean;
-}[] = [
+  ctaText?: string;
+  ctaLink?: string;
+};
+
+const TIERS: Tier[] = [
   {
     name: "Starter",
     price: "AED 5,000",
@@ -31,7 +35,8 @@ const TIERS: {
   },
 ];
 
-export function PricingTeaser() {
+export function PricingTeaser({ tiers }: { tiers?: Tier[] }) {
+  const data = tiers && tiers.length ? tiers : TIERS;
   return (
     <section className="py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -48,7 +53,7 @@ export function PricingTeaser() {
         </div>
 
         <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-3">
-          {TIERS.map((t, i) => (
+          {data.map((t, i) => (
             <Reveal key={t.name} delay={i * 0.08}>
               <article
                 className={cn(
@@ -78,7 +83,7 @@ export function PricingTeaser() {
                   ))}
                 </ul>
                 <Link
-                  href="/contact"
+                  href={t.ctaLink ?? "/contact"}
                   className={cn(
                     "mt-7 inline-flex items-center justify-center rounded-full px-6 py-2.5 text-sm font-semibold transition-all",
                     t.popular
@@ -86,7 +91,7 @@ export function PricingTeaser() {
                       : "border border-white/20 text-white/90 hover:border-white/50",
                   )}
                 >
-                  Contact for Details
+                  {t.ctaText ?? "Contact for Details"}
                 </Link>
               </article>
             </Reveal>

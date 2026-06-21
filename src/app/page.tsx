@@ -1,6 +1,7 @@
 import { getPayloadClient, safeQuery } from "@/lib/payload";
 import type { Project, Testimonial } from "@/payload-types";
 import { getStats } from "@/lib/stats";
+import { getServices, getTrustNames } from "@/lib/content";
 import { Hero } from "@/components/home/Hero";
 import { TrustBar } from "@/components/home/TrustBar";
 import { StatsRow } from "@/components/home/StatsRow";
@@ -15,7 +16,7 @@ import { HomeCta } from "@/components/home/HomeCta";
 export const revalidate = 60; // ISR
 
 export default async function Home() {
-  const [stats, featured, testimonials] = await Promise.all([
+  const [stats, featured, testimonials, services, trustNames] = await Promise.all([
     getStats(),
     safeQuery(async () => {
       const payload = await getPayloadClient();
@@ -33,14 +34,16 @@ export default async function Home() {
       const res = await payload.find({ collection: "testimonials", limit: 3, depth: 1 });
       return res.docs;
     }, [] as Testimonial[]),
+    getServices(),
+    getTrustNames(),
   ]);
 
   return (
     <main className="min-h-screen bg-navy">
       <Hero />
-      <TrustBar />
+      <TrustBar names={trustNames} />
       <StatsRow stats={stats} />
-      <ServicesOverview />
+      <ServicesOverview services={services} />
       {featured.length > 0 ? (
         <FeaturedProjects projects={featured} />
       ) : (

@@ -9,7 +9,7 @@ import Image from "next/image";
 /** Server switch: render the right preview component for a project's previewType. */
 export function ProjectPreview({ project }: { project: Project }) {
   const cover = mediaUrl(project.coverImage, "feature");
-  const coverAlt = mediaAlt(project.coverImage) || project.title;
+  const coverAlt = mediaAlt(project.coverImage) || project.title || "Project";
 
   switch (project.previewType) {
     case "liveEmbed":

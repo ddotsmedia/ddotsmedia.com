@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { Reveal } from "@/components/shared/Reveal";
-import { SERVICES } from "@/lib/data/services";
+import { SERVICES, type Service } from "@/lib/data/services";
 
-/** 6 service cards (3×2) linking to /services. */
-export function ServicesOverview() {
+/** 6 service cards (3×2) linking to /services. DB-driven with static fallback. */
+export function ServicesOverview({ services }: { services?: Service[] }) {
+  const items = services && services.length ? services : SERVICES;
   return (
     <section className="py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -20,7 +21,7 @@ export function ServicesOverview() {
         </div>
 
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {SERVICES.map((s, i) => (
+          {items.map((s, i) => (
             <Reveal key={s.slug} delay={i * 0.06}>
               <Link
                 href="/services"

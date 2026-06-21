@@ -31,12 +31,13 @@ const FAQS: { q: string; a: string }[] = [
   },
 ];
 
-export function FaqAccordion() {
+export function FaqAccordion({ items }: { items?: { q: string; a: string }[] }) {
+  const data = items && items.length ? items : FAQS;
   const [open, setOpen] = useState<number | null>(0);
 
   return (
     <div className="mx-auto mt-12 max-w-3xl divide-y divide-white/10 overflow-hidden rounded-2xl border border-[#1e2d42] bg-[#111827]">
-      {FAQS.map((f, i) => {
+      {data.map((f, i) => {
         const isOpen = open === i;
         return (
           <div key={i}>

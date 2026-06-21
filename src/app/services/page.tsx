@@ -11,6 +11,7 @@ import { Industries } from "@/components/services/Industries";
 import { PricingTeaser } from "@/components/services/PricingTeaser";
 import { FaqAccordion } from "@/components/services/FaqAccordion";
 import { SERVICES, type ProcessStep } from "@/lib/data/services";
+import { getServices, getIndustries, getPricing, getFaqs, getProcessSteps } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -79,7 +80,17 @@ function TechBadges({ tech }: { tech: string[] }) {
   );
 }
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const [dbServices, dbIndustries, dbPricing, dbFaqs, dbSteps] = await Promise.all([
+    getServices(),
+    getIndustries(),
+    getPricing(),
+    getFaqs("services"),
+    getProcessSteps(),
+  ]);
+  const serviceList = dbServices.length ? dbServices : SERVICES;
+  const stepList = dbSteps.length ? dbSteps : PROCESS;
+
   return (
     <main className="min-h-screen bg-navy">
       {/* 1. HERO */}
@@ -127,7 +138,7 @@ export default function ServicesPage() {
       <section className="pb-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 gap-5 [grid-auto-flow:dense] sm:grid-cols-2 lg:grid-cols-3">
-            {SERVICES.map((s, i) => (
+            {serviceList.map((s, i) => (
               <Reveal
                 key={s.slug}
                 delay={i * 0.07}
@@ -174,13 +185,13 @@ export default function ServicesPage() {
       </section>
 
       {/* 3. INDIVIDUAL SERVICE SECTIONS */}
-      <ServiceSections />
+      <ServiceSections services={serviceList} />
 
       {/* 4. INDUSTRIES SERVED */}
-      <Industries />
+      <Industries items={dbIndustries.length ? dbIndustries : undefined} />
 
       {/* 5. PRICING TEASER */}
-      <PricingTeaser />
+      <PricingTeaser tiers={dbPricing.length ? dbPricing : undefined} />
 
       {/* 6. PROCESS FLOW */}
       <section className="border-t border-white/5 py-24">
@@ -191,7 +202,7 @@ export default function ServicesPage() {
             subtext="A proven four-step process that keeps projects on track and stakeholders aligned."
           />
           <div className="mt-14 flex flex-col items-stretch gap-6 md:flex-row md:items-start md:justify-between">
-            {PROCESS.map((step, i) => (
+            {stepList.map((step, i) => (
               <Fragment key={step.label}>
                 <Reveal delay={i * 0.08} className="flex flex-1 flex-col items-center text-center">
                   <span className="flex h-16 w-16 items-center justify-center rounded-full border border-[#1e2d42] bg-[#111827] text-[var(--brand-teal)]">
@@ -200,7 +211,7 @@ export default function ServicesPage() {
                   <h3 className="mt-4 text-lg font-semibold text-white">{step.label}</h3>
                   <p className="mt-1 max-w-[16rem] text-sm text-white/55">{step.description}</p>
                 </Reveal>
-                {i < PROCESS.length - 1 && (
+                {i < stepList.length - 1 && (
                   <ChevronRight
                     aria-hidden
                     className="mx-auto hidden h-7 w-7 shrink-0 self-center text-white/25 md:block"
@@ -220,7 +231,7 @@ export default function ServicesPage() {
             title="Questions, answered"
             subtext="The things clients ask us most before getting started."
           />
-          <FaqAccordion />
+          <FaqAccordion items={dbFaqs.length ? dbFaqs : undefined} />
         </div>
       </section>
 

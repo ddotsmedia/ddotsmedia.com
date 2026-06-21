@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { Reveal } from "@/components/shared/Reveal";
 import { ContactForm } from "@/components/contact/ContactForm";
+import { getCompanySettings } from "@/lib/content";
 
 /** Brand glyphs — lucide-react no longer ships social/brand icons. */
 type IconProps = { className?: string };
@@ -42,27 +43,37 @@ export const metadata: Metadata = {
     "Get in touch with Ddotsmedia — web, software, mobile, and ERP solutions for the UAE and GCC. Offices in Dubai, Abu Dhabi, and Sharjah.",
 };
 
-const INFO = [
-  { icon: Mail, label: "Email", value: "hello@ddotsmedia.com", href: "mailto:hello@ddotsmedia.com" },
-  { icon: Phone, label: "Phone", value: "+971 50 937 9212", href: "tel:+971509379212" },
-  { icon: MapPin, label: "Location", value: "Dubai · Abu Dhabi · Sharjah", href: undefined },
-];
+export default async function ContactPage() {
+  const cs = await getCompanySettings();
+  const phone = cs?.phone || "+971 50 937 9212";
+  const phoneHref = `tel:${phone.replace(/[^\d+]/g, "")}`;
+  const email = cs?.email || "hello@ddotsmedia.com";
+  const wa = (cs?.whatsappNumber || "971509379212").replace(/[^\d]/g, "");
+  const responseTime = cs?.responseTime || "within 2 hours";
+  const officeHours = cs?.officeHours || "";
+  const address = cs?.address || "Dubai · Abu Dhabi · Sharjah";
+  const social = cs?.socialLinks ?? null;
 
-const METHODS: { icon: LucideIcon; label: string; value: string; href: string; external?: boolean }[] = [
-  { icon: Phone, label: "Call us", value: "+971 50 937 9212", href: "tel:+971509379212" },
-  { icon: Mail, label: "Email us", value: "hello@ddotsmedia.com", href: "mailto:hello@ddotsmedia.com" },
-  { icon: MessageCircle, label: "WhatsApp", value: "Instant chat", href: "https://wa.me/971509379212", external: true },
-  { icon: Building2, label: "Office visit", value: "Dubai · by appointment", href: "#contact-form" },
-];
+  const INFO: { icon: LucideIcon; label: string; value: string; href?: string }[] = [
+    { icon: Mail, label: "Email", value: email, href: `mailto:${email}` },
+    { icon: Phone, label: "Phone", value: phone, href: phoneHref },
+    { icon: MapPin, label: "Location", value: address, href: undefined },
+  ];
 
-const SOCIAL: { icon: ComponentType<IconProps>; label: string; href: string }[] = [
-  { icon: LinkedInIcon, label: "LinkedIn", href: "#" },
-  { icon: XIcon, label: "Twitter / X", href: "#" },
-  { icon: InstagramIcon, label: "Instagram", href: "#" },
-  { icon: GitHubIcon, label: "GitHub", href: "#" },
-];
+  const METHODS: { icon: LucideIcon; label: string; value: string; href: string; external?: boolean }[] = [
+    { icon: Phone, label: "Call us", value: phone, href: phoneHref },
+    { icon: Mail, label: "Email us", value: email, href: `mailto:${email}` },
+    { icon: MessageCircle, label: "WhatsApp", value: "Instant chat", href: `https://wa.me/${wa}`, external: true },
+    { icon: Building2, label: "Office visit", value: "Dubai · by appointment", href: "#contact-form" },
+  ];
 
-export default function ContactPage() {
+  const SOCIAL: { icon: ComponentType<IconProps>; label: string; href: string }[] = [
+    { icon: LinkedInIcon, label: "LinkedIn", href: social?.linkedin || "#" },
+    { icon: XIcon, label: "Twitter / X", href: social?.twitter || "#" },
+    { icon: InstagramIcon, label: "Instagram", href: social?.instagram || "#" },
+    { icon: GitHubIcon, label: "GitHub", href: social?.github || "#" },
+  ];
+
   return (
     <main className="min-h-screen bg-navy">
       {/* 1. HERO */}
@@ -86,7 +97,7 @@ export default function ContactPage() {
           </p>
           <p className="mx-auto mt-4 inline-flex items-center gap-2 rounded-full border border-[var(--brand-teal)]/30 bg-[var(--brand-teal)]/10 px-4 py-1.5 text-sm text-white/70">
             <span className="h-2 w-2 rounded-full bg-[var(--brand-accent-green)]" />
-            We typically respond within 2 hours during UAE business hours (Sun–Thu, 9AM–6PM GST).
+            We typically respond {responseTime} during UAE business hours (Sun–Thu, 9AM–6PM GST).
           </p>
         </div>
       </section>
@@ -148,7 +159,7 @@ export default function ContactPage() {
 
               {/* WhatsApp CTA */}
               <a
-                href="https://wa.me/971509379212"
+                href={`https://wa.me/${wa}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-4 rounded-2xl border border-[var(--brand-accent-green)]/30 bg-[var(--brand-accent-green)]/10 p-5 transition-all duration-300 hover:border-[var(--brand-accent-green)] hover:shadow-[0_0_30px_-12px_var(--brand-accent-green)]"
@@ -173,7 +184,7 @@ export default function ContactPage() {
                 <dl className="mt-4 space-y-2 text-sm">
                   <div className="flex justify-between">
                     <dt className="text-white/55">Sun – Thu</dt>
-                    <dd className="font-medium text-white">9:00 AM – 6:00 PM GST</dd>
+                    <dd className="font-medium text-white">{officeHours || "9:00 AM – 6:00 PM GST"}</dd>
                   </div>
                   <div className="flex justify-between">
                     <dt className="text-white/55">Fri – Sat</dt>
