@@ -1,10 +1,10 @@
-import Image from "next/image";
 import Link from "next/link";
 import type { Stat } from "@/lib/stats";
 import { FourDotLogo } from "@/components/shared/FourDotLogo";
 import { Reveal } from "@/components/shared/Reveal";
 import { CountUp } from "./CountUp";
 import { TypingWords } from "./TypingWords";
+import { HeroSlideshow } from "./HeroSlideshow";
 
 export function Hero({ stats }: { stats: Stat[] }) {
   return (
@@ -71,38 +71,9 @@ export function Hero({ stats }: { stats: Stat[] }) {
           )}
         </div>
 
-        {/* ── Right: tilted browser mockup (desktop only) ── */}
+        {/* ── Right: rotating browser mockup slideshow (desktop only) ── */}
         <Reveal delay={0.15} className="hidden md:block">
-          <div
-            className="rounded-xl"
-            style={{
-              transform: "perspective(1200px) rotateY(-8deg)",
-              boxShadow: "0 25px 60px rgba(42,154,164,0.25)",
-            }}
-          >
-            <div className="overflow-hidden rounded-xl border border-white/10 bg-[#111827]">
-              <div className="flex items-center gap-2 border-b border-white/10 bg-white/[0.04] px-4 py-3">
-                <span className="flex gap-1.5">
-                  <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
-                  <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
-                  <span className="h-3 w-3 rounded-full bg-[#28c840]" />
-                </span>
-                <span className="ml-3 flex-1 truncate rounded-md bg-black/30 px-3 py-1 text-xs text-white/40">
-                  ddotsmediajobs.com
-                </span>
-              </div>
-              <div className="relative aspect-[16/10]">
-                <Image
-                  src="/projects/ddotsmediajobs.png"
-                  alt="Ddotsmedia Jobs — a live product we built"
-                  fill
-                  priority
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-cover object-left-top"
-                />
-              </div>
-            </div>
-          </div>
+          <HeroSlideshow />
         </Reveal>
       </div>
     </section>
