@@ -8,7 +8,7 @@ import { TypingWords } from "./TypingWords";
 
 export function Hero({ stats }: { stats: Stat[] }) {
   return (
-    <section className="relative overflow-hidden pt-32 pb-20 lg:pt-40 lg:pb-28">
+    <section className="relative overflow-hidden pt-32 pb-20 md:pt-40 md:pb-28">
       {/* Background gradient blobs */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div
@@ -21,26 +21,26 @@ export function Hero({ stats }: { stats: Stat[] }) {
         />
       </div>
 
-      <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-10 lg:px-8">
+      <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 md:grid-cols-2 md:gap-10 md:px-8">
         {/* ── Left: text ── */}
-        <div className="text-center lg:text-left">
+        <div className="text-center md:text-left">
           <div className="badge-glow mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-4 py-1.5 text-sm text-white/70">
             <FourDotLogo size={18} />
             UAE-based software studio
           </div>
 
-          <h1 className="font-display text-4xl font-bold leading-[1.1] text-white sm:text-5xl lg:text-[3.25rem]">
+          <h1 className="font-display text-4xl font-bold leading-[1.1] text-white sm:text-5xl md:text-[3.25rem]">
             We build <TypingWords />
             <br />
             that move your business forward.
           </h1>
 
-          <p className="mx-auto mt-6 max-w-xl text-lg text-white/60 lg:mx-0">
+          <p className="mx-auto mt-6 max-w-xl text-lg text-white/60 md:mx-0">
             Web apps, mobile apps, and custom ERP systems engineered for performance,
             built for the UAE market and beyond.
           </p>
 
-          <div className="mt-8 flex flex-wrap justify-center gap-4 lg:justify-start">
+          <div className="mt-8 flex flex-wrap justify-center gap-4 md:justify-start">
             <Link
               href="/contact"
               className="rounded-full bg-[var(--brand-teal)] px-7 py-3 font-semibold text-white shadow-lg shadow-[var(--brand-teal)]/25 transition-transform hover:-translate-y-0.5"
@@ -57,9 +57,9 @@ export function Hero({ stats }: { stats: Stat[] }) {
 
           {/* ── Inline stats ── */}
           {stats.length > 0 && (
-            <div className="mt-10 flex flex-wrap justify-center gap-x-10 gap-y-6 lg:justify-start">
+            <div className="mt-10 flex flex-wrap justify-center gap-x-10 gap-y-6 md:justify-start">
               {stats.map((s) => (
-                <div key={s.label} className="text-center lg:text-left">
+                <div key={s.label} className="text-center md:text-left">
                   <div className="text-3xl font-bold text-[var(--brand-teal)] md:text-4xl">
                     <CountUp value={s.value} />
                     {s.suffix}
@@ -72,7 +72,7 @@ export function Hero({ stats }: { stats: Stat[] }) {
         </div>
 
         {/* ── Right: tilted browser mockup (desktop only) ── */}
-        <Reveal delay={0.15} className="hidden lg:block">
+        <Reveal delay={0.15} className="hidden md:block">
           <div
             className="rounded-xl"
             style={{
@@ -97,7 +97,7 @@ export function Hero({ stats }: { stats: Stat[] }) {
                   alt="Ddotsmedia Jobs — a live product we built"
                   fill
                   priority
-                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-cover object-left-top"
                 />
               </div>
