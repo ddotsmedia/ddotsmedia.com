@@ -1,11 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { CheckCircle2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type Status = "idle" | "sending" | "success" | "error";
 
 const SERVICES = ["Web", "Mobile", "Software", "ERP", "UI/UX", "DevOps", "Other"];
+
+const QUICK = [
+  { label: "I need a Website", service: "Web" },
+  { label: "I need a Mobile App", service: "Mobile" },
+  { label: "I need Custom Software", service: "Software" },
+];
 
 const FIELD =
   "w-full rounded-lg border border-[#1e2d42] bg-white/[0.03] px-4 py-3 text-white placeholder-white/30 outline-none transition-colors focus:border-[var(--brand-teal)]";
@@ -14,6 +21,12 @@ export function ContactForm() {
   const [form, setForm] = useState({ name: "", email: "", phone: "", service: "", message: "" });
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  const pickService = (service: string) => {
+    setForm((f) => ({ ...f, service }));
+    rootRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   const update = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
     setForm((f) => ({ ...f, [k]: e.target.value }));
@@ -62,10 +75,32 @@ export function ContactForm() {
   }
 
   return (
-    <form
-      onSubmit={onSubmit}
-      className="rounded-2xl border border-[#1e2d42] bg-[#111827] p-6 sm:p-8"
-    >
+    <div id="contact-form" ref={rootRef} className="scroll-mt-28">
+      <div className="mb-4 rounded-2xl border border-[#1e2d42] bg-[#111827] p-4 sm:p-5">
+        <p className="mb-3 text-sm text-white/55">Quick inquiry — pick one to get started:</p>
+        <div className="flex flex-wrap gap-2">
+          {QUICK.map((q) => (
+            <button
+              key={q.service}
+              type="button"
+              onClick={() => pickService(q.service)}
+              className={cn(
+                "rounded-full border px-4 py-2 text-sm font-medium transition-colors",
+                form.service === q.service
+                  ? "border-[var(--brand-teal)] bg-[var(--brand-teal)]/10 text-[var(--brand-teal)]"
+                  : "border-[#1e2d42] bg-white/[0.03] text-white/70 hover:border-[var(--brand-teal)]/60",
+              )}
+            >
+              {q.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <form
+        onSubmit={onSubmit}
+        className="rounded-2xl border border-[#1e2d42] bg-[#111827] p-6 sm:p-8"
+      >
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor="name" className="mb-1.5 block text-sm text-white/70">
@@ -114,6 +149,7 @@ export function ContactForm() {
       >
         {status === "sending" ? "Sending…" : "Send Message"}
       </button>
-    </form>
+      </form>
+    </div>
   );
 }
