@@ -10,7 +10,6 @@ import { FeaturedProjects } from "@/components/home/FeaturedProjects";
 import { FeaturedScreenshots } from "@/components/home/FeaturedScreenshots";
 import { WhyChooseUs } from "@/components/home/WhyChooseUs";
 import { Testimonials } from "@/components/home/Testimonials";
-import { TechMarquee } from "@/components/home/TechMarquee";
 import { HomeCta } from "@/components/home/HomeCta";
 
 export const revalidate = 60; // ISR
@@ -46,7 +45,6 @@ export default async function Home() {
       )}
       <WhyChooseUs />
       {testimonials.length > 0 && <Testimonials items={testimonials} />}
-      <TechMarquee />
       <HomeCta />
     </main>
   );
