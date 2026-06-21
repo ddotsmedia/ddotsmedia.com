@@ -3,15 +3,23 @@ import Link from "next/link";
 import type { Stat } from "@/lib/stats";
 import { FourDotLogo } from "@/components/shared/FourDotLogo";
 import { Reveal } from "@/components/shared/Reveal";
-import { BrowserFrame } from "@/components/preview/BrowserFrame";
 import { CountUp } from "./CountUp";
 import { TypingWords } from "./TypingWords";
 
 export function Hero({ stats }: { stats: Stat[] }) {
   return (
     <section className="relative overflow-hidden pt-32 pb-20 lg:pt-40 lg:pb-28">
-      {/* Single soft teal accent behind the mockup */}
-      <div className="pointer-events-none absolute right-[-4%] top-1/2 hidden h-[380px] w-[380px] -translate-y-1/2 rounded-full bg-[var(--brand-teal)]/15 blur-[100px] lg:block" />
+      {/* Background gradient blobs */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div
+          className="absolute right-[-6%] top-1/2 h-[500px] w-[500px] -translate-y-1/2 rounded-full"
+          style={{ background: "radial-gradient(circle, rgba(42,154,164,0.2), transparent 70%)" }}
+        />
+        <div
+          className="absolute left-[-8%] top-[-12%] h-[400px] w-[400px] rounded-full"
+          style={{ background: "radial-gradient(circle, rgba(240,124,58,0.12), transparent 70%)" }}
+        />
+      </div>
 
       <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-10 lg:px-8">
         {/* ── Left: text ── */}
@@ -41,32 +49,48 @@ export function Hero({ stats }: { stats: Stat[] }) {
             </Link>
             <Link
               href="/portfolio"
-              className="rounded-full border-2 border-[var(--brand-teal)] px-7 py-3 font-semibold text-[var(--brand-teal)] transition-colors hover:bg-[var(--brand-teal)]/10"
+              className="rounded-full border-2 border-white/30 px-7 py-3 font-semibold text-white transition-colors hover:border-white"
             >
               View Our Work
             </Link>
           </div>
 
-          {/* ── Stats ── */}
+          {/* ── Inline stats ── */}
           {stats.length > 0 && (
-            <div className="mt-12 grid grid-cols-2 gap-6 sm:grid-cols-4">
-              {stats.map((s, i) => (
-                <Reveal key={s.label} delay={i * 0.08}>
-                  <div className="text-3xl font-bold text-[var(--brand-teal)]">
+            <div className="mt-10 flex flex-wrap justify-center gap-x-10 gap-y-6 lg:justify-start">
+              {stats.map((s) => (
+                <div key={s.label} className="text-center lg:text-left">
+                  <div className="text-3xl font-bold text-[var(--brand-teal)] md:text-4xl">
                     <CountUp value={s.value} />
                     {s.suffix}
                   </div>
                   <div className="mt-1 text-sm text-white/60">{s.label}</div>
-                </Reveal>
+                </div>
               ))}
             </div>
           )}
         </div>
 
-        {/* ── Right: real product screenshot in a browser frame ── */}
-        <Reveal delay={0.15} className="relative">
-          <div className="rounded-xl shadow-[0_0_40px_rgba(42,154,164,0.3)] lg:[transform:perspective(1000px)_rotateY(-5deg)]">
-            <BrowserFrame url="ddotsmediajobs.com">
+        {/* ── Right: tilted browser mockup (desktop only) ── */}
+        <Reveal delay={0.15} className="hidden lg:block">
+          <div
+            className="rounded-xl"
+            style={{
+              transform: "perspective(1200px) rotateY(-8deg)",
+              boxShadow: "0 25px 60px rgba(42,154,164,0.25)",
+            }}
+          >
+            <div className="overflow-hidden rounded-xl border border-white/10 bg-[#111827]">
+              <div className="flex items-center gap-2 border-b border-white/10 bg-white/[0.04] px-4 py-3">
+                <span className="flex gap-1.5">
+                  <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
+                  <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
+                  <span className="h-3 w-3 rounded-full bg-[#28c840]" />
+                </span>
+                <span className="ml-3 flex-1 truncate rounded-md bg-black/30 px-3 py-1 text-xs text-white/40">
+                  ddotsmediajobs.com
+                </span>
+              </div>
               <div className="relative aspect-[16/10]">
                 <Image
                   src="/projects/ddotsmediajobs.png"
@@ -77,7 +101,7 @@ export function Hero({ stats }: { stats: Stat[] }) {
                   className="object-cover object-left-top"
                 />
               </div>
-            </BrowserFrame>
+            </div>
           </div>
         </Reveal>
       </div>
