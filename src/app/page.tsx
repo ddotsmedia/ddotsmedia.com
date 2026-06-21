@@ -1,7 +1,7 @@
 import { getPayloadClient, safeQuery } from "@/lib/payload";
-import type { Project, Testimonial } from "@/payload-types";
+import type { Project } from "@/payload-types";
 import { getStats } from "@/lib/stats";
-import { getServices, getTrustNames } from "@/lib/content";
+import { getServices, getTrustNames, getTestimonials } from "@/lib/content";
 import { Hero } from "@/components/home/Hero";
 import { TrustBar } from "@/components/home/TrustBar";
 import { StatsRow } from "@/components/home/StatsRow";
@@ -29,11 +29,7 @@ export default async function Home() {
       });
       return res.docs;
     }, [] as Project[]),
-    safeQuery(async () => {
-      const payload = await getPayloadClient();
-      const res = await payload.find({ collection: "testimonials", limit: 3, depth: 1 });
-      return res.docs;
-    }, [] as Testimonial[]),
+    getTestimonials(),
     getServices(),
     getTrustNames(),
   ]);
@@ -41,16 +37,16 @@ export default async function Home() {
   return (
     <main className="min-h-screen bg-navy">
       <Hero />
-      <TrustBar names={trustNames} />
+      {trustNames.length > 0 && <TrustBar names={trustNames} />}
       <StatsRow stats={stats} />
-      <ServicesOverview services={services} />
+      {services.length > 0 && <ServicesOverview services={services} />}
       {featured.length > 0 ? (
         <FeaturedProjects projects={featured} />
       ) : (
         <FeaturedScreenshots />
       )}
       <WhyChooseUs />
-      <Testimonials items={testimonials} />
+      {testimonials.length > 0 && <Testimonials items={testimonials} />}
       <TechMarquee />
       <HomeCta />
     </main>

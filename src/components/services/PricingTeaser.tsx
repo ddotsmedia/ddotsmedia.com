@@ -13,30 +13,8 @@ type Tier = {
   ctaLink?: string;
 };
 
-const TIERS: Tier[] = [
-  {
-    name: "Starter",
-    price: "AED 5,000",
-    blurb: "For small sites & MVPs",
-    features: ["Up to 5 pages / screens", "Responsive design", "Contact form & basic SEO", "~2 weeks delivery", "1 month support"],
-  },
-  {
-    name: "Professional",
-    price: "AED 15,000",
-    blurb: "For growing products",
-    popular: true,
-    features: ["Custom web or mobile app", "CMS / admin panel", "API & 3rd-party integrations", "Auth & dashboards", "3 months support"],
-  },
-  {
-    name: "Enterprise",
-    price: "Custom",
-    blurb: "For large-scale platforms",
-    features: ["ERP & complex platforms", "Dedicated team", "SLA & priority support", "Cloud & DevOps setup", "Ongoing partnership"],
-  },
-];
-
-export function PricingTeaser({ tiers }: { tiers?: Tier[] }) {
-  const data = tiers && tiers.length ? tiers : TIERS;
+export function PricingTeaser({ tiers }: { tiers: Tier[] }) {
+  const data = tiers;
   return (
     <section className="py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

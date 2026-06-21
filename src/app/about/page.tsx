@@ -62,15 +62,6 @@ const VALUES: { icon: LucideIcon; title: string; body: string; accent: string }[
   },
 ];
 
-const ACHIEVEMENTS: { value?: number; suffix?: string; text?: string; label: string }[] = [
-  { value: 150, suffix: "+", label: "Projects" },
-  { value: 80, suffix: "+", label: "Clients" },
-  { value: 50, suffix: "+", label: "Enterprise Apps" },
-  { value: 9, suffix: "+", label: "Years" },
-  { value: 12, suffix: "+", label: "Countries" },
-  { text: "24/7", label: "Support" },
-];
-
 const PARTNERS = [
   "SHAMS Free Zone Licensed",
   "UAE Corporate Tax Compliant",
@@ -94,13 +85,6 @@ const CULTURE: { icon: LucideIcon; title: string; body: string }[] = [
     title: "Continuous Learning",
     body: "We set aside time for learning, experiments, and knowledge-sharing, keeping our skills — and your product — current.",
   },
-];
-
-const TEAM = [
-  { name: "Mohammed Al Rashid", role: "CEO", initials: "MA", accent: "var(--brand-teal)" },
-  { name: "Priya Nair", role: "Lead Developer", initials: "PN", accent: "var(--brand-accent-orange)" },
-  { name: "Omar Hassan", role: "UI/UX Designer", initials: "OH", accent: "var(--brand-accent-green)" },
-  { name: "Aisha Karimi", role: "Project Manager", initials: "AK", accent: "#3dbac6" },
 ];
 
 const TIMELINE = [
@@ -131,8 +115,8 @@ function SectionHead({ overline, title, subtext }: { overline: string; title: st
 
 export default async function AboutPage() {
   const [dbTeam, dbAchievements] = await Promise.all([getTeam(), getAchievements()]);
-  const teamData = dbTeam.length ? dbTeam : TEAM;
-  const achData = dbAchievements.length ? dbAchievements : ACHIEVEMENTS;
+  const teamData = dbTeam;
+  const achData = dbAchievements;
 
   return (
     <main className="min-h-screen bg-navy">
@@ -207,6 +191,7 @@ export default async function AboutPage() {
       </section>
 
       {/* 4. ACHIEVEMENTS / NUMBERS */}
+      {achData.length > 0 && (
       <section
         className="relative overflow-hidden border-y border-[var(--brand-teal)]/20"
         style={{
@@ -239,8 +224,10 @@ export default async function AboutPage() {
           ))}
         </div>
       </section>
+      )}
 
-      {/* 4. TEAM */}
+      {/* 5. TEAM */}
+      {teamData.length > 0 && (
       <section className="py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHead overline="Our Team" title="The people behind the work" />
@@ -266,8 +253,9 @@ export default async function AboutPage() {
           </div>
         </div>
       </section>
+      )}
 
-      {/* 5. TIMELINE */}
+      {/* 6. TIMELINE */}
       <section className="border-t border-white/5 py-24">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <SectionHead overline="Our Journey" title="From a Dubai studio to the GCC" />

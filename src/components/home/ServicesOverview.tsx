@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { Reveal } from "@/components/shared/Reveal";
-import { SERVICES, type Service } from "@/lib/data/services";
+import type { Service } from "@/lib/data/services";
 
-/** 6 service cards (3×2) linking to /services. DB-driven with static fallback. */
-export function ServicesOverview({ services }: { services?: Service[] }) {
-  const items = services && services.length ? services : SERVICES;
+/** Service cards (3×2) linking to /services. Renders the provided list. */
+export function ServicesOverview({ services }: { services: Service[] }) {
+  const items = services;
   return (
     <section className="py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

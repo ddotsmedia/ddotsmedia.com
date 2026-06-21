@@ -2,24 +2,36 @@ import { getPayloadClient, safeQuery } from "@/lib/payload";
 import { mediaUrl } from "@/lib/media";
 import { iconByName } from "@/lib/icons";
 import { toSlug } from "@/lib/slugify";
+import { SERVICES } from "@/lib/data/services";
 import type { Service as UIService } from "@/lib/data/services";
-import type { LucideIcon } from "lucide-react";
+import {
+  TEAM_FALLBACK,
+  INDUSTRIES_FALLBACK,
+  PRICING_FALLBACK,
+  FAQ_SERVICES_FALLBACK,
+  PROCESS_FALLBACK,
+  ACHIEVEMENTS_FALLBACK,
+  TESTIMONIALS_FALLBACK,
+  TRUST_FALLBACK,
+  type UITeamMember,
+  type UIIndustry,
+  type UIPricing,
+  type UIFaq,
+  type UIProcessStep,
+  type UIAchievement,
+  type UITestimonial,
+} from "@/lib/fallbacks";
 
-/* ---------- shared UI shapes (match the static fallback data) ---------- */
-export type UITeamMember = { name: string; role: string; initials: string; accent: string; avatar?: string };
-export type UIIndustry = { icon: LucideIcon; title: string; body: string };
-export type UIPricing = {
-  name: string;
-  price: string;
-  blurb: string;
-  features: string[];
-  popular?: boolean;
-  ctaText: string;
-  ctaLink: string;
+export type {
+  UITeamMember,
+  UIIndustry,
+  UIPricing,
+  UIFaq,
+  UIProcessStep,
+  UIAchievement,
+  UITestimonial,
 };
-export type UIFaq = { q: string; a: string };
-export type UIProcessStep = { label: string; description: string; icon: LucideIcon };
-export type UIAchievement = { value?: number; suffix?: string; text?: string; label: string };
+
 export type UICompany = {
   companyName?: string | null;
   tagline?: string | null;
@@ -66,7 +78,12 @@ const arr = <T,>(v: T[] | null | undefined): T[] => (Array.isArray(v) ? v : []);
 const vals = (a: { value?: string | null }[] | null | undefined): string[] =>
   arr(a).map((x) => x.value ?? "").filter(Boolean);
 
-/* ---------- loaders (empty / null => caller uses static fallback) ---------- */
+/* ----------------------------------------------------------------------------
+ * Loaders. Semantics:
+ *   - DB reachable + data        -> the real array
+ *   - DB reachable + empty       -> []  (caller hides the section)
+ *   - DB UNREACHABLE (throws)    -> the static fallback (safety net only)
+ * -------------------------------------------------------------------------- */
 
 export async function getServices(): Promise<UIService[]> {
   return safeQuery(async () => {
@@ -87,7 +104,7 @@ export async function getServices(): Promise<UIService[]> {
         features: vals(d.features),
       };
     });
-  }, []);
+  }, SERVICES);
 }
 
 export async function getTeam(): Promise<UITeamMember[]> {
@@ -101,7 +118,7 @@ export async function getTeam(): Promise<UITeamMember[]> {
       accent: ACCENTS[i % ACCENTS.length],
       avatar: mediaUrl(d.avatar, "thumbnail") ?? undefined,
     }));
-  }, []);
+  }, TEAM_FALLBACK);
 }
 
 export async function getIndustries(): Promise<UIIndustry[]> {
@@ -113,7 +130,7 @@ export async function getIndustries(): Promise<UIIndustry[]> {
       title: d.title ?? "",
       body: d.description ?? "",
     }));
-  }, []);
+  }, INDUSTRIES_FALLBACK);
 }
 
 export async function getPricing(): Promise<UIPricing[]> {
@@ -129,7 +146,7 @@ export async function getPricing(): Promise<UIPricing[]> {
       ctaText: d.ctaText ?? "Contact for Details",
       ctaLink: d.ctaLink ?? "/contact",
     }));
-  }, []);
+  }, PRICING_FALLBACK);
 }
 
 export async function getFaqs(page: "services" | "about" | "general"): Promise<UIFaq[]> {
@@ -142,7 +159,7 @@ export async function getFaqs(page: "services" | "about" | "general"): Promise<U
       limit: 50,
     });
     return res.docs.map((d): UIFaq => ({ q: d.question ?? "", a: d.answer ?? "" }));
-  }, []);
+  }, page === "services" ? FAQ_SERVICES_FALLBACK : []);
 }
 
 export async function getProcessSteps(): Promise<UIProcessStep[]> {
@@ -154,7 +171,7 @@ export async function getProcessSteps(): Promise<UIProcessStep[]> {
       description: s.description ?? "",
       icon: iconByName(s.icon, iconByName("Search")),
     }));
-  }, []);
+  }, PROCESS_FALLBACK);
 }
 
 export async function getTrustNames(): Promise<string[]> {
@@ -162,7 +179,7 @@ export async function getTrustNames(): Promise<string[]> {
     const payload = await getPayloadClient();
     const g = await payload.findGlobal({ slug: "trust-bar" });
     return arr(g.items).map((i) => i.name ?? "").filter(Boolean);
-  }, []);
+  }, TRUST_FALLBACK);
 }
 
 export async function getAchievements(): Promise<UIAchievement[]> {
@@ -174,14 +191,27 @@ export async function getAchievements(): Promise<UIAchievement[]> {
       suffix: s.suffix ?? "",
       label: s.label ?? "",
     }));
-  }, []);
+  }, ACHIEVEMENTS_FALLBACK);
+}
+
+export async function getTestimonials(): Promise<UITestimonial[]> {
+  return safeQuery(async () => {
+    const payload = await getPayloadClient();
+    const res = await payload.find({ collection: "testimonials", sort: ["-createdAt"], limit: 3, depth: 1 });
+    return res.docs.map((t): UITestimonial => ({
+      quote: t.quote ?? "",
+      author: t.author ?? "",
+      role: t.role ?? "",
+      company: t.company ?? "",
+      rating: 5,
+    }));
+  }, TESTIMONIALS_FALLBACK);
 }
 
 export async function getCompanySettings(): Promise<UICompany | null> {
   return safeQuery(async () => {
     const payload = await getPayloadClient();
     const g = await payload.findGlobal({ slug: "company-settings" });
-    // Treat an all-empty global as "not configured" so callers use fallback.
     if (!g || (!g.companyName && !g.phone && !g.email && !g.heroHeading)) return null;
     return g as UICompany;
   }, null);

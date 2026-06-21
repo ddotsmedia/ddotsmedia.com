@@ -1,19 +1,6 @@
-const CLIENTS = [
-  "Dubai Municipality",
-  "ADNOC",
-  "Sharjah Media City",
-  "DubaiSME",
-  "RAKEZ",
-  "SHAMS",
-  "Ajman Free Zone",
-  "Dubai Silicon Oasis",
-  "Abu Dhabi SME Hub",
-  "UAE Ministry of Economy",
-];
-
 /** Infinite CSS marquee of client/partner names (pauses on reduced-motion). */
-export function TrustBar({ names }: { names?: string[] }) {
-  const list = names && names.length ? names : CLIENTS;
+export function TrustBar({ names }: { names: string[] }) {
+  const list = names;
   return (
     <section className="border-y border-white/10 bg-white/[0.02] py-10">
       <p className="mb-6 text-center text-xs font-semibold uppercase tracking-[0.2em] text-white/40">

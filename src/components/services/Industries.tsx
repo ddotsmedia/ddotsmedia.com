@@ -1,25 +1,8 @@
-import {
-  Building2,
-  GraduationCap,
-  HeartPulse,
-  Landmark,
-  ShoppingCart,
-  Truck,
-  type LucideIcon,
-} from "lucide-react";
+import { type LucideIcon } from "lucide-react";
 import { Reveal } from "@/components/shared/Reveal";
 
-const INDUSTRIES: { icon: LucideIcon; title: string; body: string }[] = [
-  { icon: HeartPulse, title: "Healthcare", body: "Clinics, pharmacies, and wellness platforms with booking and records." },
-  { icon: Building2, title: "Real Estate", body: "Listing portals, CRM, and lead management for agencies." },
-  { icon: ShoppingCart, title: "E-commerce & Retail", body: "Storefronts, POS, and inventory for online and in-store sales." },
-  { icon: Landmark, title: "Government & PRO Services", body: "Compliant portals and document workflows for the public sector." },
-  { icon: GraduationCap, title: "Education", body: "Learning platforms, student portals, and admissions systems." },
-  { icon: Truck, title: "Trading & Logistics", body: "Supply-chain, fleet, and warehouse management tools." },
-];
-
-export function Industries({ items }: { items?: { icon: LucideIcon; title: string; body: string }[] }) {
-  const data = items && items.length ? items : INDUSTRIES;
+export function Industries({ items }: { items: { icon: LucideIcon; title: string; body: string }[] }) {
+  const data = items;
   return (
     <section className="border-t border-white/5 py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

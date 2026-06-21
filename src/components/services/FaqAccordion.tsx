@@ -4,35 +4,8 @@ import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const FAQS: { q: string; a: string }[] = [
-  {
-    q: "How long does a project take?",
-    a: "Most websites take 2–4 weeks; mobile apps and ERP systems run 6–12 weeks depending on scope. We share a clear timeline before we start.",
-  },
-  {
-    q: "What technologies do you use?",
-    a: "Primarily Next.js, React, React Native, Node.js, PostgreSQL, and Docker — chosen for performance and long-term maintainability.",
-  },
-  {
-    q: "Do you provide support after launch?",
-    a: "Yes. Every project includes a support window, and we offer ongoing maintenance plans with monitoring, backups, and updates.",
-  },
-  {
-    q: "Can you work with existing code?",
-    a: "Absolutely. We regularly audit, refactor, and extend existing codebases as well as build new products from scratch.",
-  },
-  {
-    q: "How does pricing work?",
-    a: "We scope each project and quote a fixed price or milestone-based plan. The pricing section above shows typical starting points.",
-  },
-  {
-    q: "Do you sign NDAs?",
-    a: "Yes — we're happy to sign an NDA before discussing any sensitive details of your project.",
-  },
-];
-
-export function FaqAccordion({ items }: { items?: { q: string; a: string }[] }) {
-  const data = items && items.length ? items : FAQS;
+export function FaqAccordion({ items }: { items: { q: string; a: string }[] }) {
+  const data = items;
   const [open, setOpen] = useState<number | null>(0);
 
   return (

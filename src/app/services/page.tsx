@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment } from "react";
-import { ChevronRight, Code, Palette, Rocket, Search, type LucideIcon } from "lucide-react";
+import { ChevronRight, type LucideIcon } from "lucide-react";
 import { Reveal } from "@/components/shared/Reveal";
 import { CountUp } from "@/components/home/CountUp";
 import { BrowserFrame } from "@/components/preview/BrowserFrame";
@@ -10,7 +10,6 @@ import { ServiceSections } from "@/components/services/ServiceSections";
 import { Industries } from "@/components/services/Industries";
 import { PricingTeaser } from "@/components/services/PricingTeaser";
 import { FaqAccordion } from "@/components/services/FaqAccordion";
-import { SERVICES, type ProcessStep } from "@/lib/data/services";
 import { getServices, getIndustries, getPricing, getFaqs, getProcessSteps } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
@@ -19,13 +18,6 @@ export const metadata: Metadata = {
   description:
     "Web development, mobile apps, custom software, UI/UX design, cloud & DevOps, and ERP systems — built for UAE businesses.",
 };
-
-const PROCESS: ProcessStep[] = [
-  { label: "Discover", description: "We map your goals, users, and constraints.", icon: Search },
-  { label: "Design", description: "Wireframes and UI that put the user first.", icon: Palette },
-  { label: "Develop", description: "Clean, tested, production-grade code.", icon: Code },
-  { label: "Deploy", description: "Ship, monitor, and iterate with confidence.", icon: Rocket },
-];
 
 const CARD =
   "group flex h-full flex-col rounded-2xl border border-[#1e2d42] bg-[#111827] transition-all duration-300 hover:border-[var(--brand-teal)] hover:shadow-[0_0_36px_-12px_var(--brand-teal)]";
@@ -88,8 +80,8 @@ export default async function ServicesPage() {
     getFaqs("services"),
     getProcessSteps(),
   ]);
-  const serviceList = dbServices.length ? dbServices : SERVICES;
-  const stepList = dbSteps.length ? dbSteps : PROCESS;
+  const serviceList = dbServices;
+  const stepList = dbSteps;
 
   return (
     <main className="min-h-screen bg-navy">
@@ -135,6 +127,7 @@ export default async function ServicesPage() {
       </section>
 
       {/* 2. BENTO GRID */}
+      {serviceList.length > 0 && (
       <section className="pb-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 gap-5 [grid-auto-flow:dense] sm:grid-cols-2 lg:grid-cols-3">
@@ -183,17 +176,19 @@ export default async function ServicesPage() {
           </div>
         </div>
       </section>
+      )}
 
       {/* 3. INDIVIDUAL SERVICE SECTIONS */}
-      <ServiceSections services={serviceList} />
+      {serviceList.length > 0 && <ServiceSections services={serviceList} />}
 
       {/* 4. INDUSTRIES SERVED */}
-      <Industries items={dbIndustries.length ? dbIndustries : undefined} />
+      {dbIndustries.length > 0 && <Industries items={dbIndustries} />}
 
       {/* 5. PRICING TEASER */}
-      <PricingTeaser tiers={dbPricing.length ? dbPricing : undefined} />
+      {dbPricing.length > 0 && <PricingTeaser tiers={dbPricing} />}
 
       {/* 6. PROCESS FLOW */}
+      {stepList.length > 0 && (
       <section className="border-t border-white/5 py-24">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <SectionHead
@@ -222,8 +217,10 @@ export default async function ServicesPage() {
           </div>
         </div>
       </section>
+      )}
 
       {/* 7. FAQ */}
+      {dbFaqs.length > 0 && (
       <section className="py-24">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <SectionHead
@@ -231,9 +228,10 @@ export default async function ServicesPage() {
             title="Questions, answered"
             subtext="The things clients ask us most before getting started."
           />
-          <FaqAccordion items={dbFaqs.length ? dbFaqs : undefined} />
+          <FaqAccordion items={dbFaqs} />
         </div>
       </section>
+      )}
 
       {/* 8. CTA BANNER */}
       <section className="px-4 pb-24 sm:px-6 lg:px-8">

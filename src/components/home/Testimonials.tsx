@@ -1,44 +1,9 @@
 import { Star } from "lucide-react";
-import type { Testimonial } from "@/payload-types";
 import { Reveal } from "@/components/shared/Reveal";
+import type { UITestimonial } from "@/lib/fallbacks";
 
-type Item = { quote: string; author: string; role: string; company: string; rating: number };
-
-const FALLBACK: Item[] = [
-  {
-    quote: "Ddotsmedia rebuilt our job portal and traffic doubled within three months. The team just gets the UAE market.",
-    author: "Khalid Rahman",
-    role: "Operations Director",
-    company: "GulfHire",
-    rating: 5,
-  },
-  {
-    quote: "Their ERP cut our monthly closing from five days to one. Genuinely transformative for our finance team.",
-    author: "Sara Al Mansoori",
-    role: "CFO",
-    company: "Al Noor Trading",
-    rating: 5,
-  },
-  {
-    quote: "Responsive, professional, and they actually understand local business. Easily our best development partner.",
-    author: "Vikram Patel",
-    role: "Founder",
-    company: "DeltaRetail",
-    rating: 5,
-  },
-];
-
-export function Testimonials({ items }: { items: Testimonial[] }) {
-  const data: Item[] =
-    items.length > 0
-      ? items.slice(0, 3).map((t) => ({
-          quote: t.quote,
-          author: t.author,
-          role: t.role ?? "",
-          company: t.company ?? "",
-          rating: 5,
-        }))
-      : FALLBACK;
+export function Testimonials({ items }: { items: UITestimonial[] }) {
+  const data = items;
 
   return (
     <section className="py-24">

@@ -3,12 +3,12 @@ import Link from "next/link";
 import { Check } from "lucide-react";
 import { Reveal } from "@/components/shared/Reveal";
 import { BrowserFrame } from "@/components/preview/BrowserFrame";
-import { SERVICES, type Service } from "@/lib/data/services";
+import type { Service } from "@/lib/data/services";
 import { cn } from "@/lib/utils";
 
-/** Full-width alternating deep-dive section per service. DB-driven w/ fallback. */
-export function ServiceSections({ services }: { services?: Service[] }) {
-  const items = services && services.length ? services : SERVICES;
+/** Full-width alternating deep-dive section per service. Renders the given list. */
+export function ServiceSections({ services }: { services: Service[] }) {
+  const items = services;
   return (
     <div id="service-details">
       {items.map((s, i) => {
