@@ -4,7 +4,7 @@ import { ScreenshotCard } from "@/components/portfolio/ScreenshotCard";
 
 /** Homepage preview shown when the Payload DB has no featured projects. */
 export function FeaturedScreenshots() {
-  const items = PORTFOLIO.slice(0, 3);
+  const items = PORTFOLIO.slice(0, 12);
   return (
     <section className="py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

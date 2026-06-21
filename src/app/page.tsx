@@ -17,7 +17,7 @@ export default async function Home() {
         collection: "projects",
         where: { featured: { equals: true } },
         sort: ["order", "-createdAt"],
-        limit: 6,
+        limit: 12,
         depth: 1,
       });
       return res.docs;
