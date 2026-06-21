@@ -235,49 +235,8 @@
   }
 }
 
-/* ─────────── Hero animations (CSS-only, GPU-friendly) ─────────── */
+/* ─────────── Hero text effects (typing words + badge) ─────────── */
 @layer utilities {
-  /* Animated teal grid — drifts slowly upward + pulses */
-  .hero-grid {
-    background-image:
-      linear-gradient(to right, rgba(42, 154, 164, 0.15) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(42, 154, 164, 0.15) 1px, transparent 1px);
-    background-size: 48px 48px;
-    -webkit-mask-image: radial-gradient(125% 90% at 50% 0%, black, transparent 78%);
-    mask-image: radial-gradient(125% 90% at 50% 0%, black, transparent 78%);
-    animation: hero-grid-drift 16s linear infinite, hero-grid-pulse 6s ease-in-out infinite;
-  }
-  @keyframes hero-grid-drift {
-    from { background-position: 0 0, 0 0; }
-    to { background-position: 0 -48px, 0 -48px; }
-  }
-  @keyframes hero-grid-pulse {
-    0%, 100% { opacity: 0.6; }
-    50% { opacity: 0.9; }
-  }
-
-  /* Breathing radial glow */
-  .hero-glow { animation: hero-breathe 9s ease-in-out infinite; will-change: transform, opacity; }
-  @keyframes hero-breathe {
-    0%, 100% { transform: scale(1); opacity: 0.65; }
-    50% { transform: scale(1.2); opacity: 1; }
-  }
-
-  /* Floating code mockup — keeps its 3D tilt across the drift */
-  .hero-mockup { animation: hero-mockup 10s ease-in-out infinite; will-change: transform; }
-  @keyframes hero-mockup {
-    0%, 100% { transform: perspective(1200px) rotateY(-16deg) rotateX(6deg) translateY(0); }
-    50% { transform: perspective(1200px) rotateY(-16deg) rotateX(6deg) translateY(-14px); }
-  }
-
-  /* Floating decorative shapes */
-  .hero-float { animation: hero-float 14s ease-in-out infinite; will-change: transform; }
-  .hero-float-slow { animation: hero-float 22s ease-in-out infinite; will-change: transform; }
-  @keyframes hero-float {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-22px) rotate(9deg); }
-  }
-
   /* Badge breathing glow */
   .badge-glow { animation: badge-glow 3.6s ease-in-out infinite; }
   @keyframes badge-glow {
@@ -289,24 +248,6 @@
       box-shadow: 0 0 22px -4px color-mix(in srgb, var(--brand-teal) 60%, transparent);
       border-color: color-mix(in srgb, var(--brand-teal) 70%, transparent);
     }
-  }
-
-  /* Button shimmer sweep */
-  .btn-shimmer { position: relative; overflow: hidden; }
-  .btn-shimmer::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -160%;
-    height: 100%;
-    width: 85%;
-    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.6), transparent);
-    transform: skewX(-20deg);
-    animation: btn-shimmer 6s ease-in-out infinite;
-  }
-  @keyframes btn-shimmer {
-    0% { left: -160%; }
-    45%, 100% { left: 170%; }
   }
 
   /* Typing cursor */
@@ -329,24 +270,10 @@
     to { background-position: 200% center; }
   }
 
-  /* Scroll indicator bounce */
-  .scroll-bounce { animation: scroll-bounce 1.8s ease-in-out infinite; }
-  @keyframes scroll-bounce {
-    0%, 100% { transform: translateY(0); opacity: 0.85; }
-    50% { transform: translateY(8px); opacity: 1; }
-  }
-
   @media (prefers-reduced-motion: reduce) {
-    .hero-grid,
-    .hero-glow,
-    .hero-mockup,
-    .hero-float,
-    .hero-float-slow,
     .badge-glow,
-    .btn-shimmer::after,
     .type-cursor,
-    .text-gradient-anim,
-    .scroll-bounce {
+    .text-gradient-anim {
       animation: none;
     }
   }
