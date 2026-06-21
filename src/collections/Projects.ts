@@ -1,22 +1,33 @@
 import type { CollectionConfig } from "payload";
 import { slugField } from "../lib/slugify";
+import { enrichProjectFromUrl } from "./hooks/enrichProjectFromUrl";
 
 export const Projects: CollectionConfig = {
   slug: "projects",
   admin: {
     useAsTitle: "title",
     defaultColumns: ["title", "category", "status", "featured", "order"],
+    description:
+      "Paste a live URL and save — the title, description, slug, and screenshot are auto-filled. Everything else is optional.",
   },
   access: { read: () => true },
+  hooks: { beforeChange: [enrichProjectFromUrl] },
   fields: [
+    // Only the URL is required — paste it and save; the rest auto-fills.
+    {
+      name: "liveUrl",
+      type: "text",
+      required: true,
+      label: "Live URL",
+      admin: { description: "Public URL of the site/app. Everything else is optional." },
+    },
     {
       type: "row",
       fields: [
-        { name: "title", type: "text", required: true, admin: { width: "70%" } },
+        { name: "title", type: "text", admin: { width: "70%" } },
         {
           name: "category",
           type: "select",
-          required: true,
           admin: { width: "30%" },
           options: ["Web", "iOS", "Android", "Desktop", "ERP"],
         },
@@ -50,7 +61,6 @@ export const Projects: CollectionConfig = {
       type: "collapsible",
       label: "Links",
       fields: [
-        { name: "liveUrl", type: "text" },
         { name: "appStoreUrl", type: "text" },
         { name: "playStoreUrl", type: "text" },
         { name: "githubUrl", type: "text" },

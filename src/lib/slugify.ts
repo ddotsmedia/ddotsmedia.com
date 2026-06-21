@@ -1,6 +1,6 @@
 import type { FieldHook } from "payload";
 
-const toSlug = (val: string): string =>
+export const toSlug = (val: string): string =>
   val
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
