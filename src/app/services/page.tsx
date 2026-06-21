@@ -4,7 +4,12 @@ import Link from "next/link";
 import { Fragment } from "react";
 import { ChevronRight, Code, Palette, Rocket, Search, type LucideIcon } from "lucide-react";
 import { Reveal } from "@/components/shared/Reveal";
+import { CountUp } from "@/components/home/CountUp";
 import { BrowserFrame } from "@/components/preview/BrowserFrame";
+import { ServiceSections } from "@/components/services/ServiceSections";
+import { Industries } from "@/components/services/Industries";
+import { PricingTeaser } from "@/components/services/PricingTeaser";
+import { FaqAccordion } from "@/components/services/FaqAccordion";
 import { SERVICES, type ProcessStep } from "@/lib/data/services";
 import { cn } from "@/lib/utils";
 
@@ -97,6 +102,24 @@ export default function ServicesPage() {
             From first line of code to production and beyond — design, engineering, and
             infrastructure built for the UAE market and beyond.
           </p>
+          <div className="mx-auto mt-10 grid max-w-2xl grid-cols-3 gap-4">
+            <div>
+              <div className="text-3xl font-bold text-[var(--brand-teal)] sm:text-4xl">
+                <CountUp value={150} />+
+              </div>
+              <div className="mt-1 text-xs text-white/55 sm:text-sm">Projects</div>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-[var(--brand-teal)] sm:text-4xl">
+                <CountUp value={6} />
+              </div>
+              <div className="mt-1 text-xs text-white/55 sm:text-sm">Core Services</div>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-[var(--brand-teal)] sm:text-4xl">Full-Stack</div>
+              <div className="mt-1 text-xs text-white/55 sm:text-sm">Coverage</div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -150,7 +173,16 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* 3. PROCESS FLOW */}
+      {/* 3. INDIVIDUAL SERVICE SECTIONS */}
+      <ServiceSections />
+
+      {/* 4. INDUSTRIES SERVED */}
+      <Industries />
+
+      {/* 5. PRICING TEASER */}
+      <PricingTeaser />
+
+      {/* 6. PROCESS FLOW */}
       <section className="border-t border-white/5 py-24">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <SectionHead
@@ -180,7 +212,19 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* 4. CTA BANNER */}
+      {/* 7. FAQ */}
+      <section className="py-24">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <SectionHead
+            overline="FAQ"
+            title="Questions, answered"
+            subtext="The things clients ask us most before getting started."
+          />
+          <FaqAccordion />
+        </div>
+      </section>
+
+      {/* 8. CTA BANNER */}
       <section className="px-4 pb-24 sm:px-6 lg:px-8">
         <div className="relative mx-auto max-w-5xl overflow-hidden rounded-3xl border border-[#1e2d42] bg-[#111827] px-6 py-14 text-center sm:px-12">
           <div
