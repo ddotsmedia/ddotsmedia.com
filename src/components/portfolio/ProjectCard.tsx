@@ -12,7 +12,9 @@ const categoryColor: Record<Project["category"], string> = {
 };
 
 export function ProjectCard({ project }: { project: Project }) {
-  const cover = mediaUrl(project.coverImage, "card");
+  // Use the landscape "feature" size (not the portrait "card" crop) so the full
+  // width of the captured page shows; next/image downscales per `sizes`.
+  const cover = mediaUrl(project.coverImage, "feature");
   const tags = (project.techStack ?? []).map((t) => t.tech).filter(Boolean).slice(0, 4);
 
   return (
@@ -20,14 +22,14 @@ export function ProjectCard({ project }: { project: Project }) {
       href={`/portfolio/${project.slug}`}
       className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] transition-all duration-300 hover:-translate-y-1.5 hover:border-white/20 hover:shadow-2xl hover:shadow-black/40"
     >
-      <div className="relative aspect-[16/10] overflow-hidden bg-navy/40">
+      <div className="relative aspect-[16/9] overflow-hidden bg-navy/40">
         {cover ? (
           <Image
             src={cover}
             alt={mediaAlt(project.coverImage) || project.title}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className="object-cover object-left-top origin-top-left transition-transform duration-500 group-hover:scale-105"
             style={{ viewTransitionName: `project-cover-${project.id}` }}
           />
         ) : (

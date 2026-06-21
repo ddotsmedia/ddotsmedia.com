@@ -124,13 +124,13 @@ export default function ServicesPage() {
                     </div>
                     <div className="mt-2 px-6 pb-6">
                       <BrowserFrame url={s.screenshotUrl}>
-                        <div className="relative aspect-[16/10] overflow-hidden">
+                        <div className="relative aspect-[16/9] overflow-hidden">
                           <Image
                             src={s.screenshot}
                             alt={`${s.title} — live project`}
                             fill
                             sizes="(max-width: 1024px) 100vw, 66vw"
-                            className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                            className="object-cover object-left-top origin-top-left transition-transform duration-500 group-hover:scale-105"
                           />
                         </div>
                       </BrowserFrame>

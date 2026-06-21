@@ -25,8 +25,8 @@ export function ProjectPreview({ project }: { project: Project }) {
       if (cover)
         return (
           <BrowserFrame url={project.liveUrl ?? undefined}>
-            <div className="relative aspect-[16/10]">
-              <Image src={cover} alt={coverAlt} fill className="object-cover object-top" />
+            <div className="relative aspect-[16/9]">
+              <Image src={cover} alt={coverAlt} fill className="object-cover object-left-top" />
             </div>
           </BrowserFrame>
         );
@@ -37,8 +37,8 @@ export function ProjectPreview({ project }: { project: Project }) {
   if (!cover) return null;
   return (
     <BrowserFrame url={project.liveUrl ?? undefined}>
-      <div className="relative aspect-[16/10]">
-        <Image src={cover} alt={coverAlt} fill priority className="object-cover object-top" />
+      <div className="relative aspect-[16/9]">
+        <Image src={cover} alt={coverAlt} fill priority className="object-cover object-left-top" />
       </div>
     </BrowserFrame>
   );
