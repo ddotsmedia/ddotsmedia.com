@@ -29,7 +29,8 @@ export default buildConfig({
   collections: [
     {
       slug: "users",
-      auth: true,
+      // Lock an account for 15 minutes after 5 failed logins (brute-force guard).
+      auth: { maxLoginAttempts: 5, lockTime: 15 * 60 * 1000 },
       admin: { useAsTitle: "email" },
       fields: [],
     },

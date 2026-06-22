@@ -25,7 +25,8 @@ function esc(s: string): string {
 export async function sendContactEmail(data: ContactSubmission): Promise<{ success: boolean }> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
-    console.log("[contact] RESEND_API_KEY unset — submission logged (not emailed):", data);
+    // Don't log submission contents (PII). Configure RESEND_API_KEY to actually send.
+    console.log("[contact] RESEND_API_KEY unset — submission received but not emailed.");
     return { success: true };
   }
 

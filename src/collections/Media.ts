@@ -5,7 +5,8 @@ export const Media: CollectionConfig = {
   access: { read: () => true },
   upload: {
     staticDir: "media",
-    mimeTypes: ["image/*", "video/*"],
+    // Images only — block video/other uploads.
+    mimeTypes: ["image/*"],
     imageSizes: [
       { name: "thumbnail", width: 400, height: 300, position: "centre" },
       { name: "card", width: 768, height: 1024, position: "centre" },

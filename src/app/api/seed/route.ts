@@ -208,9 +208,14 @@ const COMPANY = {
 };
 
 export async function GET(req: Request) {
+  // Disabled unless an explicit SEED_KEY is configured (no default key).
+  const expected = process.env.SEED_KEY;
+  if (!expected) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
   const key = new URL(req.url).searchParams.get("key");
-  if (key !== (process.env.SEED_KEY || "seed123")) {
-    return NextResponse.json({ error: "Unauthorized. Pass ?key=…" }, { status: 401 });
+  if (key !== expected) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const result: Record<string, string> = {};

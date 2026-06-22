@@ -19,6 +19,18 @@ export const Projects: CollectionConfig = {
       type: "text",
       required: true,
       label: "Live URL",
+      validate: (value: string | null | undefined) => {
+        if (!value) return "Live URL is required";
+        try {
+          const u = new URL(value);
+          if (u.protocol !== "http:" && u.protocol !== "https:") {
+            return "URL must start with http:// or https://";
+          }
+          return true;
+        } catch {
+          return "Enter a valid URL, e.g. https://example.com";
+        }
+      },
       admin: { description: "Public URL of the site/app. Everything else is optional." },
     },
     {
