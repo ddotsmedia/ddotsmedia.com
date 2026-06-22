@@ -2,6 +2,7 @@ import type { ComponentType } from "react";
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { FourDotLogo } from "@/components/shared/FourDotLogo";
+import { getCompanySettings } from "@/lib/content";
 
 const MAPS_URL =
   "https://www.google.com/maps/place/Ddotsmedia+Technologies/data=!4m2!3m1!1s0x0:0xd0de77bb1c7c8908";
@@ -37,14 +38,20 @@ const GitHubIcon = (p: IconProps) => (
   </svg>
 );
 
-const SOCIAL: { icon: ComponentType<IconProps>; label: string; href: string }[] = [
-  { icon: LinkedInIcon, label: "LinkedIn", href: "#" },
-  { icon: XIcon, label: "Twitter / X", href: "#" },
-  { icon: InstagramIcon, label: "Instagram", href: "#" },
-  { icon: GitHubIcon, label: "GitHub", href: "#" },
-];
+export async function Footer() {
+  const cs = await getCompanySettings();
+  const phone = cs?.phone || "+971 50 937 9212";
+  const phoneHref = `tel:${phone.replace(/[^\d+]/g, "")}`;
+  const email = cs?.email || "hello@ddotsmedia.com";
+  const address = cs?.address || "SHAMS Free Zone, Sharjah, UAE";
+  const social = cs?.socialLinks ?? null;
+  const SOCIAL: { icon: ComponentType<IconProps>; label: string; href: string }[] = [
+    { icon: LinkedInIcon, label: "LinkedIn", href: social?.linkedin || "#" },
+    { icon: XIcon, label: "Twitter / X", href: social?.twitter || "#" },
+    { icon: InstagramIcon, label: "Instagram", href: social?.instagram || "#" },
+    { icon: GitHubIcon, label: "GitHub", href: social?.github || "#" },
+  ];
 
-export function Footer() {
   return (
     <footer className="w-full border-t border-white/10 bg-[#0a0e17] py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -79,20 +86,20 @@ export function Footer() {
             <h3 className="text-sm font-semibold text-white">Contact</h3>
             <ul className="mt-4 space-y-3 text-sm text-white/60">
               <li>
-                <a href="tel:+971509379212" className="inline-flex items-center gap-2 transition-colors hover:text-[var(--brand-teal)]">
+                <a href={phoneHref} className="inline-flex items-center gap-2 transition-colors hover:text-[var(--brand-teal)]">
                   <Phone className="h-4 w-4 shrink-0 text-[var(--brand-teal)]" />
-                  +971 50 937 9212
+                  {phone}
                 </a>
               </li>
               <li>
-                <a href="mailto:hello@ddotsmedia.com" className="inline-flex items-center gap-2 transition-colors hover:text-[var(--brand-teal)]">
+                <a href={`mailto:${email}`} className="inline-flex items-center gap-2 transition-colors hover:text-[var(--brand-teal)]">
                   <Mail className="h-4 w-4 shrink-0 text-[var(--brand-teal)]" />
-                  hello@ddotsmedia.com
+                  {email}
                 </a>
               </li>
               <li className="flex items-start gap-2">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[var(--brand-teal)]" />
-                SHAMS Free Zone, Sharjah, UAE
+                {address}
               </li>
               <li>
                 <a

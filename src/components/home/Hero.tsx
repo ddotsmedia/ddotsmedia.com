@@ -1,12 +1,20 @@
 import Link from "next/link";
-import type { Stat } from "@/lib/stats";
+import type { UIAchievement } from "@/lib/content";
 import { FourDotLogo } from "@/components/shared/FourDotLogo";
 import { Reveal } from "@/components/shared/Reveal";
 import { CountUp } from "./CountUp";
 import { TypingWords } from "./TypingWords";
 import { HeroSlideshow } from "./HeroSlideshow";
 
-export function Hero({ stats }: { stats: Stat[] }) {
+export function Hero({
+  stats,
+  ctaText,
+  ctaLink,
+}: {
+  stats: UIAchievement[];
+  ctaText: string;
+  ctaLink: string;
+}) {
   return (
     <section className="relative overflow-hidden pt-24 pb-20 md:pt-32 md:pb-28">
       {/* Background gradient blobs */}
@@ -42,10 +50,10 @@ export function Hero({ stats }: { stats: Stat[] }) {
 
           <div className="mt-8 flex flex-wrap justify-center gap-4 md:justify-start">
             <Link
-              href="/contact"
+              href={ctaLink}
               className="rounded-full bg-[var(--brand-teal)] px-7 py-3 font-semibold text-white shadow-lg shadow-[var(--brand-teal)]/25 transition-transform hover:-translate-y-0.5"
             >
-              Get a Free Quote
+              {ctaText}
             </Link>
             <Link
               href="/portfolio"
@@ -61,8 +69,14 @@ export function Hero({ stats }: { stats: Stat[] }) {
               {stats.map((s) => (
                 <div key={s.label} className="text-center md:text-left">
                   <div className="text-3xl font-bold text-[var(--brand-teal)] md:text-4xl">
-                    <CountUp value={s.value} />
-                    {s.suffix}
+                    {typeof s.value === "number" ? (
+                      <>
+                        <CountUp value={s.value} />
+                        {s.suffix}
+                      </>
+                    ) : (
+                      s.text
+                    )}
                   </div>
                   <div className="mt-1 text-sm text-white/60">{s.label}</div>
                 </div>

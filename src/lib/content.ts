@@ -43,6 +43,13 @@ export type UICompany = {
   address?: string | null;
   officeHours?: string | null;
   responseTime?: string | null;
+  officeLocation?: string | null;
+  officeVisitNote?: string | null;
+  officeHoursWeekday?: string | null;
+  officeHoursFriSat?: string | null;
+  officeHoursNote?: string | null;
+  ctaButtonText?: string | null;
+  ctaButtonLink?: string | null;
   socialLinks?: { linkedin?: string | null; twitter?: string | null; instagram?: string | null; github?: string | null } | null;
 };
 

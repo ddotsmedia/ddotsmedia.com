@@ -935,7 +935,38 @@ export interface CompanySetting {
     github?: string | null;
   };
   officeHours?: string | null;
+  /**
+   * e.g. "within 2 hours"
+   */
   responseTime?: string | null;
+  /**
+   * e.g. "Dubai · Abu Dhabi · Sharjah"
+   */
+  officeLocation?: string | null;
+  /**
+   * e.g. "Dubai · by appointment"
+   */
+  officeVisitNote?: string | null;
+  /**
+   * e.g. "Sun – Thu: 9:00 AM – 6:00 PM GST"
+   */
+  officeHoursWeekday?: string | null;
+  /**
+   * e.g. "Fri – Sat: Closed"
+   */
+  officeHoursFriSat?: string | null;
+  /**
+   * e.g. Emergency support / timezone note
+   */
+  officeHoursNote?: string | null;
+  /**
+   * e.g. "Get Free Quote"
+   */
+  ctaButtonText?: string | null;
+  /**
+   * e.g. "/contact"
+   */
+  ctaButtonLink?: string | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1014,6 +1045,13 @@ export interface CompanySettingsSelect<T extends boolean = true> {
       };
   officeHours?: T;
   responseTime?: T;
+  officeLocation?: T;
+  officeVisitNote?: T;
+  officeHoursWeekday?: T;
+  officeHoursFriSat?: T;
+  officeHoursNote?: T;
+  ctaButtonText?: T;
+  ctaButtonLink?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
