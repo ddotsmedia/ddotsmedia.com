@@ -1,6 +1,5 @@
 import Link from "next/link";
 import type { UIAchievement } from "@/lib/content";
-import { FourDotLogo } from "@/components/shared/FourDotLogo";
 import { Reveal } from "@/components/shared/Reveal";
 import { CountUp } from "./CountUp";
 import { TypingWords } from "./TypingWords";
@@ -32,11 +31,6 @@ export function Hero({
       <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 md:grid-cols-2 md:gap-10 md:px-8">
         {/* ── Left: text ── */}
         <div className="text-center md:text-left">
-          <div className="badge-glow mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-4 py-1.5 text-sm text-white/70">
-            <FourDotLogo size={18} />
-            UAE-based software studio
-          </div>
-
           <h1 className="font-display text-4xl font-bold leading-[1.1] text-white sm:text-5xl md:text-[3.25rem]">
             We build <TypingWords />
             <br />
