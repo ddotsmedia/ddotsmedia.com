@@ -1,0 +1,162 @@
+# VPS-focused deploy workflow. NOTE: .github/workflows/ci-cd.yml already builds,
+# tests, and pushes images on every push to v2/main, plus has its own
+# workflow_dispatch deploy job targeting the same VPS path. This file
+# duplicates that build/test/push path for a standalone trigger — reconcile
+# the two before relying on both (see the summary this was generated with).
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Image tag to deploy (defaults to this run's commit SHA)"
+        required: false
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ddotsmedia/ddotsmedia-web
+  # Verify this against docs/AUDIT.md before trusting it — see GITHUB_SECRETS.md.
+  VPS_HOST: 187.127.185.239
+  DEPLOY_PORT: 3082
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: ddots_app
+          POSTGRES_PASSWORD: ci_password
+          POSTGRES_DB: ddotsmedia_ci
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U ddots_app -d ddotsmedia_ci"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgres://ddots_app:ci_password@localhost:5432/ddotsmedia_ci
+      BETTER_AUTH_SECRET: ci-only-secret-not-for-production-use-0000000000
+      BETTER_AUTH_URL: http://localhost:3000
+      NEXT_PUBLIC_SITE_URL: http://localhost:3000
+      OWNER_EMAIL: ci-owner@ddotsmedia.test
+      OWNER_PASSWORD: ci-password-123456
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      # Real script names (package.json) — the brief's test:unit/test:e2e/test:a11y
+      # don't exist in this repo; axe accessibility checks live inside `e2e`
+      # (tests/e2e/axe.spec.ts), not as a separate script.
+      - run: npm run test
+      - run: npm run db:migrate
+      - run: npm run db:seed
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run e2e
+        env:
+          E2E_BASE_URL: http://127.0.0.1:3000
+
+  build-and-push:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      image_tag: ${{ steps.meta.outputs.sha_tag }}
+    # Static generation (sitemap.ts, generateStaticParams) queries the DB at
+    # build time — Dockerfile's builder stage needs a reachable Postgres.
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: ddots_app
+          POSTGRES_PASSWORD: ci_password
+          POSTGRES_DB: ddotsmedia_ci
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U ddots_app -d ddotsmedia_ci"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+      - run: npm ci
+      - run: npm run db:migrate
+        env:
+          DATABASE_URL: postgres://ddots_app:ci_password@localhost:5432/ddotsmedia_ci
+      - id: meta
+        run: echo "sha_tag=${{ inputs.image_tag || github.sha }}" >> "$GITHUB_OUTPUT"
+      - uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v5
+        with:
+          context: .
+          target: runner
+          push: true
+          network: host
+          build-args: |
+            DATABASE_URL=postgres://ddots_app:ci_password@localhost:5432/ddotsmedia_ci
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.sha_tag }}
+      - uses: docker/build-push-action@v5
+        with:
+          context: .
+          target: migrator
+          push: true
+          network: host
+          build-args: |
+            DATABASE_URL=postgres://ddots_app:ci_password@localhost:5432/ddotsmedia_ci
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-migrator:${{ steps.meta.outputs.sha_tag }}
+
+  deploy:
+    needs: build-and-push
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      # Read-only disk/port checks happen on the VPS inside the SSH session,
+      # not here — nothing in this job touches 187.127.185.239 until the SSH
+      # step runs, and that only fires on an explicit workflow_dispatch.
+      - name: Deploy over SSH
+        env:
+          TAG: ${{ needs.build-and-push.outputs.image_tag }}
+        run: |
+          for attempt in 1 2 3; do
+            ssh -o ConnectTimeout=10 -o StrictHostKeyChecking=accept-new \
+              "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" bash -s "$TAG" "${{ env.DEPLOY_PORT }}" <<'EOF' && break
+            set -euo pipefail
+            TAG="$1"; PORT="$2"
+            cd /opt/ddotsmedia
+            FREE_KB=$(df -Pk . | awk 'NR==2 {print $4}')
+            if [ "$FREE_KB" -lt $((15 * 1024 * 1024)) ]; then
+              echo "Disk gate failed: less than 15GB free" >&2
+              exit 1
+            fi
+            ./scripts/backup.sh
+            TAG="$TAG" docker compose -f docker-compose.prod.yml pull
+            TAG="$TAG" docker compose -f docker-compose.prod.yml up -d
+            for i in $(seq 1 18); do
+              sleep 10
+              if curl -fsS "http://127.0.0.1:${PORT}/api/health" > /dev/null; then
+                echo "Health check passed"
+                exit 0
+              fi
+            done
+            echo "Health check failed after 180s" >&2
+            exit 1
+          EOF
+            echo "SSH attempt $attempt failed, retrying..."
+            sleep 5
+          done

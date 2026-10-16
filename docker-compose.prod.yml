@@ -1,0 +1,96 @@
+# Production compose (BUILD_PLAN §12). Deployed at /opt/ddotsmedia-v2/ on the
+# VPS — Phase 6 step 3+ only, requires explicit owner go-ahead (docs/PROGRESS.md).
+# Local use: `docker compose -f docker-compose.prod.yml build && ... up -d`.
+name: ddotsmedia-v2
+
+services:
+  migrate:
+    # Distinct image name from `web` — they build different Dockerfile targets
+    # from the same context; sharing one tag would let whichever builds last
+    # silently overwrite the other.
+    image: ghcr.io/ddotsmedia/ddotsmedia-web-migrator:${TAG:-local}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrator
+      # Static generation (sitemap.ts, generateStaticParams) queries the DB
+      # at build time, so the build container needs one reachable — CI passes
+      # its postgres service; locally this points at the host's dev DB.
+      args:
+        DATABASE_URL: ${BUILD_DATABASE_URL}
+    env_file: .env
+    environment:
+      DATABASE_URL: postgres://ddots_app:${DB_PASSWORD}@db:5432/ddotsmedia
+    depends_on:
+      db:
+        condition: service_healthy
+    networks: [ddotsmedia-v2-net]
+    restart: "no"
+
+  web:
+    image: ghcr.io/ddotsmedia/ddotsmedia-web:${TAG:-local}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runner
+      args:
+        DATABASE_URL: ${BUILD_DATABASE_URL}
+    ports:
+      - "127.0.0.1:3082:3000"
+    volumes:
+      - media:/data/media
+      - private:/data/private
+    env_file: .env
+    environment:
+      DATABASE_URL: postgres://ddots_app:${DB_PASSWORD}@db:5432/ddotsmedia
+      PRIVATE_DIR: /data/private
+      MEDIA_DIR: /data/media
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    mem_limit: 768m
+    networks: [ddotsmedia-v2-net]
+
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: ddots_app
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ddotsmedia
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ddots_app -d ddotsmedia"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    mem_limit: 512m
+    networks: [ddotsmedia-v2-net]
+
+networks:
+  ddotsmedia-v2-net:
+
+volumes:
+  pgdata:
+  media:
+  private:
