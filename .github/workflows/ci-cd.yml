@@ -17,17 +17,10 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:17-alpine
-        env:
-          POSTGRES_USER: ddots_app
-          POSTGRES_PASSWORD: ci_password
-          POSTGRES_DB: ddotsmedia_ci
-        ports: ["5432:5432"]
-        options: >-
-          --health-cmd "pg_isready -U ddots_app -d ddotsmedia_ci"
-          --health-interval 5s --health-timeout 5s --health-retries 10
+    # No postgres service: the build tolerates an unreachable DB (safeQuery
+    # fallbacks), and a *reachable-but-unmigrated* one is worse — Payload's
+    # auto-migrate-on-init races across next build's parallel workers and
+    # fails with "duplicate key value violates unique constraint".
     env:
       DATABASE_URL: postgres://ddots_app:ci_password@localhost:5432/ddotsmedia_ci
       PAYLOAD_SECRET: ci-only-secret-not-for-production-use-0000000000
@@ -49,21 +42,6 @@ jobs:
     permissions:
       contents: read
       packages: write
-    # Static generation (sitemap.ts, generateStaticParams) queries the DB at
-    # build time — see Dockerfile's builder stage — so the image build needs
-    # a reachable Postgres, same as a local `docker compose -f
-    # docker-compose.prod.yml build` needs BUILD_DATABASE_URL.
-    services:
-      postgres:
-        image: postgres:17-alpine
-        env:
-          POSTGRES_USER: ddots_app
-          POSTGRES_PASSWORD: ci_password
-          POSTGRES_DB: ddotsmedia_ci
-        ports: ["5432:5432"]
-        options: >-
-          --health-cmd "pg_isready -U ddots_app -d ddotsmedia_ci"
-          --health-interval 5s --health-timeout 5s --health-retries 10
     outputs:
       image_tag: ${{ steps.meta.outputs.sha_tag }}
     steps:
@@ -85,9 +63,6 @@ jobs:
           context: .
           target: runner
           push: true
-          network: host # lets the build container reach the postgres service on localhost
-          build-args: |
-            DATABASE_URL=postgres://ddots_app:ci_password@localhost:5432/ddotsmedia_ci
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.sha_tag }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref_name == 'main' && 'latest' || 'latest-staging' }}
@@ -96,9 +71,6 @@ jobs:
           context: .
           target: migrator
           push: true
-          network: host
-          build-args: |
-            DATABASE_URL=postgres://ddots_app:ci_password@localhost:5432/ddotsmedia_ci
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-migrator:${{ steps.meta.outputs.sha_tag }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-migrator:${{ github.ref_name == 'main' && 'latest' || 'latest-staging' }}
