@@ -78,7 +78,7 @@ jobs:
         env:
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_USER: ${{ secrets.VPS_USER }}
-          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_SSH_KEY: ${{ secrets.VPS_DEPLOY_KEY }}
           IMAGE_SHA: ${{ needs.build.outputs.image-sha }}
         run: |
           mkdir -p ~/.ssh
