@@ -40,3 +40,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# session/environment files
+.cache/
+.claude/
+.config/
+.npm/
+.npm-global/
+.pki/
+.ssh/
+.wget-hsts
+.gitconfig
