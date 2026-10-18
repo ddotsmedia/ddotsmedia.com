@@ -82,7 +82,7 @@ jobs:
           IMAGE_SHA: ${{ needs.build.outputs.image-sha }}
         run: |
           mkdir -p ~/.ssh
-          echo "$VPS_SSH_KEY" > ~/.ssh/vps_key
+          printf '%s' "$VPS_SSH_KEY" > ~/.ssh/vps_key
           chmod 600 ~/.ssh/vps_key
           ssh-keyscan -H $VPS_HOST >> ~/.ssh/known_hosts 2>/dev/null || true
           
