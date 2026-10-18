@@ -102,7 +102,7 @@ jobs:
           set -e
           COMPOSE_DIR="/opt/ddotsmedia"
           IMAGE="ghcr.io/ddotsmedia/ddotsmedia.com:$IMAGE_SHA"
-          TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
+          TIMESTAMP=\$(date '+%Y-%m-%d %H:%M:%S')
           
           mkdir -p "$COMPOSE_DIR"
           cd "$COMPOSE_DIR"
