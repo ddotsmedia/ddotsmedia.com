@@ -74,10 +74,21 @@ jobs:
     needs: build
     if: success()
     steps:
+      - name: Decode base64 SSH key
+        id: ssh_key
+        run: |
+          # GitHub Secrets corrupts multi-line keys via environment variables
+          # If the key is stored as base64, decode it before using
+          DECODED_KEY=$(echo "${{ secrets.VPS_DEPLOY_KEY }}" | base64 -d 2>/dev/null || echo "${{ secrets.VPS_DEPLOY_KEY }}")
+          # Set as output with proper newline handling
+          echo "key<<EOF" >> $GITHUB_OUTPUT
+          echo "$DECODED_KEY" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
       - name: Setup SSH key
         uses: webfactory/ssh-agent@v0.5.4
         with:
-          ssh-private-key: ${{ secrets.VPS_DEPLOY_KEY }}
+          ssh-private-key: ${{ steps.ssh_key.outputs.key }}
 
       - name: Deploy to VPS
         env:
