@@ -121,7 +121,7 @@ jobs:
               container_name: ddotsmedia-db
               environment:
                 POSTGRES_DB: ddotsmedia
-                POSTGRES_PASSWORD: ${DB_PASSWORD}
+                POSTGRES_PASSWORD: \${DB_PASSWORD}
                 POSTGRES_USER: ddotsmedia
               volumes:
                 - ddotsmedia-db-data:/var/lib/postgresql/data
@@ -135,7 +135,7 @@ jobs:
                 retries: 5
           
             ddotsmedia-web:
-              image: ${IMAGE}
+              image: \${IMAGE}
               container_name: ddotsmedia-web
               depends_on:
                 ddotsmedia-db:
@@ -143,9 +143,9 @@ jobs:
               environment:
                 NODE_ENV: production
                 PAYLOAD_PUBLIC_SERVER_URL: https://ddotsmedia.com
-                DATABASE_URL: postgresql://ddotsmedia:${DB_PASSWORD}@ddotsmedia-db:5432/ddotsmedia
-                PAYLOAD_SECRET: ${PAYLOAD_SECRET}
-                BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+                DATABASE_URL: postgresql://ddotsmedia:\${DB_PASSWORD}@ddotsmedia-db:5432/ddotsmedia
+                PAYLOAD_SECRET: \${PAYLOAD_SECRET}
+                BETTER_AUTH_SECRET: \${BETTER_AUTH_SECRET}
               ports:
                 - "127.0.0.1:3025:3000"
               networks:
@@ -177,8 +177,8 @@ jobs:
             echo "[WARN] Docker login failed, attempting pull anyway..."
           }
           
-          echo "[INFO] Pulling image: \${IMAGE}"
-          docker pull "\${IMAGE}" || {
+          echo "[INFO] Pulling image: \\${IMAGE}"
+          docker pull "\\${IMAGE}" || {
             echo "[ERROR] Failed to pull image"
             exit 1
           }
@@ -225,7 +225,7 @@ jobs:
           fi
           
           echo "[SUCCESS] Deployment successful"
-          echo "[\${TIMESTAMP}] Deployed \${IMAGE}" >> deployments.log
+          echo "[\${TIMESTAMP}] Deployed \\${IMAGE}" >> deployments.log
           
           echo "[INFO] Configuring Nginx..."
           
