@@ -95,7 +95,7 @@ jobs:
         run: |
           ssh-keyscan -H $VPS_HOST >> ~/.ssh/known_hosts 2>/dev/null || true
 
-          ssh -o StrictHostKeyChecking=no "$VPS_USER@$VPS_HOST" << 'DEPLOY_EOF'
+          ssh -o StrictHostKeyChecking=no "$VPS_USER@$VPS_HOST" << DEPLOY_EOF
           set -e
           COMPOSE_DIR="/opt/ddotsmedia"
           IMAGE="ghcr.io/ddotsmedia/ddotsmedia.com:$IMAGE_SHA"
@@ -167,10 +167,10 @@ jobs:
               driver: bridge
           COMPOSEEOF
           
-          PREV_CONTAINER=$(docker ps -q -f name=ddotsmedia-web || true)
+          PREV_CONTAINER=\$(docker ps -q -f name=ddotsmedia-web || true)
           PREV_IMAGE=""
           if [ ! -z "$PREV_CONTAINER" ]; then
-            PREV_IMAGE=$(docker inspect "$PREV_CONTAINER" --format='{{.Config.Image}}')
+            PREV_IMAGE=\$(docker inspect "$PREV_CONTAINER" --format='{{.Config.Image}}')
           fi
           
           echo "[INFO] Pulling image: ${IMAGE}"
