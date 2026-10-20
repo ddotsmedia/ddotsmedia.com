@@ -113,7 +113,7 @@ jobs:
           
           source .env.prod
           
-          cat > docker-compose.yml << 'COMPOSEEOF'
+          cat > docker-compose.yml << COMPOSEEOF
           version: '3.9'
           services:
             ddotsmedia-db:
