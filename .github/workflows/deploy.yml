@@ -77,10 +77,7 @@ jobs:
       - name: Decode base64 SSH key
         id: ssh_key
         run: |
-          # GitHub Secrets corrupts multi-line keys via environment variables
-          # If the key is stored as base64, decode it before using
           DECODED_KEY=$(echo "${{ secrets.VPS_DEPLOY_KEY }}" | base64 -d 2>/dev/null || echo "${{ secrets.VPS_DEPLOY_KEY }}")
-          # Set as output with proper newline handling
           echo "key<<EOF" >> $GITHUB_OUTPUT
           echo "$DECODED_KEY" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
@@ -98,7 +95,7 @@ jobs:
         run: |
           ssh-keyscan -H $VPS_HOST >> ~/.ssh/known_hosts 2>/dev/null || true
 
-          ssh -o StrictHostKeyChecking=no "$VPS_USER@$VPS_HOST" << DEPLOY_EOF
+          ssh -o StrictHostKeyChecking=no "$VPS_USER@$VPS_HOST" << 'DEPLOY_EOF'
           set -e
           COMPOSE_DIR="/opt/ddotsmedia"
           IMAGE="ghcr.io/ddotsmedia/ddotsmedia.com:$IMAGE_SHA"
@@ -107,7 +104,6 @@ jobs:
           mkdir -p "$COMPOSE_DIR"
           cd "$COMPOSE_DIR"
           
-          # Create .env.prod with generated secrets
           cat > .env.prod << 'ENVEOF'
           NODE_ENV=production
           PAYLOAD_PUBLIC_SERVER_URL=https://ddotsmedia.com
@@ -118,7 +114,6 @@ jobs:
           
           source .env.prod
           
-          # Create docker-compose.yml
           cat > docker-compose.yml << 'COMPOSEEOF'
           version: '3.9'
           services:
@@ -172,7 +167,6 @@ jobs:
               driver: bridge
           COMPOSEEOF
           
-          # Store previous container for rollback
           PREV_CONTAINER=$(docker ps -q -f name=ddotsmedia-web || true)
           PREV_IMAGE=""
           if [ ! -z "$PREV_CONTAINER" ]; then
@@ -194,7 +188,6 @@ jobs:
           
           sleep 10
           
-          # Health check with 5 retries
           HEALTH_OK=false
           for i in {1..5}; do
             if curl -sf https://ddotsmedia.com/api/health > /dev/null 2>&1; then
@@ -229,19 +222,62 @@ jobs:
           
           echo "[SUCCESS] Deployment successful"
           echo "[${TIMESTAMP}] Deployed ${IMAGE}" >> deployments.log
+          
+          echo "[INFO] Configuring Nginx..."
+          
+          sudo tee /etc/nginx/sites-available/ddotsmedia.com > /dev/null << 'NGINXEOF'
+          server {
+              listen 80;
+              server_name ddotsmedia.com www.ddotsmedia.com;
+              
+              location / {
+                  proxy_pass http://127.0.0.1:3025;
+                  proxy_http_version 1.1;
+                  proxy_set_header Upgrade $http_upgrade;
+                  proxy_set_header Connection 'upgrade';
+                  proxy_set_header Host $host;
+                  proxy_set_header X-Real-IP $remote_addr;
+                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                  proxy_set_header X-Forwarded-Proto $scheme;
+                  proxy_cache_bypass $http_upgrade;
+              }
+          }
+          NGINXEOF
+          
+          sudo ln -sf /etc/nginx/sites-available/ddotsmedia.com /etc/nginx/sites-enabled/ddotsmedia.com
+          
+          if sudo nginx -t 2>&1 | grep -q "successful"; then
+              echo "[OK] Nginx configuration is valid"
+              sudo systemctl restart nginx || {
+                  echo "[ERROR] Failed to restart Nginx"
+                  exit 1
+              }
+              echo "[OK] Nginx restarted successfully"
+          else
+              echo "[ERROR] Nginx configuration test failed"
+              sudo nginx -t
+              exit 1
+          fi
+          
+          sleep 2
+          if netstat -tlnp 2>/dev/null | grep -q ":80 "; then
+              echo "[OK] Nginx is listening on port 80"
+          else
+              echo "[WARN] Port 80 not detected in netstat, but Nginx may still be active"
+          fi
+          
           DEPLOY_EOF
 
       - name: Deployment Success
         if: success()
         run: |
-          echo "? ddotsmedia.com deployed successfully"
+          echo "✅ ddotsmedia.com deployed successfully"
           echo "Commit: ${{ github.sha }}"
           echo "Timestamp: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
 
       - name: Deployment Failure
         if: failure()
         run: |
-          echo "? Deployment failed and rolled back"
+          echo "❌ Deployment failed and rolled back"
           echo "Commit: ${{ github.sha }}"
-          echo "Check VPS logs: ssh root@187.127.185.239 'tail -100 /opt/ddotsmedia/deployments.log'"
           exit 1
