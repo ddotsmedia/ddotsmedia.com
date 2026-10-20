@@ -101,8 +101,8 @@ jobs:
           IMAGE="ghcr.io/ddotsmedia/ddotsmedia.com:$IMAGE_SHA"
           TIMESTAMP=\$(date '+%Y-%m-%d %H:%M:%S')
           
-          mkdir -p "$COMPOSE_DIR"
-          cd "$COMPOSE_DIR"
+          mkdir -p "\$COMPOSE_DIR"
+          cd "\$COMPOSE_DIR"
           
           cat > .env.prod << 'ENVEOF'
           NODE_ENV=production
@@ -169,17 +169,17 @@ jobs:
           
           PREV_CONTAINER=\$(docker ps -q -f name=ddotsmedia-web || true)
           PREV_IMAGE=""
-          if [ ! -z "$PREV_CONTAINER" ]; then
-            PREV_IMAGE=\$(docker inspect "$PREV_CONTAINER" --format='{{.Config.Image}}')
+          if [ ! -z "\$PREV_CONTAINER" ]; then
+            PREV_IMAGE=\$(docker inspect "\$PREV_CONTAINER" --format='{{.Config.Image}}')
           fi
           
-          echo "[INFO] Pulling image: ${IMAGE}"
-          docker pull "${IMAGE}" || {
+          echo "[INFO] Pulling image: \${IMAGE}"
+          docker pull "\${IMAGE}" || {
             echo "[ERROR] Failed to pull image"
             exit 1
           }
           
-          echo "[INFO] Deploying at ${TIMESTAMP}"
+          echo "[INFO] Deploying at \${TIMESTAMP}"
           docker compose down --remove-orphans 2>&1 || true
           docker compose up -d || {
             echo "[ERROR] Failed to start containers"
@@ -191,15 +191,15 @@ jobs:
           HEALTH_OK=false
           for i in {1..5}; do
             if curl -sf https://ddotsmedia.com/api/health > /dev/null 2>&1; then
-              echo "[OK] Health check passed (attempt $i)"
+              echo "[OK] Health check passed (attempt \$i)"
               HEALTH_OK=true
               break
             fi
-            echo "[WARN] Health check attempt $i/5 failed, retrying in 5s..."
+            echo "[WARN] Health check attempt \$i/5 failed, retrying in 5s..."
             sleep 5
           done
           
-          if [ "$HEALTH_OK" = false ]; then
+          if [ "\$HEALTH_OK" = false ]; then
             echo "[ERROR] Health checks failed after 5 attempts"
             echo "[DEBUG] Container logs:"
             docker compose logs --tail=50 || true
@@ -207,21 +207,21 @@ jobs:
             echo "[ROLLBACK] Rolling back to previous image"
             docker compose down || true
             
-            if [ ! -z "$PREV_IMAGE" ] && [ ! -z "$PREV_CONTAINER" ]; then
-              echo "[ROLLBACK] Restarting previous container with image: ${PREV_IMAGE}"
+            if [ ! -z "\$PREV_IMAGE" ] && [ ! -z "\$PREV_CONTAINER" ]; then
+              echo "[ROLLBACK] Restarting previous container with image: \${PREV_IMAGE}"
               docker run -d \
                 --name ddotsmedia-web-fallback \
                 --network ddotsmedia-network \
                 -p 127.0.0.1:3025:3000 \
                 --restart unless-stopped \
-                "$PREV_IMAGE" || echo "[WARN] Rollback container start failed"
+                "\$PREV_IMAGE" || echo "[WARN] Rollback container start failed"
             fi
             
             exit 1
           fi
           
           echo "[SUCCESS] Deployment successful"
-          echo "[${TIMESTAMP}] Deployed ${IMAGE}" >> deployments.log
+          echo "[\${TIMESTAMP}] Deployed \${IMAGE}" >> deployments.log
           
           echo "[INFO] Configuring Nginx..."
           
