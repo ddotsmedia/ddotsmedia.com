@@ -194,7 +194,7 @@ jobs:
           
           HEALTH_OK=false
           for i in {1..5}; do
-            if curl -sf https://ddotsmedia.com/api/health > /dev/null 2>&1; then
+            if curl -sf http://localhost:3025/api/health > /dev/null 2>&1; then
               echo "[OK] Health check passed (attempt \$i)"
               HEALTH_OK=true
               break
