@@ -91,51 +91,54 @@ jobs:
         env:
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_USER: ${{ secrets.VPS_USER }}
-          IMAGE_SHA: ${{ needs.build.outputs.image-sha }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ssh-keyscan -H $VPS_HOST >> ~/.ssh/known_hosts 2>/dev/null || true
+          SSH_OPTS="-o StrictHostKeyChecking=no -o ConnectTimeout=20 -o ServerAliveInterval=15 -o ServerAliveCountMax=8"
+          # Retry connect: transient timeouts / fail2ban hiccups shouldn't fail the deploy
+          for i in 1 2 3 4; do
+            ssh $SSH_OPTS "$VPS_USER@$VPS_HOST" true && break
+            echo "[WARN] SSH connect attempt $i failed, retrying in 20s..."
+            [ $i -eq 4 ] && { echo "[ERROR] Cannot reach VPS over SSH"; exit 1; }
+            sleep 20
+          done
 
-          ssh -o StrictHostKeyChecking=no "$VPS_USER@$VPS_HOST" << DEPLOY_EOF
+          # Quoted heredoc: nothing expands on the runner; ${{ }} is filled in by Actions
+          ssh $SSH_OPTS "$VPS_USER@$VPS_HOST" 'bash -s' << 'DEPLOY_EOF'
           set -e
-          IMAGE="ghcr.io/ddotsmedia/ddotsmedia.com:$IMAGE_SHA"
-          GITHUB_TOKEN="$GITHUB_TOKEN"
-          TIMESTAMP=\$(date '+%Y-%m-%d %H:%M:%S')
-          
-          
-          cat > .env.prod << 'ENVEOF'
-          NODE_ENV=production
-          PAYLOAD_PUBLIC_SERVER_URL=https://ddotsmedia.com
+          mkdir -p /opt/ddotsmedia && cd /opt/ddotsmedia
+          umask 077
+
+          # docker compose auto-loads .env from this dir (also makes manual compose commands work)
+          cat > .env << 'ENVEOF'
+          IMAGE=ghcr.io/ddotsmedia/ddotsmedia.com:${{ needs.build.outputs.image-sha }}
           DB_PASSWORD=${{ secrets.DB_PASSWORD }}
           PAYLOAD_SECRET=${{ secrets.PAYLOAD_SECRET }}
           BETTER_AUTH_SECRET=${{ secrets.BETTER_AUTH_SECRET }}
           ENVEOF
-          
-          source .env.prod
-          
-          cat > docker-compose.yml << COMPOSEEOF
-          version: '3.9'
+          set -a; . ./.env; set +a
+          umask 022
+
+          cat > docker-compose.yml << 'COMPOSEEOF'
+          name: ddotsmedia
           services:
             ddotsmedia-db:
               image: postgres:16-alpine
               container_name: ddotsmedia-db
               environment:
                 POSTGRES_DB: ddotsmedia
-                POSTGRES_PASSWORD: \${DB_PASSWORD}
                 POSTGRES_USER: ddotsmedia
+                POSTGRES_PASSWORD: ${DB_PASSWORD}
               volumes:
                 - ddotsmedia-db-data:/var/lib/postgresql/data
-              networks:
-                - ddotsmedia-network
+              networks: [ddotsmedia-network]
               restart: unless-stopped
               healthcheck:
                 test: ["CMD-SHELL", "pg_isready -U ddotsmedia -d ddotsmedia"]
-                interval: 10s
-                timeout: 5s
-                retries: 5
-          
+                interval: 5s
+                timeout: 3s
+                retries: 20
+
             ddotsmedia-web:
-              image: \${IMAGE}
+              image: ${IMAGE}
               container_name: ddotsmedia-web
               depends_on:
                 ddotsmedia-db:
@@ -143,99 +146,82 @@ jobs:
               environment:
                 NODE_ENV: production
                 PAYLOAD_PUBLIC_SERVER_URL: https://ddotsmedia.com
-                DATABASE_URL: postgresql://ddotsmedia:\${DB_PASSWORD}@ddotsmedia-db:5432/ddotsmedia
-                PAYLOAD_SECRET: \${PAYLOAD_SECRET}
-                BETTER_AUTH_SECRET: \${BETTER_AUTH_SECRET}
+                DATABASE_URL: postgresql://ddotsmedia:${DB_PASSWORD}@ddotsmedia-db:5432/ddotsmedia
+                PAYLOAD_SECRET: ${PAYLOAD_SECRET}
+                BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
               ports:
                 - "127.0.0.1:3025:3000"
-              networks:
-                - ddotsmedia-network
+              volumes:
+                - ./data/media:/app/media
+              networks: [ddotsmedia-network]
               restart: unless-stopped
               healthcheck:
-                test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+                test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000/api/health || exit 1"]
                 interval: 10s
                 timeout: 5s
-                retries: 3
-          
+                retries: 5
+                start_period: 30s
+              logging:
+                driver: json-file
+                options: { max-size: "50m", max-file: "5" }
+
           volumes:
             ddotsmedia-db-data:
-              driver: local
-          
           networks:
             ddotsmedia-network:
-              driver: bridge
           COMPOSEEOF
-          
-          PREV_CONTAINER=\$(docker ps -q -f name=ddotsmedia-web || true)
-          PREV_IMAGE=""
-          if [ ! -z "\$PREV_CONTAINER" ]; then
-            PREV_IMAGE=\$(docker inspect "\$PREV_CONTAINER" --format='{{.Config.Image}}')
+          mkdir -p data/media && chown -R 1001:1001 data/media
+
+          PREV_IMAGE=$(docker inspect ddotsmedia-web --format '{{.Config.Image}}' 2>/dev/null || true)
+
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          echo "[INFO] Pulling $IMAGE"
+          docker pull "$IMAGE"
+
+          # Remove leftovers from old deploy layouts (only ddotsmedia-* containers; DB data is kept)
+          for c in ddotsmedia-web ddotsmedia-web-fallback; do docker rm -f "$c" >/dev/null 2>&1 || true; done
+          if [ "$(docker inspect ddotsmedia-db --format '{{index .Config.Labels "com.docker.compose.project"}}' 2>/dev/null)" != "ddotsmedia" ]; then
+            docker rm -f ddotsmedia-db >/dev/null 2>&1 || true
           fi
-          
-          echo "[INFO] Logging into ghcr.io..."
-          echo "\$GITHUB_TOKEN" | docker login ghcr.io -u ddotsmedia --password-stdin || {
-            echo "[WARN] Docker login failed, attempting pull anyway..."
-          }
-          
-          echo "[INFO] Pulling image: \\${IMAGE}"
-          docker pull "\\${IMAGE}" || {
-            echo "[ERROR] Failed to pull image"
-            exit 1
-          }
-          
-          echo "[INFO] Deploying at \${TIMESTAMP}"
-          docker compose down --remove-orphans --volumes 2>&1 || true
-          echo "[INFO] Explicitly removing PostgreSQL volume to force reinitialization..."
-          docker volume rm ddotsmedia-db-data 2>/dev/null || echo "[INFO] Volume not found or in use, continuing..."
-          docker compose up -d || {
-            echo "[ERROR] Failed to start containers"
-            exit 1
-          }
-          
-          sleep 20
-          
+
+          echo "[INFO] Starting database"
+          docker compose up -d --wait ddotsmedia-db
+          # Keep DB user password in sync with the GitHub secret (local socket = trusted, no wipe needed)
+          docker exec ddotsmedia-db psql -q -U ddotsmedia -d ddotsmedia -c "ALTER USER ddotsmedia WITH PASSWORD '$DB_PASSWORD';"
+
+          echo "[INFO] Starting web"
+          docker compose up -d ddotsmedia-web
+
           HEALTH_OK=false
-          for i in {1..10}; do
-            if curl -sf http://localhost:3025/api/health > /dev/null 2>&1; then
-              echo "[OK] Health check passed (attempt \$i)"
-              HEALTH_OK=true
-              break
+          for i in $(seq 1 30); do
+            if curl -sf -m 5 http://127.0.0.1:3025/api/health >/dev/null; then
+              echo "[OK] Health check passed (attempt $i)"; HEALTH_OK=true; break
             fi
-            echo "[WARN] Health check attempt $i/10 failed, retrying in 10s..."
-            sleep 10
+            echo "[WAIT] Health attempt $i/30..."
+            sleep 5
           done
-          
-          if [ "\$HEALTH_OK" = false ]; then
-            echo "[ERROR] Health checks failed after 10 attempts"
-            echo "[DEBUG] Container logs:"
-            docker compose logs --tail=50 || true
-            
-            echo "[ROLLBACK] Rolling back to previous image"
-            docker compose down || true
-            
-            if [ ! -z "\$PREV_IMAGE" ] && [ ! -z "\$PREV_CONTAINER" ]; then
-              echo "[ROLLBACK] Restarting previous container with image: \${PREV_IMAGE}"
-              docker run -d \
-                --name ddotsmedia-web-fallback \
-                --network ddotsmedia-network \
-                -p 127.0.0.1:3025:3000 \
-                --restart unless-stopped \
-                "\$PREV_IMAGE" || echo "[WARN] Rollback container start failed"
+
+          if [ "$HEALTH_OK" != true ]; then
+            echo "[ERROR] Health check failed. Diagnostics:"
+            docker compose ps -a
+            docker compose logs --tail=150 --no-color ddotsmedia-web
+            docker compose logs --tail=40 --no-color ddotsmedia-db
+            if [ -n "$PREV_IMAGE" ] && [ "$PREV_IMAGE" != "$IMAGE" ]; then
+              echo "[ROLLBACK] Restoring $PREV_IMAGE"
+              IMAGE="$PREV_IMAGE" docker compose up -d ddotsmedia-web || true
             fi
-            
             exit 1
           fi
-          
-          echo "[SUCCESS] Deployment successful"
-          echo "[\${TIMESTAMP}] Deployed \\${IMAGE}" >> deployments.log
-          
-          echo "[INFO] Configuring Nginx..."
-          
-          sudo tee /etc/nginx/sites-available/ddotsmedia.com > /dev/null << 'NGINXEOF'
+
+          echo "[$(date '+%F %T')] Deployed $IMAGE" >> deployments.log
+
+          # Nginx: create site once only, never overwrite (certbot adds SSL to this file)
+          if [ ! -f /etc/nginx/sites-available/ddotsmedia.com ]; then
+            cat > /etc/nginx/sites-available/ddotsmedia.com << 'NGINXEOF'
           server {
               listen 80;
               server_name ddotsmedia.com www.ddotsmedia.com;
-              
+              client_max_body_size 20m;
               location / {
                   proxy_pass http://127.0.0.1:3025;
                   proxy_http_version 1.1;
@@ -249,29 +235,11 @@ jobs:
               }
           }
           NGINXEOF
-          
-          sudo ln -sf /etc/nginx/sites-available/ddotsmedia.com /etc/nginx/sites-enabled/ddotsmedia.com
-          
-          if sudo nginx -t 2>&1 | grep -q "successful"; then
-              echo "[OK] Nginx configuration is valid"
-              sudo systemctl restart nginx || {
-                  echo "[ERROR] Failed to restart Nginx"
-                  exit 1
-              }
-              echo "[OK] Nginx restarted successfully"
-          else
-              echo "[ERROR] Nginx configuration test failed"
-              sudo nginx -t
-              exit 1
+            ln -sf /etc/nginx/sites-available/ddotsmedia.com /etc/nginx/sites-enabled/ddotsmedia.com
+            # reload (not restart) so other sites on this VPS are never interrupted
+            nginx -t && systemctl reload nginx
           fi
-          
-          sleep 2
-          if netstat -tlnp 2>/dev/null | grep -q ":80 "; then
-              echo "[OK] Nginx is listening on port 80"
-          else
-              echo "[WARN] Port 80 not detected in netstat, but Nginx may still be active"
-          fi
-          
+          echo "[SUCCESS] Deployment complete"
           DEPLOY_EOF
 
       - name: Deployment Success
