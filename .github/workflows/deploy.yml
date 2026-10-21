@@ -184,7 +184,9 @@ jobs:
           }
           
           echo "[INFO] Deploying at \${TIMESTAMP}"
-          docker compose down --remove-orphans 2>&1 || true
+          docker compose down --remove-orphans --volumes 2>&1 || true
+          echo "[INFO] Explicitly removing PostgreSQL volume to force reinitialization..."
+          docker volume rm ddotsmedia-db-data 2>/dev/null || echo "[INFO] Volume not found or in use, continuing..."
           docker compose up -d || {
             echo "[ERROR] Failed to start containers"
             exit 1
