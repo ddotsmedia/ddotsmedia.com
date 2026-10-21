@@ -101,7 +101,7 @@ jobs:
             sleep 20
           done
 
-          # Quoted heredoc: nothing expands on the runner; ${{ }} is filled in by Actions
+          # Quoted heredoc: nothing expands on the runner; GitHub expressions are filled in by Actions
           ssh $SSH_OPTS "$VPS_USER@$VPS_HOST" 'bash -s' << 'DEPLOY_EOF'
           set -e
           mkdir -p /opt/ddotsmedia && cd /opt/ddotsmedia
