@@ -106,9 +106,9 @@ jobs:
           cat > .env.prod << 'ENVEOF'
           NODE_ENV=production
           PAYLOAD_PUBLIC_SERVER_URL=https://ddotsmedia.com
-          DB_PASSWORD=$(openssl rand -hex 8)
-          PAYLOAD_SECRET=$(openssl rand -hex 16)
-          BETTER_AUTH_SECRET=$(openssl rand -hex 16)
+          DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+          PAYLOAD_SECRET=${{ secrets.PAYLOAD_SECRET }}
+          BETTER_AUTH_SECRET=${{ secrets.BETTER_AUTH_SECRET }}
           ENVEOF
           
           source .env.prod
