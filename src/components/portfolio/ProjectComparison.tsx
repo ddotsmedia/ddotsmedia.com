@@ -19,7 +19,7 @@ export function ProjectComparison({ projects }: { projects: Project[] }) {
     setSelected(next);
   };
 
-  const selectedProjects = projects.filter((p) => selected.has(p.id));
+  const selectedProjects = projects.filter((p) => selected.has(String(p.id)));
   const canSelect = selected.size < 3;
 
   return (
@@ -50,7 +50,7 @@ export function ProjectComparison({ projects }: { projects: Project[] }) {
         <h3 className="mb-4 text-lg font-semibold text-white">Available Projects</h3>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {projects.map((project) => {
-            const isSelected = selected.has(project.id);
+            const isSelected = selected.has(String(project.id));
             const cover = mediaUrl(project.coverImage, "feature");
 
             return (
@@ -58,9 +58,9 @@ export function ProjectComparison({ projects }: { projects: Project[] }) {
                 key={project.id}
                 onClick={() => {
                   if (isSelected) {
-                    toggleProject(project.id);
+                    toggleProject(String(project.id));
                   } else if (canSelect) {
-                    toggleProject(project.id);
+                    toggleProject(String(project.id));
                   }
                 }}
                 disabled={!isSelected && !canSelect}
