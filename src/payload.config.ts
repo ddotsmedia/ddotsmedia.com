@@ -15,10 +15,20 @@ import { TeamMembers } from "./collections/TeamMembers";
 import { FaqItems } from "./collections/FaqItems";
 import { Industries } from "./collections/Industries";
 import { PricingTiers } from "./collections/PricingTiers";
+import { ContactSubmissions } from "./collections/ContactSubmissions";
+import { NewsletterSubscribers } from "./collections/NewsletterSubscribers";
+import { BlogCategories } from "./collections/BlogCategories";
+import { Awards } from "./collections/Awards";
+import { Partners } from "./collections/Partners";
+import { JobListings } from "./collections/JobListings";
 import { CompanySettings } from "./globals/CompanySettings";
 import { Stats } from "./globals/Stats";
 import { TrustBar } from "./globals/TrustBar";
 import { ProcessSteps } from "./globals/ProcessSteps";
+import { HomepageHero } from "./globals/HomepageHero";
+import { Navigation } from "./globals/Navigation";
+import { FooterSettings } from "./globals/FooterSettings";
+import { SeoDefaults } from "./globals/SeoDefaults";
 import { migrations } from "./migrations";
 
 const filename = fileURLToPath(import.meta.url);
@@ -44,8 +54,14 @@ export default buildConfig({
     FaqItems,
     Industries,
     PricingTiers,
+    ContactSubmissions,
+    NewsletterSubscribers,
+    BlogCategories,
+    Awards,
+    Partners,
+    JobListings,
   ],
-  globals: [CompanySettings, Stats, TrustBar, ProcessSteps],
+  globals: [CompanySettings, Stats, TrustBar, ProcessSteps, HomepageHero, Navigation, FooterSettings, SeoDefaults],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "",
   typescript: { outputFile: path.resolve(dirname, "payload-types.ts") },
@@ -57,7 +73,7 @@ export default buildConfig({
     // Run committed migrations automatically on Payload init in production, so a
     // fresh DB rebuilds its schema at container start without a CLI step (the
     // standalone runner image has no Payload CLI). Already-applied migrations
-    // (tracked in payload_migrations) are skipped — no-op on the live DB.
+    // (tracked in payload_migrations) are skipped -- no-op on the live DB.
     prodMigrations: migrations,
   }),
   sharp,
