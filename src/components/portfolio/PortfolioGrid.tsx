@@ -53,7 +53,7 @@ export function PortfolioGrid({ projects }: { projects: Project[] }) {
   const allTechs = useMemo(() => extractTechs(projects), [projects]);
 
   const filtered = useMemo(() => {
-    let result = projects.filter((p) => {
+    const result = projects.filter((p) => {
       if (!matches(p, active)) return false;
       if (search) {
         const term = search.toLowerCase();
