@@ -46,10 +46,10 @@ export async function Footer() {
   const address = cs?.address || "SHAMS Free Zone, Sharjah, UAE";
   const social = cs?.socialLinks ?? null;
   const SOCIAL: { icon: ComponentType<IconProps>; label: string; href: string }[] = [
-    { icon: LinkedInIcon, label: "LinkedIn", href: social?.linkedin || "#" },
-    { icon: XIcon, label: "Twitter / X", href: social?.twitter || "#" },
-    { icon: InstagramIcon, label: "Instagram", href: social?.instagram || "#" },
-    { icon: GitHubIcon, label: "GitHub", href: social?.github || "#" },
+    ...(social?.linkedin ? [{ icon: LinkedInIcon, label: "LinkedIn", href: social.linkedin }] : []),
+    ...(social?.twitter ? [{ icon: XIcon, label: "Twitter / X", href: social.twitter }] : []),
+    ...(social?.instagram ? [{ icon: InstagramIcon, label: "Instagram", href: social.instagram }] : []),
+    ...(social?.github ? [{ icon: GitHubIcon, label: "GitHub", href: social.github }] : []),
   ];
 
   return (
@@ -135,7 +135,7 @@ export async function Footer() {
 
         {/* Bottom bar */}
         <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-xs text-white/40 sm:flex-row">
-          <p>© 2024 Ddotsmedia IT Solutions. All rights reserved.</p>
+          <p>© 2026 Ddotsmedia IT Solutions. All rights reserved.</p>
           <p>SHAMS Free Zone Licensed</p>
         </div>
       </div>
