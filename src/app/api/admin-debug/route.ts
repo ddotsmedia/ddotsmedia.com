@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { getPayload } from "payload";
 import config from "@payload-config";
 
@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 // TODO: Remove this endpoint once root cause is identified
 // Data exposed: collection doc counts, global existence, DB ping status — no secrets
-export async function GET(_req: NextRequest) {
+export async function GET() {
   const results: Record<string, unknown> = {};
   const errors: Record<string, string> = {};
 
