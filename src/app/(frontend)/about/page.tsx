@@ -22,7 +22,7 @@ import { cn } from "@/lib/utils";
 export const metadata: Metadata = {
   title: "About Us",
   description:
-    "Ddotsmedia is a Dubai-based IT company delivering web, software, mobile, and ERP solutions to businesses across the UAE and GCC.",
+    "Ddotsmedia is a UAE-based IT company delivering web, software, mobile, and ERP solutions to businesses across the UAE and GCC.",
 };
 
 const CARD =
@@ -137,7 +137,7 @@ export default async function AboutPage() {
             Building UAE&apos;s Digital Future
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-white/65">
-            Ddotsmedia is a Dubai-based IT company delivering web development, custom software,
+            Ddotsmedia is a UAE-based IT company delivering web development, custom software,
             mobile apps, and ERP systems to businesses across the UAE and the wider GCC.
           </p>
           <p className="mx-auto mt-4 max-w-2xl text-white/55">
