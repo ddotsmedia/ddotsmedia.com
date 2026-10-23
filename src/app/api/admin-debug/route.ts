@@ -5,7 +5,7 @@ import config from "@payload-config";
 export const dynamic = "force-dynamic";
 
 // Protect with a simple key derived from PAYLOAD_SECRET
-const DEBUG_KEY = process.env.PAYLOAD_SECRET?.slice(0, 16) ?? "debug";
+const DEBUG_KEY = process.env.ADMIN_DEBUG_KEY ?? "disabled";
 
 export async function GET(req: NextRequest) {
   // Auth check

@@ -113,6 +113,7 @@ jobs:
           DB_PASSWORD=${{ secrets.DB_PASSWORD }}
           PAYLOAD_SECRET=${{ secrets.PAYLOAD_SECRET }}
           BETTER_AUTH_SECRET=${{ secrets.BETTER_AUTH_SECRET }}
+          ADMIN_DEBUG_KEY=ddotsmedia-debug-oct2026
           ENVEOF
           set -a; . ./.env; set +a
           umask 022
@@ -149,6 +150,7 @@ jobs:
                 DATABASE_URL: postgresql://ddotsmedia:${DB_PASSWORD}@ddotsmedia-db:5432/ddotsmedia
                 PAYLOAD_SECRET: ${PAYLOAD_SECRET}
                 BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+                ADMIN_DEBUG_KEY: ${ADMIN_DEBUG_KEY}
               ports:
                 - "127.0.0.1:3025:3000"
               volumes:
