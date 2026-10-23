@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
     const dbStart = Date.now();
 
     const counts = await Promise.all(
-      COLLECTIONS.map((c) => payload.count({ collection: c as any }))
+      COLLECTIONS.map((c) => payload.count({ collection: c as Parameters<typeof payload.count>[0]["collection"] }))
     );
 
     dbLatencyMs = Date.now() - dbStart;

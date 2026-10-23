@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -224,8 +225,8 @@ export default async function MonitorPage({
         </div>
 
         <p className="text-center text-xs text-gray-400">
-          ddotsmedia.com · <a href="/" className="underline">Home</a> ·{" "}
-          <a href="/admin" className="underline">Payload Admin</a>
+          ddotsmedia.com · <Link href="/" className="underline">Home</Link> ·{" "}
+          <Link href="/admin" className="underline">Payload Admin</Link>
         </p>
       </div>
     </div>
