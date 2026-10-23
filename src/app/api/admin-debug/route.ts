@@ -68,8 +68,8 @@ export async function GET(req: NextRequest) {
 
   // Step 4: DB raw ping
   try {
-    // @ts-expect-error db internals
-    await payload.db.pool?.query("SELECT 1");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (payload.db as any).pool?.query("SELECT 1");
     results.dbPing = "OK";
   } catch (err) {
     errors.dbPing = (err as Error).message;
