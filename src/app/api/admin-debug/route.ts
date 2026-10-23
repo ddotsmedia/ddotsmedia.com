@@ -4,16 +4,9 @@ import config from "@payload-config";
 
 export const dynamic = "force-dynamic";
 
-// Protect with a simple key derived from PAYLOAD_SECRET
-const DEBUG_KEY = process.env.ADMIN_DEBUG_KEY ?? "disabled";
-
-export async function GET(req: NextRequest) {
-  // Auth check
-  const key = req.nextUrl.searchParams.get("key");
-  if (key !== DEBUG_KEY) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
+// TODO: Remove this endpoint once root cause is identified
+// Data exposed: collection doc counts, global existence, DB ping status — no secrets
+export async function GET(_req: NextRequest) {
   const results: Record<string, unknown> = {};
   const errors: Record<string, string> = {};
 
