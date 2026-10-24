@@ -31,7 +31,7 @@ export const PORTFOLIO: PortfolioItem[] = [
     name: "ayurconnect",
     title: "AyurConnect",
     url: "https://ayurconnect.com",
-    image: "/projects/ayurconnect.png",
+    image: "/projects/ayurconnect.webp",
     category: "Web",
     description:
       "Ayurveda wellness platform linking practitioners and patients with online booking, video consultations, and health records.",
@@ -61,7 +61,7 @@ export const PORTFOLIO: PortfolioItem[] = [
     name: "bayrotna",
     title: "Bayrotna — Little Smarties",
     url: "https://bayrotna.ae",
-    image: "/projects/bayrotna.png",
+    image: "/projects/bayrotna.webp",
     category: "Web",
     description:
       "Modern nursery website with facility gallery, program listings, parent portal, and online enrollment for UAE parents.",
@@ -71,7 +71,7 @@ export const PORTFOLIO: PortfolioItem[] = [
     name: "kayakalpam",
     title: "Kayakalpam Vaidya Sala",
     url: "https://kayakalpamvaidyasala.com",
-    image: "/projects/kayakalpam.png",
+    image: "/projects/kayakalpam.webp",
     category: "Web",
     description:
       "Traditional Kerala Ayurvedic clinic site with treatment listings, doctor profiles, and online appointment booking in Malayalam and English.",
@@ -81,7 +81,7 @@ export const PORTFOLIO: PortfolioItem[] = [
     name: "synergytyping",
     title: "Synergy Typing",
     url: "https://milestonm.ae",
-    image: "/projects/synergytyping.png",
+    image: "/projects/synergytyping.webp",
     category: "Desktop",
     description:
       "Professional typing training platform with speed tests, progress tracking, and certification for UAE typing institutes.",
