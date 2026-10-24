@@ -83,7 +83,6 @@ export const Projects: CollectionConfig = {
         // ── Tab 1: Overview ──────────────────────────────────────────────────
         {
           label: "📋 Overview",
-          description: "Start with the URL — everything else auto-fills",
           fields: [
 
             // ════════════ REQUIRED ════════════
@@ -113,7 +112,6 @@ export const Projects: CollectionConfig = {
                 {
                   name: "title",
                   type: "text",
-                  required: true,
                   label: "Project Title *",
                   admin: {
                     width: "65%",
@@ -133,7 +131,6 @@ export const Projects: CollectionConfig = {
             {
               name: "shortDescription",
               type: "textarea",
-              required: true,
               label: "Short Description *",
               admin: {
                 description: "Auto-filled from meta tags — shown on portfolio cards (1–2 sentences)",
