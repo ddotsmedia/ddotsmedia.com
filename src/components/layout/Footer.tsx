@@ -116,21 +116,25 @@ export async function Footer() {
           </div>
 
           {/* Social */}
-          <div>
-            <h3 className="text-sm font-semibold text-white">Follow Us</h3>
-            <div className="mt-4 flex gap-3">
-              {SOCIAL.map((s) => (
-                <a
-                  key={s.label}
-                  href={s.href}
-                  aria-label={s.label}
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/[0.03] text-white/60 transition-colors hover:border-[var(--brand-teal)] hover:text-[var(--brand-teal)]"
-                >
-                  <s.icon className="h-4 w-4" />
-                </a>
-              ))}
+          {SOCIAL.length > 0 && (
+            <div>
+              <h3 className="text-sm font-semibold text-white">Follow Us</h3>
+              <div className="mt-4 flex gap-3">
+                {SOCIAL.map((s) => (
+                  <a
+                    key={s.label}
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={s.label}
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/[0.03] text-white/60 transition-colors hover:border-[var(--brand-teal)] hover:text-[var(--brand-teal)]"
+                  >
+                    <s.icon className="h-4 w-4" />
+                  </a>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Bottom bar */}
