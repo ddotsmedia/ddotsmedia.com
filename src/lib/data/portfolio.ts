@@ -48,16 +48,6 @@ export const PORTFOLIO: PortfolioItem[] = [
     tags: ["Next.js", "TypeScript", "Stripe", "Twilio", "PostgreSQL", "Prisma", "Booking", "Video Calls", "Healthcare", "Multilingual"],
   },
   {
-    name: "gayathi",
-    title: "Gayathi",
-    url: "https://gayathi.ae",
-    image: "/projects/gayathi.png",
-    category: "Web",
-    description:
-      "Corporate website for a UAE trading and services group with a Payload CMS-driven product catalogue and enquiry management.",
-    tags: ["Next.js", "Payload CMS", "TypeScript", "Tailwind CSS", "CMS", "SEO", "Corporate", "Product Catalogue"],
-  },
-  {
     name: "ddotshop",
     title: "Ddotshop",
     url: "https://ddotshop.com",
@@ -116,16 +106,6 @@ export const PORTFOLIO: PortfolioItem[] = [
     description:
       "Premium UAE coffee brand website with WooCommerce storefront, product catalogue, and local delivery integration.",
     tags: ["WordPress", "WooCommerce", "PHP", "E-commerce", "Delivery", "F&B", "Payment Gateway"],
-  },
-  {
-    name: "ddotsmediahr",
-    title: "Ddotsmedia HR",
-    url: "https://ddotsmediahr.com",
-    image: "/projects/ddotsmediahr.png",
-    category: "Web",
-    description:
-      "HR management platform for UAE businesses — employee records, leave management, attendance tracking, and payroll processing.",
-    tags: ["React", "Node.js", "PostgreSQL", "Docker", "HR", "Leave Management", "Attendance", "Payroll", "Dashboards"],
   },
   {
     name: "synergytyping",
