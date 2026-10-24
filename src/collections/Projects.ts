@@ -214,7 +214,6 @@ export const Projects: CollectionConfig = {
               admin: { description: "Additional screenshots or design previews" },
               fields: [
                 { name: "image",   type: "upload", relationTo: "media", required: true },
-                { name: "caption", type: "text",   admin: { description: "Optional caption" } },
               ],
             },
             {
