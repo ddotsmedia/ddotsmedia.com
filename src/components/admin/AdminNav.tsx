@@ -51,10 +51,10 @@ const CATEGORIES: NavCategory[] = [
   {
     id: 'people', label: 'People', icon: '👥', color: '#34d399',
     items: [
-      { slug: 'team-members', icon: '👥', label: 'Team Members', type: 'collection' },
+      { slug: 'team-members', icon: '👥', label: 'Team Members',  type: 'collection' },
       { slug: 'media',        icon: '🖼️', label: 'Media Library', type: 'collection' },
-      { slug: 'faq-items',   icon: '❓', label: 'FAQ Items',     type: 'collection' },
-      { slug: 'users',        icon: '👤', label: 'Admin Users',  type: 'collection' },
+      { slug: 'faq-items',    icon: '❓', label: 'FAQ Items',     type: 'collection' },
+      { slug: 'users',        icon: '👤', label: 'Admin Users',   type: 'collection' },
     ],
   },
   {
@@ -72,7 +72,18 @@ const CATEGORIES: NavCategory[] = [
   },
 ]
 
-/* ─── Styles ───────────────────────────────────────────── */
+/* ─── Styles ─────────────────────────────────────────────
+   Per-category color rules are generated from CATEGORIES at
+   module-load time so no inline style or CSS custom properties
+   are needed in JSX (avoids React 19 / TSC strictness issues).
+────────────────────────────────────────────────────────── */
+const CAT_CSS = CATEGORIES.map(({ id, color }) => `
+  details.adm-cat[data-cat="${id}"][open] > .adm-cat-summary { border-left-color: ${color}; }
+  details.adm-cat[data-cat="${id}"][open] > .adm-cat-summary .adm-cat-label { color: ${color}; }
+  details.adm-cat[data-cat="${id}"][open] > .adm-cat-summary .adm-cat-arrow { transform:rotate(90deg); color: ${color}; }
+  details.adm-cat[data-cat="${id}"] .adm-cat-items { border-left-color: ${color}30; }
+`).join('')
+
 const CSS = `
   .adm-nav {
     font-family: system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
@@ -128,27 +139,22 @@ const CSS = `
   }
   .adm-cat-summary::-webkit-details-marker { display:none }
   .adm-cat-summary:hover { background:rgba(255,255,255,.04); }
-  .adm-cat[open] > .adm-cat-summary { border-left-color: var(--cc); }
 
   .adm-cat-emoji { font-size:13px; width:18px; text-align:center; flex-shrink:0; }
   .adm-cat-label {
     flex:1; font-size:10px; font-weight:700; letter-spacing:.1em;
     text-transform:uppercase; color:#4a6880; transition:color .13s;
   }
-  .adm-cat[open] > .adm-cat-summary .adm-cat-label { color: var(--cc); }
   .adm-cat-summary:hover .adm-cat-label { color:#7a94ab; }
 
   .adm-cat-arrow {
     font-size:11px; color:#2a3f55; transition:transform .2s, color .13s;
     display:inline-block;
   }
-  .adm-cat[open] > .adm-cat-summary .adm-cat-arrow {
-    transform:rotate(90deg); color: var(--cc);
-  }
 
   /* ── Category items wrapper ── */
   .adm-cat-items {
-    border-left: 2px solid var(--cc-dim, #111d2b);
+    border-left: 2px solid #111d2b;
     margin-left:20px;
     padding:2px 0 6px;
   }
@@ -179,29 +185,39 @@ const CSS = `
 
   /* ── Divider ── */
   .adm-divider { height:1px; background:#111d2b; margin:6px 12px; }
+
+  /* ── Per-category colors (generated from CATEGORIES) ── */
+${CAT_CSS}
 `
 
 /* ─── Helpers ──────────────────────────────────────────── */
-async function safeCount(payload: ServerProps['payload'], slug: string): Promise<number> {
+async function safeCount(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  payload: any,
+  slug: string,
+): Promise<number> {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const r = await (payload as any).count({ collection: slug })
+    const r = await payload.count({ collection: slug }) as { totalDocs?: number }
     return r?.totalDocs ?? 0
-  } catch { return -1 }
+  } catch {
+    return -1
+  }
 }
 
 /* ─── Component ────────────────────────────────────────── */
 export async function AdminNav(props: ServerProps) {
   const { payload } = props
-  if (!payload?.config) return null
+  if (!payload) return null
 
   /* Fetch counts for all collection items in parallel */
-  const allCollectionItems = CATEGORIES.flatMap(c => c.items.filter(i => i.type === 'collection'))
+  const allCollectionItems = CATEGORIES.flatMap(c =>
+    c.items.filter(i => i.type === 'collection')
+  )
   const countResults = await Promise.all(
     allCollectionItems.map(item => safeCount(payload, item.slug))
   )
   const counts: Record<string, number> = {}
-  allCollectionItems.forEach((item, idx) => { counts[item.slug] = countResults[idx] })
+  allCollectionItems.forEach((item, idx) => { counts[item.slug] = countResults[idx]! })
 
   return (
     <>
@@ -232,13 +248,13 @@ export async function AdminNav(props: ServerProps) {
           <details
             key={cat.id}
             className="adm-cat"
-            open={cat.defaultOpen ?? false}
-            style={{ ['--cc' as string]: cat.color, ['--cc-dim' as string]: cat.color + '30' }}
+            data-cat={cat.id}
+            open={cat.defaultOpen === true}
           >
             <summary className="adm-cat-summary">
               <span className="adm-cat-emoji">{cat.icon}</span>
               <span className="adm-cat-label">{cat.label}</span>
-              <span className="adm-cat-arrow">›</span>
+              <span className="adm-cat-arrow">{'›'}</span>
             </summary>
 
             <div className="adm-cat-items">
@@ -252,9 +268,9 @@ export async function AdminNav(props: ServerProps) {
                     <span className="adm-item-icon">{item.icon}</span>
                     <span className="adm-item-label">{item.label}</span>
                     {item.type === 'global' && (
-                      <span className="adm-item-global">G</span>
+                      <span className="adm-item-global">{'G'}</span>
                     )}
-                    {item.type === 'collection' && count >= 0 && (
+                    {item.type === 'collection' && typeof count === 'number' && count >= 0 && (
                       <span className="adm-item-count">{count}</span>
                     )}
                   </a>
