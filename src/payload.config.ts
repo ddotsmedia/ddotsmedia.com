@@ -86,5 +86,35 @@ export default buildConfig({
     // (tracked in payload_migrations) are skipped -- no-op on the live DB.
     prodMigrations: migrations,
   }),
+  onInit: async (payload) => {
+    // Auto-seed portfolio projects on first boot if the collection is empty.
+    // Idempotent: skips if any project already exists. Errors are logged, never thrown.
+    try {
+      const { totalDocs } = await payload.count({ collection: "projects" });
+      if (totalDocs === 0) {
+        const { PORTFOLIO } = await import("./lib/data/portfolio");
+        for (let i = 0; i < PORTFOLIO.length; i++) {
+          const item = PORTFOLIO[i];
+          await payload.create({
+            collection: "projects",
+            data: {
+              liveUrl: item.url,
+              title: item.title,
+              slug: item.name,
+              category: item.category as "Web" | "iOS" | "Android" | "Desktop" | "ERP",
+              shortDescription: item.description,
+              techStack: (item.tags ?? []).map((tech, j) => ({ tech, id: String(j) })),
+              featured: i < 2,
+              order: i + 1,
+              status: "Live" as const,
+            },
+          });
+        }
+        payload.logger.info(`[seed] Auto-seeded ${PORTFOLIO.length} portfolio projects`);
+      }
+    } catch (err) {
+      payload.logger.warn(`[seed] Project auto-seed failed: ${String(err)}`);
+    }
+  },
   sharp,
 });

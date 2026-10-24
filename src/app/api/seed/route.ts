@@ -210,7 +210,8 @@ const COMPANY = {
 
 export async function GET(req: Request) {
   // Disabled unless an explicit SEED_KEY is configured (no default key).
-  const expected = process.env.SEED_KEY;
+  // SEED_KEY takes priority; falls back to PAYLOAD_SECRET so no extra GitHub secret is needed.
+  const expected = process.env.SEED_KEY ?? process.env.PAYLOAD_SECRET;
   if (!expected) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
