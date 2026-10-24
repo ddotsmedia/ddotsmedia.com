@@ -107,44 +107,28 @@ export const ACHIEVEMENTS_FALLBACK: UIAchievement[] = [
   { value: 150, suffix: "+", label: "Projects" },
   { value: 80, suffix: "+", label: "Clients" },
   { value: 50, suffix: "+", label: "Enterprise Apps" },
-  { value: 9, suffix: "+", label: "Years" },
+  { value: 10, suffix: "+", label: "Years" },   // Founded 2016 → 2026
   { value: 12, suffix: "+", label: "Countries" },
   { text: "24/7", label: "Support" },
 ];
 
-export const TESTIMONIALS_FALLBACK: UITestimonial[] = [
-  {
-    quote: "Ddotsmedia rebuilt our job portal and traffic doubled within three months. The team just gets the UAE market.",
-    author: "Khalid Rahman",
-    role: "Operations Director",
-    company: "GulfHire",
-    rating: 5,
-  },
-  {
-    quote: "Their ERP cut our monthly closing from five days to one. Genuinely transformative for our finance team.",
-    author: "Sara Al Mansoori",
-    role: "CFO",
-    company: "Al Noor Trading",
-    rating: 5,
-  },
-  {
-    quote: "Responsive, professional, and they actually understand local business. Easily our best development partner.",
-    author: "Vikram Patel",
-    role: "Founder",
-    company: "DeltaRetail",
-    rating: 5,
-  },
-];
+// Testimonials are not shown until real client quotes are added via the Payload admin.
+// Never populate this fallback with invented names — the Testimonials section
+// is conditionally rendered only when items.length > 0.
+export const TESTIMONIALS_FALLBACK: UITestimonial[] = [];
 
+// Industry categories shown in the trust-bar marquee.
+// Do NOT list specific client or government names here unless you have
+// explicit permission to name them publicly.
 export const TRUST_FALLBACK: string[] = [
-  "Dubai Municipality",
-  "ADNOC",
-  "Sharjah Media City",
-  "DubaiSME",
-  "RAKEZ",
-  "SHAMS",
-  "Ajman Free Zone",
-  "Dubai Silicon Oasis",
-  "Abu Dhabi SME Hub",
-  "UAE Ministry of Economy",
+  "Healthcare & Clinics",
+  "Real Estate & Property",
+  "E-commerce & Retail",
+  "Government & PRO Services",
+  "Education & EdTech",
+  "Trading & Logistics",
+  "Hospitality & F&B",
+  "HR & Payroll Systems",
+  "Finance & Accounting",
+  "Startups & SMEs",
 ];

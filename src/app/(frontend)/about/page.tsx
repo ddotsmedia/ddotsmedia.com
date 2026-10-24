@@ -93,6 +93,7 @@ const TIMELINE = [
   { year: "2020", title: "ERP Division", body: "Started building custom ERP systems for inventory, HR, and accounting." },
   { year: "2022", title: "Abu Dhabi & Sharjah", body: "Expanded across the Emirates with new presence in Abu Dhabi and Sharjah." },
   { year: "2024", title: "150+ Projects", body: "Crossed 150 delivered projects for clients in 12 countries." },
+  { year: "2026", title: "10 Years On", body: "A decade of building products for UAE and GCC businesses, still growing." },
 ];
 
 const CITIES = [
