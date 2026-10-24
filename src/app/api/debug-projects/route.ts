@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createElement } from "react";
 import { getPayloadClient } from "@/lib/payload";
+import { ProjectCard } from "@/components/portfolio/ProjectCard";
 
 // TEMPORARY diagnostic route — remove after the homepage crash is fixed.
 export const dynamic = "force-dynamic";
@@ -9,6 +11,7 @@ export async function GET(req: NextRequest) {
   if (req.nextUrl.searchParams.get("t") !== TOKEN) {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
+  const stage: string[] = [];
   try {
     const payload = await getPayloadClient();
     const res = await payload.find({
@@ -18,24 +21,19 @@ export async function GET(req: NextRequest) {
       limit: 12,
       depth: 1,
     });
-    const docs = res.docs.map((d) => ({
-      id: d.id,
-      title: d.title,
-      slug: d.slug,
-      category: d.category,
-      status: d.status,
-      featured: d.featured,
-      order: d.order,
-      createdAt: d.createdAt,
-      techStack: d.techStack,
-      gallery: d.gallery,
-      coverImage: d.coverImage && typeof d.coverImage !== "number"
-        ? { url: d.coverImage.url, filename: d.coverImage.filename, mimeType: d.coverImage.mimeType, width: d.coverImage.width, height: d.coverImage.height, alt: d.coverImage.alt, sizes: d.coverImage.sizes }
-        : d.coverImage,
-    }));
-    return NextResponse.json({ ok: true, count: docs.length, docs });
+    stage.push(`docs=${res.docs.length}`);
+    const { renderToStaticMarkup } = await import("react-dom/server");
+    stage.push("renderer loaded");
+    for (const d of res.docs) {
+      const html = renderToStaticMarkup(createElement(ProjectCard, { project: d }));
+      stage.push(`card ok id=${d.id} len=${html.length}`);
+    }
+    return NextResponse.json({ ok: true, stage });
   } catch (err) {
     const e = err as Error;
-    return NextResponse.json({ ok: false, name: e.name, message: e.message }, { status: 500 });
+    return NextResponse.json({
+      ok: false, stage, name: e.name, message: e.message,
+      stack: (e.stack ?? "").split("\n").slice(0, 8),
+    }, { status: 500 });
   }
 }
