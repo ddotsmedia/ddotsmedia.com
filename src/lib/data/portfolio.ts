@@ -28,16 +28,6 @@ export const PORTFOLIO: PortfolioItem[] = [
     tags: ["Next.js", "TypeScript", "PostgreSQL", "Prisma", "Redis", "Tailwind CSS", "ATS", "Search", "Email Alerts", "Dashboards"],
   },
   {
-    name: "ddotsmediaerp",
-    title: "Ddotsmedia ERP",
-    url: "https://ddotsmediaerp.com",
-    image: "/projects/ddotsmediaerp.png",
-    category: "ERP",
-    description:
-      "End-to-end ERP for inventory, sales, HR, and accounting with role-based dashboards, automated reporting, and payroll processing.",
-    tags: ["React", "Node.js", "PostgreSQL", "Docker", "Redis", "Role-Based Access", "Inventory", "Payroll", "Reporting", "Automation"],
-  },
-  {
     name: "ayurconnect",
     title: "AyurConnect",
     url: "https://ayurconnect.com",
@@ -56,16 +46,6 @@ export const PORTFOLIO: PortfolioItem[] = [
     description:
       "Modern e-commerce storefront with full product catalogue, cart, wishlist, and secure Stripe checkout.",
     tags: ["Next.js", "Stripe", "PostgreSQL", "TypeScript", "E-commerce", "Cart", "Wishlist", "Payments", "Inventory"],
-  },
-  {
-    name: "milisauh",
-    title: "Milisa UH",
-    url: "https://milisauh.ae",
-    image: "/projects/milisauh.png",
-    category: "Web",
-    description:
-      "Business website with service catalogue and online bookings for a UAE brand — calendar integration and WhatsApp CRM.",
-    tags: ["Next.js", "Tailwind CSS", "Payload CMS", "Calendar", "Bookings", "WhatsApp CRM"],
   },
   {
     name: "abudhabimalayalees",
@@ -96,16 +76,6 @@ export const PORTFOLIO: PortfolioItem[] = [
     description:
       "Traditional Kerala Ayurvedic clinic site with treatment listings, doctor profiles, and online appointment booking in Malayalam and English.",
     tags: ["Next.js", "Tailwind CSS", "Booking", "Ayurveda", "Healthcare", "Multilingual", "Malayalam", "SEO"],
-  },
-  {
-    name: "milestonescoffee",
-    title: "Milestones Coffee",
-    url: "https://milestonescoffee.ae",
-    image: "/projects/milestonescoffee.png",
-    category: "Web",
-    description:
-      "Premium UAE coffee brand website with WooCommerce storefront, product catalogue, and local delivery integration.",
-    tags: ["WordPress", "WooCommerce", "PHP", "E-commerce", "Delivery", "F&B", "Payment Gateway"],
   },
   {
     name: "synergytyping",
