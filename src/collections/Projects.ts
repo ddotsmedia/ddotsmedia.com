@@ -173,11 +173,17 @@ export const Projects: CollectionConfig = {
               fields: [
                 {
                   name: "techStack",
-                  type: "select",
+                  type: "array",
                   label: "Tech Stack",
-                  hasMany: true,
-                  options: TECH_OPTIONS,
-                  admin: { description: "Select all technologies used — shown as tags on the portfolio card" },
+                  admin: { description: "Technologies used — shown as tags on the portfolio card", initCollapsed: false },
+                  fields: [
+                    {
+                      name: "tech",
+                      type: "select",
+                      label: "Technology",
+                      options: TECH_OPTIONS,
+                    },
+                  ],
                 },
                 {
                   name: "tags",
