@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "System Monitor — Ddotsmedia" };
+export const metadata = { title: "System Monitor" };
 
 const MONITOR_KEY =
   process.env.MONITOR_KEY ?? process.env.PAYLOAD_SECRET?.slice(0, 16) ?? "";

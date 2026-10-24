@@ -14,6 +14,12 @@ const SITES = [
   { name: "gayathi", url: "https://gayathi.ae" },
   { name: "ddotshop", url: "https://ddotshop.com" },
   { name: "milisauh", url: "https://milisauh.ae" },
+  { name: "abudhabimalayalees", url: "https://abudhabimalayalees.com" },
+  { name: "bayrotna", url: "https://bayrotna.ae" },
+  { name: "kayakalpam", url: "https://kayakalpamvaidyasala.com" },
+  { name: "milestonescoffee", url: "https://milestonescoffee.ae" },
+  { name: "ddotsmediahr", url: "https://ddotsmediahr.com" },
+  { name: "synergytyping", url: "https://milestonm.ae" },
 ];
 
 const VIEWPORT = { width: 1440, height: 900, deviceScaleFactor: 2 };
@@ -29,6 +35,13 @@ async function main() {
 
   const results = [];
   for (const site of SITES) {
+    const outFile = path.join(OUT_DIR, `${site.name}.png`);
+    // Skip if already captured
+    if (fs.existsSync(outFile)) {
+      console.log(`  ⏭ skip ${site.name}.png (already exists)`);
+      results.push({ name: site.name, ok: true });
+      continue;
+    }
     const page = await browser.newPage();
     await page.setViewport(VIEWPORT);
     try {
