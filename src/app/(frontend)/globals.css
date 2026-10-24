@@ -142,6 +142,28 @@
     @apply font-sans;
     scroll-behavior: smooth;
   }
+
+  /* Custom selection */
+  ::selection {
+    background-color: color-mix(in srgb, var(--brand-teal) 35%, transparent);
+    color: #fff;
+  }
+
+  /* Custom scrollbar (Chromium) */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0a1626;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: color-mix(in srgb, var(--brand-teal) 50%, #1e2d42);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--brand-teal);
+  }
 }
 
 /* ─────────── Ddotsmedia design system ─────────── */

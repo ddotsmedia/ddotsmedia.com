@@ -12,10 +12,16 @@ export function ServicesOverview({ services }: { services: Service[] }) {
             <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.22em] text-[var(--brand-teal)]">
               What We Do
             </span>
-            <h2 className="text-3xl font-bold text-white md:text-4xl">Services</h2>
+            <h2 className="text-3xl font-bold text-white md:text-4xl">Our Services</h2>
+            <p className="mt-2 max-w-md text-sm text-white/55">
+              End-to-end digital solutions, from design to deployment.
+            </p>
           </div>
-          <Link href="/services" className="text-sm font-semibold text-[var(--brand-teal)] hover:underline">
-            View all →
+          <Link
+            href="/services"
+            className="inline-flex items-center gap-1.5 rounded-full border border-[var(--brand-teal)]/30 bg-[var(--brand-teal)]/8 px-4 py-2 text-sm font-semibold text-[var(--brand-teal)] transition-colors hover:border-[var(--brand-teal)]/60 hover:bg-[var(--brand-teal)]/15"
+          >
+            View all services →
           </Link>
         </div>
 
