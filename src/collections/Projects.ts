@@ -185,12 +185,6 @@ export const Projects: CollectionConfig = {
                     },
                   ],
                 },
-                {
-                  name: "tags",
-                  type: "text",
-                  label: "Custom Tags",
-                  admin: { description: "Comma-separated keywords for search/filter (e.g. fintech, multilingual)" },
-                },
               ],
             },
           ],
