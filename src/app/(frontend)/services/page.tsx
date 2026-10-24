@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment } from "react";
-import { ChevronRight, type LucideIcon } from "lucide-react";
+import { ArrowRight, CheckCircle2, ChevronRight, type LucideIcon } from "lucide-react";
 import { Reveal } from "@/components/shared/Reveal";
 import { CountUp } from "@/components/home/CountUp";
 import { BrowserFrame } from "@/components/preview/BrowserFrame";
@@ -235,26 +235,49 @@ export default async function ServicesPage() {
 
       {/* 8. CTA BANNER */}
       <section className="px-4 pb-24 sm:px-6 lg:px-8">
-        <div className="relative mx-auto max-w-5xl overflow-hidden rounded-3xl border border-[#1e2d42] bg-[#111827] px-6 py-14 text-center sm:px-12">
+        <div
+          className="relative mx-auto max-w-5xl overflow-hidden rounded-3xl border border-[var(--brand-teal)]/25 px-6 py-16 text-center sm:px-12"
+          style={{ background: "var(--brand-navy)" }}
+        >
+          {/* Top glow line */}
           <div
-            className="pointer-events-none absolute inset-0 opacity-50"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px"
             style={{
               background:
-                "radial-gradient(60% 80% at 50% 0%, color-mix(in srgb, var(--brand-teal) 22%, transparent), transparent)",
+                "linear-gradient(90deg, transparent, color-mix(in srgb, var(--brand-teal) 60%, transparent), transparent)",
+            }}
+          />
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(55% 70% at 50% 0%, color-mix(in srgb, var(--brand-teal) 22%, transparent), transparent)",
             }}
           />
           <div className="relative">
-            <h2 className="text-3xl font-bold text-white sm:text-4xl">
+            <span className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--brand-teal)]">
+              Ready to Start?
+            </span>
+            <h2 className="mt-3 text-3xl font-bold text-white sm:text-4xl">
               Let&apos;s build something that moves your business forward.
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-white/60">
-              Tell us what you need — we&apos;ll scope it, price it, and ship it.
+              Tell us what you need — we&apos;ll scope it, price it, and ship it on time.
             </p>
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-5 text-sm text-white/55">
+              {["Free consultation", "Fixed-price quotes", "Reply within 2 hours"].map((p) => (
+                <span key={p} className="flex items-center gap-1.5">
+                  <CheckCircle2 className="h-4 w-4 text-[var(--brand-teal)]" />
+                  {p}
+                </span>
+              ))}
+            </div>
             <Link
               href="/contact"
-              className="mt-8 inline-flex rounded-full bg-[var(--brand-teal)] px-7 py-3 font-semibold text-white shadow-lg shadow-[var(--brand-teal)]/25 transition-transform hover:-translate-y-0.5"
+              className="mt-8 inline-flex items-center gap-2 rounded-full bg-[var(--brand-teal)] px-7 py-3 font-semibold text-white shadow-lg shadow-[var(--brand-teal)]/25 transition-all hover:-translate-y-0.5 hover:shadow-[var(--brand-teal)]/45"
             >
               Get a Free Quote
+              <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </div>

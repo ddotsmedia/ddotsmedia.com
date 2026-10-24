@@ -93,7 +93,6 @@ const TIMELINE = [
   { year: "2020", title: "ERP Division", body: "Started building custom ERP systems for inventory, HR, and accounting." },
   { year: "2022", title: "Abu Dhabi & Sharjah", body: "Expanded across the Emirates with new presence in Abu Dhabi and Sharjah." },
   { year: "2024", title: "150+ Projects", body: "Crossed 150 delivered projects for clients in 12 countries." },
-  { year: "2026", title: "10 Years On", body: "A decade of building products for UAE and GCC businesses, still growing." },
 ];
 
 const CITIES = [
@@ -193,24 +192,18 @@ export default async function AboutPage() {
 
       {/* 4. ACHIEVEMENTS / NUMBERS */}
       {achData.length > 0 && (
-      <section
-        className="relative overflow-hidden border-y border-[var(--brand-teal)]/20"
-        style={{
-          background:
-            "linear-gradient(135deg, color-mix(in srgb, var(--brand-teal) 30%, var(--brand-navy)), var(--brand-navy))",
-        }}
-      >
+      <section className="relative overflow-hidden border-y border-white/[0.06] bg-[#0d1420]">
         <div
-          className="pointer-events-none absolute inset-0 opacity-60"
+          className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "radial-gradient(60% 100% at 50% 0%, color-mix(in srgb, var(--brand-teal) 26%, transparent), transparent)",
+              "radial-gradient(70% 120% at 50% 0%, color-mix(in srgb, var(--brand-teal) 16%, transparent), transparent)",
           }}
         />
         <div className="relative mx-auto grid max-w-7xl grid-cols-2 gap-8 px-4 py-16 sm:px-6 md:grid-cols-3 lg:grid-cols-6 lg:px-8">
           {achData.map((a, i) => (
             <Reveal key={a.label} delay={i * 0.06} className="text-center">
-              <div className="text-4xl font-bold text-white md:text-5xl">
+              <div className="text-4xl font-bold text-[var(--brand-teal)] tabular-nums md:text-5xl">
                 {typeof a.value === "number" ? (
                   <>
                     <CountUp value={a.value} />
@@ -220,7 +213,7 @@ export default async function AboutPage() {
                   a.text
                 )}
               </div>
-              <div className="mt-2 text-sm text-white/80">{a.label}</div>
+              <div className="mt-2 text-sm text-white/65">{a.label}</div>
             </Reveal>
           ))}
         </div>

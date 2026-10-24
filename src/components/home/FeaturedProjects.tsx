@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import type { Project } from "@/payload-types";
 import { ProjectCard } from "@/components/portfolio/ProjectCard";
@@ -18,9 +16,9 @@ export function FeaturedProjects({ projects }: { projects: Project[] }) {
           </div>
           <Link
             href="/portfolio"
-            className="text-sm font-semibold text-[var(--brand-teal)] hover:underline"
+            className="inline-flex items-center gap-1.5 rounded-full border border-[var(--brand-teal)]/30 bg-[var(--brand-teal)]/8 px-4 py-2 text-sm font-semibold text-[var(--brand-teal)] transition-colors hover:border-[var(--brand-teal)]/60 hover:bg-[var(--brand-teal)]/15"
           >
-            View all →
+            View all projects →
           </Link>
         </div>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">

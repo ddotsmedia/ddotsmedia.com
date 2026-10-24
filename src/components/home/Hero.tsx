@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowRight, Star } from "lucide-react";
 import type { UIAchievement } from "@/lib/content";
 import { Reveal } from "@/components/shared/Reveal";
 import { CountUp } from "./CountUp";
@@ -31,6 +32,16 @@ export function Hero({
       <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 md:grid-cols-2 md:gap-10 md:px-8">
         {/* ── Left: text ── */}
         <div className="text-center md:text-left">
+          {/* Social proof badge */}
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[var(--brand-teal)]/30 bg-[var(--brand-teal)]/8 px-4 py-1.5 badge-glow">
+            <span className="flex gap-0.5">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Star key={i} className="h-3 w-3 fill-[var(--brand-accent-yellow)] text-[var(--brand-accent-yellow)]" />
+              ))}
+            </span>
+            <span className="text-xs font-semibold text-white/80">Trusted by 80+ UAE businesses</span>
+          </div>
+
           <h1 className="font-display text-4xl font-bold leading-[1.1] text-white sm:text-5xl md:text-[3.25rem]">
             We build <TypingWords />
             <br />
@@ -45,13 +56,14 @@ export function Hero({
           <div className="mt-8 flex flex-wrap justify-center gap-4 md:justify-start">
             <Link
               href={ctaLink}
-              className="rounded-full bg-[var(--brand-teal)] px-7 py-3 font-semibold text-white shadow-lg shadow-[var(--brand-teal)]/25 transition-transform hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 rounded-full bg-[var(--brand-teal)] px-7 py-3 font-semibold text-white shadow-lg shadow-[var(--brand-teal)]/25 transition-all hover:-translate-y-0.5 hover:shadow-[var(--brand-teal)]/45"
             >
               {ctaText}
+              <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               href="/portfolio"
-              className="rounded-full border-2 border-white/30 px-7 py-3 font-semibold text-white transition-colors hover:border-white"
+              className="rounded-full border border-white/20 px-7 py-3 font-semibold text-white/90 transition-colors hover:border-white/50 hover:text-white"
             >
               View Our Work
             </Link>
