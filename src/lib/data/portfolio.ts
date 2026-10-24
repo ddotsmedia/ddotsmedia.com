@@ -24,18 +24,8 @@ export const PORTFOLIO: PortfolioItem[] = [
     image: "/projects/ddotsmediajobs.png",
     category: "Web",
     description:
-      "Recruitment platform connecting UAE employers with talent — listings, profiles, and applicant tracking.",
-    tags: ["Next.js", "Search", "Dashboards"],
-  },
-  {
-    name: "ddotsmediaerp",
-    title: "Ddotsmedia ERP",
-    url: "https://ddotsmediaerp.com",
-    image: "/projects/ddotsmediaerp.png",
-    category: "ERP",
-    description:
-      "End-to-end ERP for inventory, sales, HR, and accounting with role-based dashboards and reporting.",
-    tags: ["ERP", "Reporting", "Automation"],
+      "Recruitment platform connecting UAE employers with talent — job listings, candidate profiles, applicant tracking, and automated email alerts.",
+    tags: ["Next.js", "TypeScript", "PostgreSQL", "Prisma", "Redis", "Tailwind CSS", "ATS", "Search", "Email Alerts", "Dashboards"],
   },
   {
     name: "ayurconnect",
@@ -44,18 +34,8 @@ export const PORTFOLIO: PortfolioItem[] = [
     image: "/projects/ayurconnect.png",
     category: "Web",
     description:
-      "Ayurveda wellness platform linking practitioners and patients with online booking and consultations.",
-    tags: ["Booking", "Health", "Web"],
-  },
-  {
-    name: "gayathi",
-    title: "Gayathi",
-    url: "https://gayathi.ae",
-    image: "/projects/gayathi.png",
-    category: "Web",
-    description:
-      "Corporate website for a UAE trading and services group with a CMS-driven catalogue.",
-    tags: ["Branding", "CMS", "Web"],
+      "Ayurveda wellness platform linking practitioners and patients with online booking, video consultations, and health records.",
+    tags: ["Next.js", "TypeScript", "Stripe", "Twilio", "PostgreSQL", "Prisma", "Booking", "Video Calls", "Healthcare", "Multilingual"],
   },
   {
     name: "ddotshop",
@@ -64,17 +44,47 @@ export const PORTFOLIO: PortfolioItem[] = [
     image: "/projects/ddotshop.png",
     category: "Web",
     description:
-      "Modern e-commerce storefront with product catalogue, cart, and secure checkout.",
-    tags: ["E-commerce", "Cart", "Payments"],
+      "Modern e-commerce storefront with full product catalogue, cart, wishlist, and secure Stripe checkout.",
+    tags: ["Next.js", "Stripe", "PostgreSQL", "TypeScript", "E-commerce", "Cart", "Wishlist", "Payments", "Inventory"],
   },
   {
-    name: "milisauh",
-    title: "Milisa UH",
-    url: "https://milisauh.ae",
-    image: "/projects/milisauh.png",
+    name: "abudhabimalayalees",
+    title: "Abu Dhabi Malayalees",
+    url: "https://abudhabimalayalees.com",
+    image: "/projects/abudhabimalayalees.png",
     category: "Web",
     description:
-      "Business website with service catalogue and online bookings for a UAE brand.",
-    tags: ["Web", "Bookings", "CMS"],
+      "Community social network for Kerala expatriates in Abu Dhabi — events, news, jobs board, and member directory for 120K+ members.",
+    tags: ["Next.js", "Node.js", "PostgreSQL", "Redis", "Social Network", "Events", "Jobs Board", "Community", "WhatsApp Integration"],
+  },
+  {
+    name: "bayrotna",
+    title: "Bayrotna — Little Smarties",
+    url: "https://bayrotna.ae",
+    image: "/projects/bayrotna.png",
+    category: "Web",
+    description:
+      "Modern nursery website with facility gallery, program listings, parent portal, and online enrollment for UAE parents.",
+    tags: ["Next.js", "TypeScript", "Payload CMS", "Docker", "GitHub Actions", "Enrollment", "Gallery", "Parent Portal"],
+  },
+  {
+    name: "kayakalpam",
+    title: "Kayakalpam Vaidya Sala",
+    url: "https://kayakalpamvaidyasala.com",
+    image: "/projects/kayakalpam.png",
+    category: "Web",
+    description:
+      "Traditional Kerala Ayurvedic clinic site with treatment listings, doctor profiles, and online appointment booking in Malayalam and English.",
+    tags: ["Next.js", "Tailwind CSS", "Booking", "Ayurveda", "Healthcare", "Multilingual", "Malayalam", "SEO"],
+  },
+  {
+    name: "synergytyping",
+    title: "Synergy Typing",
+    url: "https://milestonm.ae",
+    image: "/projects/synergytyping.png",
+    category: "Desktop",
+    description:
+      "Professional typing training platform with speed tests, progress tracking, and certification for UAE typing institutes.",
+    tags: ["React", "Electron", "TypeScript", "Desktop App", "Typing Tests", "Certificates", "Progress Tracking", "Leaderboard"],
   },
 ];

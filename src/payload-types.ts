@@ -78,6 +78,7 @@ export interface Config {
     'faq-items': FaqItem;
     industries: Industry;
     'pricing-tiers': PricingTier;
+    'job-listings': JobListing;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -96,6 +97,7 @@ export interface Config {
     'faq-items': FaqItemsSelect<false> | FaqItemsSelect<true>;
     industries: IndustriesSelect<false> | IndustriesSelect<true>;
     'pricing-tiers': PricingTiersSelect<false> | PricingTiersSelect<true>;
+    'job-listings': JobListingSelect<false> | JobListingSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -158,6 +160,7 @@ export interface User {
   resetPasswordExpiration?: string | null;
   salt?: string | null;
   hash?: string | null;
+  resetPasswordRequestedAt?: string | null;
   loginAttempts?: number | null;
   lockUntil?: string | null;
   sessions?:
@@ -508,6 +511,55 @@ export interface PricingTier {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "job-listings".
+ */
+export interface JobListing {
+  id: number;
+  title: string;
+  slug?: string | null;
+  department?: ('engineering' | 'design' | 'project-management' | 'sales' | 'marketing' | 'operations') | null;
+  locationType?: ('onsite' | 'remote' | 'hybrid') | null;
+  employmentType?: ('full-time' | 'part-time' | 'freelance' | 'internship') | null;
+  location?: string | null;
+  salaryRange?: string | null;
+  shortDescription?: string | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  requirements?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  active?: boolean | null;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -628,6 +680,7 @@ export interface UsersSelect<T extends boolean = true> {
   resetPasswordExpiration?: T;
   salt?: T;
   hash?: T;
+  resetPasswordRequestedAt?: T;
   loginAttempts?: T;
   lockUntil?: T;
   sessions?:
@@ -873,6 +926,27 @@ export interface PricingTiersSelect<T extends boolean = true> {
   ctaLink?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "job-listings_select".
+ */
+export interface JobListingSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  department?: T;
+  locationType?: T;
+  employmentType?: T;
+  location?: T;
+  salaryRange?: T;
+  shortDescription?: T;
+  description?: T;
+  requirements?: T;
+  active?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  id?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

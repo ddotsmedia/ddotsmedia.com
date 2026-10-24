@@ -35,12 +35,8 @@ export type UIProcessStep = { label: string; description: string; icon: LucideIc
 export type UIAchievement = { value?: number; suffix?: string; text?: string; label: string };
 export type UITestimonial = { quote: string; author: string; role: string; company: string; rating: number };
 
-export const TEAM_FALLBACK: UITeamMember[] = [
-  { name: "Mohammed Al Rashid", role: "CEO", initials: "MA", accent: "var(--brand-teal)" },
-  { name: "Priya Nair", role: "Lead Developer", initials: "PN", accent: "var(--brand-accent-orange)" },
-  { name: "Omar Hassan", role: "UI/UX Designer", initials: "OH", accent: "var(--brand-accent-green)" },
-  { name: "Aisha Karimi", role: "Project Manager", initials: "AK", accent: "#3dbac6" },
-];
+// Empty until team members are added via Payload CMS admin
+export const TEAM_FALLBACK: UITeamMember[] = [];
 
 export const INDUSTRIES_FALLBACK: UIIndustry[] = [
   { icon: HeartPulse, title: "Healthcare", body: "Clinics, pharmacies, and wellness platforms with booking and records." },

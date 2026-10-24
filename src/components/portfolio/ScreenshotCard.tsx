@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
 import Tilt from "react-parallax-tilt";
 import { motion, useReducedMotion } from "motion/react";
 import type { PortfolioItem } from "@/lib/data/portfolio";
@@ -16,6 +17,7 @@ const categoryColor: Record<PortfolioItem["category"], string> = {
 /** Live-site screenshot inside a tilting macOS-style browser frame. */
 export function ScreenshotCard({ item, index }: { item: PortfolioItem; index: number }) {
   const reduce = useReducedMotion();
+  const [imgError, setImgError] = useState(false);
   const host = item.url.replace(/^https?:\/\//, "").replace(/\/+$/, "");
 
   return (
@@ -60,13 +62,23 @@ export function ScreenshotCard({ item, index }: { item: PortfolioItem; index: nu
           </div>
 
           <div className="relative aspect-[16/9] overflow-hidden bg-navy">
-            <Image
-              src={item.image}
-              alt={`${item.title} — live site screenshot`}
-              fill
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              className="object-cover object-left-top origin-top-left transition-transform duration-500 group-hover:scale-[1.04]"
-            />
+            {!imgError ? (
+              <Image
+                src={item.image}
+                alt={`${item.title} — live site screenshot`}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className="object-cover object-left-top origin-top-left transition-transform duration-500 group-hover:scale-[1.04]"
+                onError={() => setImgError(true)}
+              />
+            ) : (
+              <div className="flex h-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-[#0d1929] to-[#111827]">
+                <span className="flex h-16 w-16 items-center justify-center rounded-2xl border border-[var(--brand-teal)]/30 bg-[var(--brand-teal)]/10 text-2xl font-bold text-[var(--brand-teal)]">
+                  {item.title.slice(0, 2).toUpperCase()}
+                </span>
+                <span className="text-sm font-medium text-white/40">{item.title}</span>
+              </div>
+            )}
             <span
               className="absolute left-3 top-3 rounded-full px-2.5 py-1 text-xs font-semibold text-white backdrop-blur"
               style={{ backgroundColor: categoryColor[item.category] }}

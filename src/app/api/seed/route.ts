@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getPayloadClient } from "@/lib/payload";
 import { SERVICES } from "@/lib/data/services";
+import { PORTFOLIO } from "@/lib/data/portfolio";
 import type { Service } from "@/payload-types";
 
 export const dynamic = "force-dynamic";
@@ -209,7 +210,8 @@ const COMPANY = {
 
 export async function GET(req: Request) {
   // Disabled unless an explicit SEED_KEY is configured (no default key).
-  const expected = process.env.SEED_KEY;
+  // SEED_KEY takes priority; falls back to PAYLOAD_SECRET so no extra GitHub secret is needed.
+  const expected = process.env.SEED_KEY ?? process.env.PAYLOAD_SECRET;
   if (!expected) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
@@ -221,6 +223,34 @@ export async function GET(req: Request) {
   const result: Record<string, string> = {};
   try {
     const payload = await getPayloadClient();
+
+    // 0. PROJECTS
+    if ((await payload.count({ collection: "projects" })).totalDocs > 0) {
+      result.projects = "skipped (not empty)";
+    } else {
+      for (let i = 0; i < PORTFOLIO.length; i++) {
+        const item = PORTFOLIO[i];
+        await payload.create({
+          collection: "projects",
+          data: {
+            liveUrl: item.url,
+            title: item.title,
+            slug: item.name,
+            category: item.category === "Web" ? "Web"
+              : item.category === "Desktop" ? "Desktop"
+              : item.category === "ERP" ? "ERP"
+              : item.category === "iOS" ? "iOS"
+              : "Android",
+            shortDescription: item.description,
+            techStack: (item.tags ?? []).map((tech, j) => ({ tech, id: String(j) })),
+            featured: i < 2,
+            order: i + 1,
+            status: "Live",
+          },
+        });
+      }
+      result.projects = `seeded ${PORTFOLIO.length}`;
+    }
 
     // 1. SERVICES
     if ((await payload.count({ collection: "services" })).totalDocs > 0) {

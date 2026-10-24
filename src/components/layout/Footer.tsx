@@ -46,10 +46,10 @@ export async function Footer() {
   const address = cs?.address || "SHAMS Free Zone, Sharjah, UAE";
   const social = cs?.socialLinks ?? null;
   const SOCIAL: { icon: ComponentType<IconProps>; label: string; href: string }[] = [
-    { icon: LinkedInIcon, label: "LinkedIn", href: social?.linkedin || "#" },
-    { icon: XIcon, label: "Twitter / X", href: social?.twitter || "#" },
-    { icon: InstagramIcon, label: "Instagram", href: social?.instagram || "#" },
-    { icon: GitHubIcon, label: "GitHub", href: social?.github || "#" },
+    ...(social?.linkedin ? [{ icon: LinkedInIcon, label: "LinkedIn", href: social.linkedin }] : []),
+    ...(social?.twitter ? [{ icon: XIcon, label: "Twitter / X", href: social.twitter }] : []),
+    ...(social?.instagram ? [{ icon: InstagramIcon, label: "Instagram", href: social.instagram }] : []),
+    ...(social?.github ? [{ icon: GitHubIcon, label: "GitHub", href: social.github }] : []),
   ];
 
   return (
@@ -116,26 +116,30 @@ export async function Footer() {
           </div>
 
           {/* Social */}
-          <div>
-            <h3 className="text-sm font-semibold text-white">Follow Us</h3>
-            <div className="mt-4 flex gap-3">
-              {SOCIAL.map((s) => (
-                <a
-                  key={s.label}
-                  href={s.href}
-                  aria-label={s.label}
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/[0.03] text-white/60 transition-colors hover:border-[var(--brand-teal)] hover:text-[var(--brand-teal)]"
-                >
-                  <s.icon className="h-4 w-4" />
-                </a>
-              ))}
+          {SOCIAL.length > 0 && (
+            <div>
+              <h3 className="text-sm font-semibold text-white">Follow Us</h3>
+              <div className="mt-4 flex gap-3">
+                {SOCIAL.map((s) => (
+                  <a
+                    key={s.label}
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={s.label}
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/[0.03] text-white/60 transition-colors hover:border-[var(--brand-teal)] hover:text-[var(--brand-teal)]"
+                  >
+                    <s.icon className="h-4 w-4" />
+                  </a>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Bottom bar */}
         <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-xs text-white/40 sm:flex-row">
-          <p>© 2024 Ddotsmedia IT Solutions. All rights reserved.</p>
+          <p>© 2026 Ddotsmedia IT Solutions. All rights reserved.</p>
           <p>SHAMS Free Zone Licensed</p>
         </div>
       </div>

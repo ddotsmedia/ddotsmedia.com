@@ -28,7 +28,11 @@ export function Navbar() {
   }, []);
 
   // Close the mobile menu whenever the route changes.
-  useEffect(() => setOpen(false), [pathname]);
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  if (pathname !== prevPathname) {
+    setPrevPathname(pathname);
+    setOpen(false);
+  }
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);

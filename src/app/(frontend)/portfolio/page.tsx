@@ -1,14 +1,30 @@
+export const dynamic = "force-dynamic";
+
 import type { Metadata } from "next";
 import { getPayloadClient, safeQuery } from "@/lib/payload";
 import type { Project } from "@/payload-types";
 import { PortfolioGrid } from "@/components/portfolio/PortfolioGrid";
-import { ScreenshotCard } from "@/components/portfolio/ScreenshotCard";
 import { PORTFOLIO } from "@/lib/data/portfolio";
+
+/** Map static fallback data → Project shape so PortfolioGrid always works */
+const STATIC_PROJECTS: Project[] = PORTFOLIO.map((item, i) => ({
+  id: -(i + 1), // negative IDs signal static data
+  liveUrl: item.url,
+  title: item.title,
+  slug: item.name,
+  category: item.category,
+  shortDescription: item.description,
+  techStack: (item.tags ?? []).map((tech, j) => ({ tech, id: String(j) })),
+  featured: i < 2, // first two shown as featured
+  order: i,
+  updatedAt: "2024-01-01T00:00:00.000Z",
+  createdAt: "2024-01-01T00:00:00.000Z",
+}));
 
 export const revalidate = 60; // ISR
 
 export const metadata: Metadata = {
-  title: "Portfolio — Ddotsmedia",
+  title: "Portfolio",
   description:
     "Real software we've built for UAE businesses — web apps, mobile apps, desktop tools, and ERP systems.",
 };
@@ -41,15 +57,7 @@ export default async function PortfolioPage() {
 
       <section className="py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          {projects.length > 0 ? (
-            <PortfolioGrid projects={projects} />
-          ) : (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {PORTFOLIO.map((item, i) => (
-                <ScreenshotCard key={item.name} item={item} index={i} />
-              ))}
-            </div>
-          )}
+          <PortfolioGrid projects={projects.length > 0 ? projects : STATIC_PROJECTS} />
         </div>
       </section>
     </main>
