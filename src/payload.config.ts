@@ -38,6 +38,7 @@ export default buildConfig({
   admin: {
     user: "users",
     components: {
+      Nav: "@/components/admin/AdminNav#AdminNav",
       views: {
         dashboard: {
           Component: "@/components/admin/Dashboard#DashboardView",
