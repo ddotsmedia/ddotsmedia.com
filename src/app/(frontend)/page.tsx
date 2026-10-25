@@ -2,9 +2,11 @@ import { getPayloadClient, safeQuery } from "@/lib/payload";
 import type { Project } from "@/payload-types";
 import { getServices, getAchievements, getCompanySettings } from "@/lib/content";
 import { Hero } from "@/components/home/Hero";
+import { TechMarquee } from "@/components/home/TechMarquee";
 import { ServicesOverview } from "@/components/home/ServicesOverview";
 import { FeaturedProjects } from "@/components/home/FeaturedProjects";
 import { FeaturedScreenshots } from "@/components/home/FeaturedScreenshots";
+import { ProcessSection } from "@/components/home/ProcessSection";
 import { WhyChooseUs } from "@/components/home/WhyChooseUs";
 import { HomeCta } from "@/components/home/HomeCta";
 
@@ -35,12 +37,14 @@ export default async function Home() {
         ctaText={cs?.ctaButtonText || "Get a Free Quote"}
         ctaLink={cs?.ctaButtonLink || "/contact"}
       />
+      <TechMarquee />
       {services.length > 0 && <ServicesOverview services={services} />}
       {featured.length > 0 ? (
         <FeaturedProjects projects={featured} />
       ) : (
         <FeaturedScreenshots />
       )}
+      <ProcessSection />
       <WhyChooseUs />
       <HomeCta />
     </main>

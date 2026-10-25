@@ -108,12 +108,6 @@ export default async function ServicesPage() {
           <div className="mx-auto mt-10 grid max-w-2xl grid-cols-3 gap-4">
             <div>
               <div className="text-3xl font-bold text-[var(--brand-teal)] sm:text-4xl">
-                <CountUp value={150} />+
-              </div>
-              <div className="mt-1 text-xs text-white/55 sm:text-sm">Projects</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-[var(--brand-teal)] sm:text-4xl">
                 <CountUp value={6} />
               </div>
               <div className="mt-1 text-xs text-white/55 sm:text-sm">Core Services</div>
@@ -121,6 +115,10 @@ export default async function ServicesPage() {
             <div>
               <div className="text-3xl font-bold text-[var(--brand-teal)] sm:text-4xl">Full-Stack</div>
               <div className="mt-1 text-xs text-white/55 sm:text-sm">Coverage</div>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-[var(--brand-teal)] sm:text-4xl">UAE</div>
+              <div className="mt-1 text-xs text-white/55 sm:text-sm">Market Focus</div>
             </div>
           </div>
         </div>
