@@ -1,0 +1,69 @@
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import type { UIAchievement } from "@/lib/content";
+import { Reveal } from "@/components/shared/Reveal";
+import { TypingWords } from "./TypingWords";
+import { HeroSlideshow } from "./HeroSlideshow";
+
+export function Hero({
+  ctaText,
+  ctaLink,
+}: {
+  stats?: UIAchievement[];
+  ctaText: string;
+  ctaLink: string;
+}) {
+  return (
+    <section className="relative overflow-hidden pt-24 pb-20 md:pt-32 md:pb-28">
+      {/* Background gradient blobs */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div
+          className="absolute right-[-6%] top-1/2 h-[500px] w-[500px] -translate-y-1/2 rounded-full"
+          style={{ background: "radial-gradient(circle, rgba(42,154,164,0.2), transparent 70%)" }}
+        />
+        <div
+          className="absolute left-[-8%] top-[-12%] h-[400px] w-[400px] rounded-full"
+          style={{ background: "radial-gradient(circle, rgba(240,124,58,0.12), transparent 70%)" }}
+        />
+      </div>
+
+      <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 md:grid-cols-2 md:gap-10 md:px-8">
+        {/* ── Left: text ── */}
+        <div className="text-center md:text-left">
+
+          <h1 className="font-display text-4xl font-bold leading-[1.1] text-white sm:text-5xl md:text-[3.25rem]">
+            We build <TypingWords />
+            <br />
+            that move your business forward.
+          </h1>
+
+          <p className="mx-auto mt-6 max-w-xl text-lg text-white/60 md:mx-0">
+            Web apps, mobile apps, and custom ERP systems engineered for performance,
+            built for the UAE market and beyond.
+          </p>
+
+          <div className="mt-8 flex flex-wrap justify-center gap-4 md:justify-start">
+            <Link
+              href={ctaLink}
+              className="inline-flex items-center gap-2 rounded-full bg-[var(--brand-teal)] px-7 py-3 font-semibold text-white shadow-lg shadow-[var(--brand-teal)]/25 transition-all hover:-translate-y-0.5 hover:shadow-[var(--brand-teal)]/45"
+            >
+              {ctaText}
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              href="/portfolio"
+              className="rounded-full border border-white/20 px-7 py-3 font-semibold text-white/90 transition-colors hover:border-white/50 hover:text-white"
+            >
+              View Our Work
+            </Link>
+          </div>
+        </div>
+
+        {/* ── Right: rotating browser mockup slideshow (desktop only) ── */}
+        <Reveal delay={0.15} className="hidden md:block">
+          <HeroSlideshow />
+        </Reveal>
+      </div>
+    </section>
+  );
+}
