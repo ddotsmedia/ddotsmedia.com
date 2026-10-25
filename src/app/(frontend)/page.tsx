@@ -1,6 +1,6 @@
 import { getPayloadClient, safeQuery } from "@/lib/payload";
 import type { Project } from "@/payload-types";
-import { getServices, getAchievements, getCompanySettings } from "@/lib/content";
+import { getServices, getAchievements, getCompanySettings, getTestimonials } from "@/lib/content";
 import { Hero } from "@/components/home/Hero";
 import { TechMarquee } from "@/components/home/TechMarquee";
 import { ServicesOverview } from "@/components/home/ServicesOverview";
@@ -9,11 +9,12 @@ import { FeaturedScreenshots } from "@/components/home/FeaturedScreenshots";
 import { ProcessSection } from "@/components/home/ProcessSection";
 import { WhyChooseUs } from "@/components/home/WhyChooseUs";
 import { HomeCta } from "@/components/home/HomeCta";
+import { Testimonials } from "@/components/home/Testimonials";
 
 export const revalidate = 60; // ISR — revalidate every 60 s
 
 export default async function Home() {
-  const [stats, featured, services, cs] = await Promise.all([
+  const [stats, featured, services, cs, testimonials] = await Promise.all([
     getAchievements(),
     safeQuery(async () => {
       const payload = await getPayloadClient();
@@ -28,6 +29,7 @@ export default async function Home() {
     }, [] as Project[]),
     getServices(),
     getCompanySettings(),
+    getTestimonials(),
   ]);
 
   return (
@@ -46,6 +48,7 @@ export default async function Home() {
       )}
       <ProcessSection />
       <WhyChooseUs />
+      {testimonials.length > 0 && <Testimonials items={testimonials} />}
       <HomeCta />
     </main>
   );

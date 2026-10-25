@@ -19,6 +19,8 @@ import { CountUp } from "@/components/home/CountUp";
 import { getTeam, getAchievements } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
+export const revalidate = 60; // ISR — revalidate every 60 s
+
 export const metadata: Metadata = {
   title: "About Us",
   description:
