@@ -1,16 +1,14 @@
-﻿
 import { getPayloadClient, safeQuery } from "@/lib/payload";
 import type { Project } from "@/payload-types";
 import { getServices, getAchievements, getCompanySettings } from "@/lib/content";
 import { Hero } from "@/components/home/Hero";
-// StatsRow is now consolidated into the Hero (stats below the CTAs).
 import { ServicesOverview } from "@/components/home/ServicesOverview";
 import { FeaturedProjects } from "@/components/home/FeaturedProjects";
 import { FeaturedScreenshots } from "@/components/home/FeaturedScreenshots";
 import { WhyChooseUs } from "@/components/home/WhyChooseUs";
 import { HomeCta } from "@/components/home/HomeCta";
 
-export const revalidate = 60; // ISR
+export const revalidate = 60; // ISR — revalidate every 60 s
 
 export default async function Home() {
   const [stats, featured, services, cs] = await Promise.all([

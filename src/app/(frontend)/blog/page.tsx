@@ -1,4 +1,4 @@
-﻿
+
 import type { Metadata } from "next";
 import { getPayloadClient, safeQuery } from "@/lib/payload";
 import type { Post } from "@/payload-types";

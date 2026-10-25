@@ -1,11 +1,11 @@
-﻿
+
 import type { Metadata } from "next";
 import { getPayloadClient, safeQuery } from "@/lib/payload";
 import type { Project } from "@/payload-types";
 import { PortfolioGrid } from "@/components/portfolio/PortfolioGrid";
 import { PORTFOLIO } from "@/lib/data/portfolio";
 
-/** Map static fallback data â†’ Project shape so PortfolioGrid always works */
+/** Map static fallback data → Project shape so PortfolioGrid always works */
 const STATIC_PROJECTS: Project[] = PORTFOLIO.map((item, i) => ({
   id: -(i + 1), // negative IDs signal static data
   liveUrl: item.url,
@@ -23,9 +23,9 @@ const STATIC_PROJECTS: Project[] = PORTFOLIO.map((item, i) => ({
 export const revalidate = 60; // ISR
 
 export const metadata: Metadata = {
-  title: "Portfolio â€” Ddotsmedia",
+  title: "Portfolio — Ddotsmedia",
   description:
-    "Real software we've built for UAE businesses â€” web apps, mobile apps, desktop tools, and ERP systems.",
+    "Real software we've built for UAE businesses — web apps, mobile apps, desktop tools, and ERP systems.",
 };
 
 export default async function PortfolioPage() {
@@ -59,7 +59,7 @@ export default async function PortfolioPage() {
             Portfolio
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-lg text-white/60">
-            Real software, real businesses â€” web apps, mobile apps, ERPs, and more built across the UAE and GCC.
+            Real software, real businesses — web apps, mobile apps, ERPs, and more built across the UAE and GCC.
           </p>
           <div className="mx-auto mt-10 grid max-w-xs grid-cols-3 gap-4 sm:max-w-sm">
             {[
