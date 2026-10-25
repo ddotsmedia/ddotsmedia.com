@@ -19,7 +19,7 @@ export default async function Home() {
       const payload = await getPayloadClient();
       const res = await payload.find({
         collection: "projects",
-        where: { featured: { equals: true } },
+        where: { featured: { equals: true }, published: { equals: true } },
         sort: ["order", "-createdAt"],
         limit: 12,
         depth: 1,
