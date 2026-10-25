@@ -19,7 +19,7 @@ async function getProject(slug: string) {
   const payload = await getPayloadClient();
   const { docs } = await payload.find({
     collection: "projects",
-    where: { slug: { equals: slug } },
+    where: { slug: { equals: slug }, published: { equals: true } },
     limit: 1,
     depth: 2,
   });
@@ -31,6 +31,7 @@ export async function generateStaticParams() {
     const payload = await getPayloadClient();
     const { docs } = await payload.find({
       collection: "projects",
+      where: { published: { equals: true } },
       limit: 200,
       depth: 0,
       select: { slug: true },
@@ -67,6 +68,7 @@ export default async function ProjectPage({ params }: Params) {
   const payload = await getPayloadClient();
   const { docs: all } = await payload.find({
     collection: "projects",
+    where: { published: { equals: true } },
     sort: ["order", "-createdAt"],
     limit: 200,
     depth: 0,
