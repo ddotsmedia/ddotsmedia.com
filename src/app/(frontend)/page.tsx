@@ -1,5 +1,4 @@
-export const dynamic = "force-dynamic";
-
+﻿
 import { getPayloadClient, safeQuery } from "@/lib/payload";
 import type { Project } from "@/payload-types";
 import { getServices, getAchievements, getCompanySettings } from "@/lib/content";

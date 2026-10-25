@@ -1,5 +1,4 @@
-export const dynamic = "force-dynamic";
-
+﻿
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -67,7 +66,7 @@ export default async function PostPage({ params }: Params) {
     <main className="min-h-screen bg-navy pt-28">
       <article className="mx-auto max-w-3xl px-4 pb-24 sm:px-6 lg:px-8">
         <Link href="/blog" className="text-sm text-white/50 hover:text-white">
-          ← All posts
+          â† All posts
         </Link>
 
         <header className="mt-6">
@@ -75,7 +74,7 @@ export default async function PostPage({ params }: Params) {
             {formatDate(post.publishedDate)}
             {post.author && (
               <>
-                <span aria-hidden>•</span>
+                <span aria-hidden>â€¢</span>
                 <span>{post.author}</span>
               </>
             )}

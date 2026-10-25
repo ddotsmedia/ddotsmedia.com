@@ -1,5 +1,4 @@
-export const dynamic = "force-dynamic";
-
+﻿
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -94,15 +93,15 @@ export default async function ProjectPage({ params }: Params) {
       {/* 1. Hero */}
       <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <Link href="/portfolio" className="text-sm text-white/50 hover:text-white">
-          ← All projects
+          â† All projects
         </Link>
         <div className="mt-6 flex flex-wrap items-center gap-3 text-sm text-white/50">
           <span className="rounded-full bg-[var(--brand-teal)]/15 px-3 py-1 font-medium text-[var(--brand-teal)]">
             {project.category}
           </span>
           {project.client && <span>{project.client}</span>}
-          {project.year && <span>· {project.year}</span>}
-          {project.status && <span>· {project.status}</span>}
+          {project.year && <span>Â· {project.year}</span>}
+          {project.status && <span>Â· {project.status}</span>}
         </div>
         <h1 className="mt-4 text-4xl font-bold leading-tight text-white md:text-6xl">
           {project.title}
@@ -113,17 +112,17 @@ export default async function ProjectPage({ params }: Params) {
         <div className="mt-6 flex flex-wrap gap-3">
           {project.liveUrl && (
             <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="rounded-full bg-[var(--brand-teal)] px-5 py-2 text-sm font-semibold text-white">
-              Visit Site ↗
+              Visit Site â†—
             </a>
           )}
           {project.appStoreUrl && (
             <a href={project.appStoreUrl} target="_blank" rel="noopener noreferrer" className="rounded-full border border-white/15 px-5 py-2 text-sm font-semibold text-white/90">
-              App Store ↗
+              App Store â†—
             </a>
           )}
           {project.playStoreUrl && (
             <a href={project.playStoreUrl} target="_blank" rel="noopener noreferrer" className="rounded-full border border-white/15 px-5 py-2 text-sm font-semibold text-white/90">
-              Play Store ↗
+              Play Store â†—
             </a>
           )}
         </div>
@@ -197,7 +196,7 @@ export default async function ProjectPage({ params }: Params) {
         <section className="mx-auto mt-20 max-w-3xl px-4 sm:px-6 lg:px-8">
           <blockquote className="rounded-2xl border border-white/10 bg-white/[0.03] p-8 text-center">
             <p className="text-xl font-medium leading-relaxed text-white/90">
-              “{project.testimonialQuote}”
+              â€œ{project.testimonialQuote}â€
             </p>
             {(project.testimonialAuthor || project.testimonialRole) && (
               <footer className="mt-4 text-sm text-white/50">
@@ -221,7 +220,7 @@ export default async function ProjectPage({ params }: Params) {
           </Link>
           {next && next.slug && (
             <Link href={`/portfolio/${next.slug}`} className="text-sm text-white/50 hover:text-white">
-              Next project: {next.title} →
+              Next project: {next.title} â†’
             </Link>
           )}
         </div>
