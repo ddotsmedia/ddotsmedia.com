@@ -51,7 +51,7 @@ export function WhyChooseUs() {
               Built to deliver, built to last
             </h2>
             <p className="mt-4 text-base text-white/55 sm:text-lg">
-              A senior team, a proven process, and 10 years of building products across the GCC.
+              A senior team and a proven process for building products across the GCC.
             </p>
           </div>
         </Reveal>

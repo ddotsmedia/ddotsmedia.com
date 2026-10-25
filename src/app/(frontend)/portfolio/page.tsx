@@ -61,16 +61,6 @@ export default async function PortfolioPage() {
           <p className="mx-auto mt-5 max-w-xl text-lg text-white/60">
             Real software, real businesses — web apps, mobile apps, ERPs, and more built across the UAE and GCC.
           </p>
-          <div className="mx-auto mt-10 grid max-w-xs grid-cols-3 gap-4 sm:max-w-sm">
-            {[
-              { value: "150+", label: "Projects" },
-              { value: "80+", label: "Clients" },
-              { value: "10+", label: "Years" },
-            ].map((s) => (
-              <div key={s.label}>
-                <div className="text-2xl font-bold text-[var(--brand-teal)] sm:text-3xl">{s.value}</div>
-                <div className="mt-1 text-xs text-white/50 sm:text-sm">{s.label}</div>
-              </div>
             ))}
           </div>
         </div>

@@ -1,17 +1,15 @@
 import Link from "next/link";
-import { ArrowRight, Star } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import type { UIAchievement } from "@/lib/content";
 import { Reveal } from "@/components/shared/Reveal";
-import { CountUp } from "./CountUp";
 import { TypingWords } from "./TypingWords";
 import { HeroSlideshow } from "./HeroSlideshow";
 
 export function Hero({
-  stats,
   ctaText,
   ctaLink,
 }: {
-  stats: UIAchievement[];
+  stats?: UIAchievement[];
   ctaText: string;
   ctaLink: string;
 }) {
@@ -32,15 +30,6 @@ export function Hero({
       <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 md:grid-cols-2 md:gap-10 md:px-8">
         {/* ── Left: text ── */}
         <div className="text-center md:text-left">
-          {/* Social proof badge */}
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[var(--brand-teal)]/30 bg-[var(--brand-teal)]/8 px-4 py-1.5 badge-glow">
-            <span className="flex gap-0.5">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Star key={i} className="h-3 w-3 fill-[var(--brand-accent-yellow)] text-[var(--brand-accent-yellow)]" />
-              ))}
-            </span>
-            <span className="text-xs font-semibold text-white/80">Trusted by 80+ UAE businesses</span>
-          </div>
 
           <h1 className="font-display text-4xl font-bold leading-[1.1] text-white sm:text-5xl md:text-[3.25rem]">
             We build <TypingWords />
@@ -68,27 +57,6 @@ export function Hero({
               View Our Work
             </Link>
           </div>
-
-          {/* ── Inline stats ── */}
-          {stats.length > 0 && (
-            <div className="mt-10 flex flex-wrap justify-center gap-x-10 gap-y-6 md:justify-start">
-              {stats.map((s) => (
-                <div key={s.label} className="text-center md:text-left">
-                  <div className="text-3xl font-bold text-[var(--brand-teal)] md:text-4xl">
-                    {typeof s.value === "number" ? (
-                      <>
-                        <CountUp value={s.value} />
-                        {s.suffix}
-                      </>
-                    ) : (
-                      s.text
-                    )}
-                  </div>
-                  <div className="mt-1 text-sm text-white/60">{s.label}</div>
-                </div>
-              ))}
-            </div>
-          )}
         </div>
 
         {/* ── Right: rotating browser mockup slideshow (desktop only) ── */}

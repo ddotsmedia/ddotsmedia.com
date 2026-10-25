@@ -103,32 +103,8 @@ export const PROCESS_FALLBACK: UIProcessStep[] = [
   { label: "Deploy", description: "Ship, monitor, and iterate with confidence.", icon: Rocket },
 ];
 
-export const ACHIEVEMENTS_FALLBACK: UIAchievement[] = [
-  { value: 150, suffix: "+", label: "Projects" },
-  { value: 80, suffix: "+", label: "Clients" },
-  { value: 50, suffix: "+", label: "Enterprise Apps" },
-  { value: 10, suffix: "+", label: "Years" },   // Founded 2016 → 2026
-  { value: 12, suffix: "+", label: "Countries" },
-  { text: "24/7", label: "Support" },
-];
+export const ACHIEVEMENTS_FALLBACK: UIAchievement[] = [];
 
-// Testimonials are not shown until real client quotes are added via the Payload admin.
-// Never populate this fallback with invented names — the Testimonials section
-// is conditionally rendered only when items.length > 0.
 export const TESTIMONIALS_FALLBACK: UITestimonial[] = [];
 
-// Industry categories shown in the trust-bar marquee.
-// Do NOT list specific client or government names here unless you have
-// explicit permission to name them publicly.
-export const TRUST_FALLBACK: string[] = [
-  "Healthcare & Clinics",
-  "Real Estate & Property",
-  "E-commerce & Retail",
-  "Government & PRO Services",
-  "Education & EdTech",
-  "Trading & Logistics",
-  "Hospitality & F&B",
-  "HR & Payroll Systems",
-  "Finance & Accounting",
-  "Startups & SMEs",
-];
+export const TRUST_FALLBACK: string[] = [];

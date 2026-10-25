@@ -32,7 +32,7 @@ const STORY = [
   "Ddotsmedia began in Dubai in 2016 as a one-person freelance practice — a single developer taking on web projects for local businesses who needed something better than an off-the-shelf template.",
   "Word spread. As the projects grew more ambitious, so did the team: designers, mobile developers, and ERP specialists came on board, and what started as a freelance habit became a proper software studio.",
   "What set us apart was a focus on what UAE businesses actually need — WPS-compliant payroll, VAT-ready invoicing, Arabic-friendly interfaces, and systems that respect local compliance from day one.",
-  "Today that same studio ships web, mobile, and ERP products for clients in 12+ countries — but we still build every project the way we built the very first one: carefully, and like it's our own.",
+  "Today that same studio ships web, mobile, and ERP products for clients across the UAE and GCC — but we still build every project the way we built the very first one: carefully, and like it's our own.",
 ];
 
 const VALUES: { icon: LucideIcon; title: string; body: string; accent: string }[] = [
@@ -92,7 +92,6 @@ const TIMELINE = [
   { year: "2018", title: "Mobile & Flutter", body: "Launched our mobile practice, shipping cross-platform apps with Flutter." },
   { year: "2020", title: "ERP Division", body: "Started building custom ERP systems for inventory, HR, and accounting." },
   { year: "2022", title: "Abu Dhabi & Sharjah", body: "Expanded across the Emirates with new presence in Abu Dhabi and Sharjah." },
-  { year: "2024", title: "150+ Projects", body: "Crossed 150 delivered projects for clients in 12 countries." },
 ];
 
 const CITIES = [
