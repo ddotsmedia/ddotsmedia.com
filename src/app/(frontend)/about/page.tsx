@@ -97,9 +97,8 @@ const TIMELINE = [
 ];
 
 const CITIES = [
-  { city: "Dubai", tag: "Headquarters", body: "Our main studio and engineering hub." },
-  { city: "Abu Dhabi", tag: "Office", body: "Serving government and enterprise clients in the capital." },
-  { city: "Sharjah", tag: "Office", body: "Supporting SMEs and startups across the northern Emirates." },
+  { city: "Sharjah", tag: "Headquarters", body: "Our main studio and engineering hub at SHAMS Free Zone, serving UAE and GCC clients." },
+  { city: "Dubai", tag: "Office", body: "Supporting enterprise clients and government projects across Dubai." },
 ];
 
 function SectionHead({ overline, title, subtext }: { overline: string; title: string; subtext?: string }) {

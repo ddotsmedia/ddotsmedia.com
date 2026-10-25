@@ -189,7 +189,7 @@ export async function Footer() {
         <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-xs text-white/35 sm:flex-row">
           <p>© {new Date().getFullYear()} Ddotsmedia IT Solutions LLC. All rights reserved.</p>
           <p className="flex items-center gap-3">
-            <span>SHAMS Free Zone · UAE</span>
+            <span>SHAMS Free Zone · Sharjah · UAE</span>
             <span className="h-3 w-px bg-white/20" />
             <Link href="/contact" className="transition-colors hover:text-white/60">Privacy</Link>
           </p>
