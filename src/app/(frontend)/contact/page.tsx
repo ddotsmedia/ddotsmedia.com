@@ -196,7 +196,7 @@ export default async function ContactPage() {
                 <div className="relative overflow-hidden rounded-2xl border border-[#1e2d42]">
                   <iframe
                     title="Ddotsmedia location"
-                    src="https://maps.google.com/maps?q=SHAMS+Free+Zone+Sharjah+UAE&z=13&output=embed"
+                    src="https://maps.google.com/maps?q=25.2978,55.3902&z=14&output=embed"
                     loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"
                     className="h-64 w-full"
