@@ -2,13 +2,19 @@ import Link from "next/link";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { Reveal } from "@/components/shared/Reveal";
 
-const PROMISES = [
+const DEFAULT_PROMISES = [
   "Free consultation",
   "Fixed-price quotes",
   "Reply within 2 hours",
 ];
 
-export function HomeCta() {
+interface Props {
+  promises?: string[];
+}
+
+export function HomeCta({ promises }: Props) {
+  const items = promises && promises.length > 0 ? promises : DEFAULT_PROMISES;
+
   return (
     <section className="px-4 pb-24 sm:px-6 lg:px-8">
       <Reveal>
@@ -44,7 +50,7 @@ export function HomeCta() {
               Tell us what you need — we&apos;ll scope it, price it, and ship it on time.
             </p>
             <div className="mt-6 flex flex-wrap items-center justify-center gap-5 text-sm text-white/55">
-              {PROMISES.map((p) => (
+              {items.map((p) => (
                 <span key={p} className="flex items-center gap-1.5">
                   <CheckCircle2 className="h-4 w-4 text-[var(--brand-teal)]" />
                   {p}

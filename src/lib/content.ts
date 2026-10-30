@@ -51,6 +51,14 @@ export type UICompany = {
   ctaButtonText?: string | null;
   ctaButtonLink?: string | null;
   socialLinks?: { linkedin?: string | null; twitter?: string | null; instagram?: string | null; github?: string | null } | null;
+  // Extended fields for About page content
+  ctaPromises?: Array<{ text: string }> | null;
+  storyParagraphs?: Array<{ text: string }> | null;
+  trustBadges?: Array<{ text: string }> | null;
+  officeLocations?: Array<{ city: string; tag?: string | null; body?: string | null }> | null;
+  timeline?: Array<{ year: string; title: string; body?: string | null }> | null;
+  companyValues?: Array<{ icon?: string | null; title: string; body?: string | null; accent?: string | null }> | null;
+  cultureItems?: Array<{ icon?: string | null; title: string; body?: string | null }> | null;
 };
 
 const ACCENTS = [

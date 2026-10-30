@@ -16,7 +16,8 @@ import {
 } from "lucide-react";
 import { Reveal } from "@/components/shared/Reveal";
 import { CountUp } from "@/components/home/CountUp";
-import { getTeam, getAchievements } from "@/lib/content";
+import { getTeam, getAchievements, getCompanySettings } from "@/lib/content";
+import { iconByName } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 
 export const revalidate = 60; // ISR — revalidate every 60 s
@@ -30,14 +31,15 @@ export const metadata: Metadata = {
 const CARD =
   "h-full rounded-2xl border border-[#1e2d42] bg-[#111827] transition-all duration-300 hover:border-[var(--brand-teal)] hover:shadow-[0_0_36px_-12px_var(--brand-teal)]";
 
-const STORY = [
+// --- Fallback data (used when CMS fields are empty) ---
+const FALLBACK_STORY = [
   "Ddotsmedia began in Dubai in 2016 as a one-person freelance practice — a single developer taking on web projects for local businesses who needed something better than an off-the-shelf template.",
   "Word spread. As the projects grew more ambitious, so did the team: designers, mobile developers, and ERP specialists came on board, and what started as a freelance habit became a proper software studio.",
   "What set us apart was a focus on what UAE businesses actually need — WPS-compliant payroll, VAT-ready invoicing, Arabic-friendly interfaces, and systems that respect local compliance from day one.",
   "Today that same studio ships web, mobile, and ERP products for clients across the UAE and GCC — but we still build every project the way we built the very first one: carefully, and like it's our own.",
 ];
 
-const VALUES: { icon: LucideIcon; title: string; body: string; accent: string }[] = [
+const FALLBACK_VALUES: { icon: LucideIcon; title: string; body: string; accent: string }[] = [
   {
     icon: Award,
     title: "Quality First",
@@ -64,14 +66,14 @@ const VALUES: { icon: LucideIcon; title: string; body: string; accent: string }[
   },
 ];
 
-const PARTNERS = [
+const FALLBACK_TRUST = [
   "SHAMS Free Zone Licensed",
   "UAE Corporate Tax Compliant",
   "ISO-aligned Processes",
   "Certified Developers",
 ];
 
-const CULTURE: { icon: LucideIcon; title: string; body: string }[] = [
+const FALLBACK_CULTURE: { icon: LucideIcon; title: string; body: string }[] = [
   {
     icon: Globe2,
     title: "Remote-First Team",
@@ -89,16 +91,25 @@ const CULTURE: { icon: LucideIcon; title: string; body: string }[] = [
   },
 ];
 
-const TIMELINE = [
+const FALLBACK_TIMELINE = [
   { year: "2016", title: "Founded in Dubai", body: "Ddotsmedia opens its doors with a small web-development team." },
   { year: "2018", title: "Mobile & Flutter", body: "Launched our mobile practice, shipping cross-platform apps with Flutter." },
   { year: "2020", title: "ERP Division", body: "Started building custom ERP systems for inventory, HR, and accounting." },
-  { year: "2022", title: "Abu Dhabi & Sharjah", body: "Expanded across the Emirates with new presence in Abu Dhabi and Sharjah." },
+  { year: "2022", title: "Sharjah Expansion", body: "Established our headquarters at SHAMS Free Zone, Sharjah." },
 ];
 
-const CITIES = [
+const FALLBACK_CITIES = [
   { city: "Sharjah", tag: "Headquarters", body: "Our main studio and engineering hub at SHAMS Free Zone, serving UAE and GCC clients." },
   { city: "Dubai", tag: "Office", body: "Supporting enterprise clients and government projects across Dubai." },
+];
+
+// Accent rotation for CMS-driven values
+const ACCENTS = [
+  "var(--brand-teal)",
+  "var(--brand-accent-orange)",
+  "var(--brand-accent-green)",
+  "#3dbac6",
+  "var(--brand-accent-yellow)",
 ];
 
 function SectionHead({ overline, title, subtext }: { overline: string; title: string; subtext?: string }) {
@@ -114,9 +125,45 @@ function SectionHead({ overline, title, subtext }: { overline: string; title: st
 }
 
 export default async function AboutPage() {
-  const [dbTeam, dbAchievements] = await Promise.all([getTeam(), getAchievements()]);
-  const teamData = dbTeam;
-  const achData = dbAchievements;
+  const [dbTeam, dbAchievements, cs] = await Promise.all([
+    getTeam(),
+    getAchievements(),
+    getCompanySettings(),
+  ]);
+
+  // CMS data with fallbacks
+  const story = cs?.storyParagraphs?.length
+    ? cs.storyParagraphs.map((p) => p.text).filter(Boolean)
+    : FALLBACK_STORY;
+
+  const values = cs?.companyValues?.length
+    ? cs.companyValues.map((v, i) => ({
+        icon: iconByName(v.icon ?? "", Award) as LucideIcon,
+        title: v.title,
+        body: v.body ?? "",
+        accent: v.accent || ACCENTS[i % ACCENTS.length],
+      }))
+    : FALLBACK_VALUES;
+
+  const trustBadges = cs?.trustBadges?.length
+    ? cs.trustBadges.map((b) => b.text).filter(Boolean)
+    : FALLBACK_TRUST;
+
+  const culture = cs?.cultureItems?.length
+    ? cs.cultureItems.map((c) => ({
+        icon: iconByName(c.icon ?? "", Globe2) as LucideIcon,
+        title: c.title,
+        body: c.body ?? "",
+      }))
+    : FALLBACK_CULTURE;
+
+  const timeline = cs?.timeline?.length
+    ? cs.timeline
+    : FALLBACK_TIMELINE;
+
+  const cities = cs?.officeLocations?.length
+    ? cs.officeLocations.map((o) => ({ city: o.city, tag: o.tag ?? "", body: o.body ?? "" }))
+    : FALLBACK_CITIES;
 
   return (
     <main className="min-h-screen bg-navy">
@@ -137,7 +184,7 @@ export default async function AboutPage() {
             Building UAE&apos;s Digital Future
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-white/65">
-            Ddotsmedia is a UAE-based IT company delivering web development, custom software,
+            Ddotsmedia Technologies LLC is a UAE-based IT company delivering web development, custom software,
             mobile apps, and ERP systems to businesses across the UAE and the wider GCC.
           </p>
           <p className="mx-auto mt-4 max-w-2xl text-white/55">
@@ -152,7 +199,7 @@ export default async function AboutPage() {
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <SectionHead overline="Our Story" title="From freelance roots to a full studio" />
           <div className="mt-10 space-y-5">
-            {STORY.map((p, i) => (
+            {story.map((p, i) => (
               <Reveal key={i} delay={i * 0.05}>
                 <p className="text-base leading-relaxed text-white/65">{p}</p>
               </Reveal>
@@ -166,7 +213,7 @@ export default async function AboutPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHead overline="Our Values" title="What we stand for" />
           <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2">
-            {VALUES.map((v, i) => (
+            {values.map((v, i) => (
               <Reveal key={v.title} delay={i * 0.08}>
                 <article className={cn(CARD, "flex gap-5 p-6")}>
                   <span
@@ -191,7 +238,7 @@ export default async function AboutPage() {
       </section>
 
       {/* 4. ACHIEVEMENTS / NUMBERS */}
-      {achData.length > 0 && (
+      {dbAchievements.length > 0 && (
       <section className="relative overflow-hidden border-y border-white/[0.06] bg-[#0d1420]">
         <div
           className="pointer-events-none absolute inset-0"
@@ -201,7 +248,7 @@ export default async function AboutPage() {
           }}
         />
         <div className="relative mx-auto grid max-w-7xl grid-cols-2 gap-8 px-4 py-16 sm:px-6 md:grid-cols-3 lg:grid-cols-6 lg:px-8">
-          {achData.map((a, i) => (
+          {dbAchievements.map((a, i) => (
             <Reveal key={a.label} delay={i * 0.06} className="text-center">
               <div className="text-4xl font-bold text-[var(--brand-teal)] tabular-nums md:text-5xl">
                 {typeof a.value === "number" ? (
@@ -221,12 +268,12 @@ export default async function AboutPage() {
       )}
 
       {/* 5. TEAM */}
-      {teamData.length > 0 && (
+      {dbTeam.length > 0 && (
       <section className="py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHead overline="Our Team" title="The people behind the work" />
           <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {teamData.map((m, i) => (
+            {dbTeam.map((m, i) => (
               <Reveal key={m.name} delay={i * 0.07}>
                 <article className={cn(CARD, "flex flex-col items-center p-6 text-center")}>
                   <span
@@ -254,8 +301,8 @@ export default async function AboutPage() {
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <SectionHead overline="Our Journey" title="From a Dubai studio to the GCC" />
           <ol className="mt-14 border-l border-[#1e2d42] pl-8">
-            {TIMELINE.map((t, i) => (
-              <Reveal key={t.year} delay={i * 0.06}>
+            {timeline.map((t, i) => (
+              <Reveal key={t.year + t.title} delay={i * 0.06}>
                 <li className="relative pb-10 last:pb-0">
                   <span className="absolute -left-[2.6rem] flex h-5 w-5 items-center justify-center rounded-full border-2 border-[var(--brand-teal)] bg-navy">
                     <span className="h-1.5 w-1.5 rounded-full bg-[var(--brand-teal)]" />
@@ -270,12 +317,12 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      {/* 6. UAE PRESENCE */}
+      {/* 7. UAE PRESENCE */}
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHead overline="UAE Presence" title="Close to our clients" />
           <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-3">
-            {CITIES.map((c, i) => (
+            {cities.map((c, i) => (
               <Reveal key={c.city} delay={i * 0.08}>
                 <article className={cn(CARD, "p-6")}>
                   <div className="flex items-center gap-3">
@@ -293,12 +340,12 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      {/* 7. PARTNERS & CERTIFICATIONS */}
+      {/* 8. PARTNERS & CERTIFICATIONS */}
       <section className="py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <SectionHead overline="Trust" title="Partners & Certifications" />
           <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {PARTNERS.map((p, i) => (
+            {trustBadges.map((p, i) => (
               <Reveal key={p} delay={i * 0.06}>
                 <div className="flex h-full items-center gap-3 rounded-xl border border-[#1e2d42] bg-[#111827] px-5 py-4">
                   <BadgeCheck className="h-6 w-6 shrink-0 text-[var(--brand-teal)]" />
@@ -310,12 +357,12 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      {/* 8. OFFICE / CULTURE */}
+      {/* 9. OFFICE / CULTURE */}
       <section className="border-t border-white/5 py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHead overline="Culture" title="How we work, day to day" />
           <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-3">
-            {CULTURE.map((c, i) => (
+            {culture.map((c, i) => (
               <Reveal key={c.title} delay={i * 0.08}>
                 <article className={cn(CARD, "p-6")}>
                   <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-[var(--brand-teal)]/30 bg-[var(--brand-teal)]/10 text-[var(--brand-teal)]">
@@ -330,7 +377,7 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      {/* 9. CALL TO ACTION */}
+      {/* 10. CALL TO ACTION */}
       <section className="px-4 pb-24 sm:px-6 lg:px-8">
         <div className="mx-auto grid max-w-5xl grid-cols-1 gap-5 md:grid-cols-2">
           <Reveal>
@@ -364,7 +411,7 @@ export default async function AboutPage() {
               </span>
               <h2 className="mt-5 text-2xl font-bold text-white">Want to work with us?</h2>
               <p className="mt-2 text-sm text-white/70">
-                Tell us about your project and we&apos;ll help you bring it to life.
+                Tell us about your project and we'll help you bring it to life.
               </p>
               <span className="mt-5 text-sm font-semibold text-white group-hover:underline">
                 Get in Touch →

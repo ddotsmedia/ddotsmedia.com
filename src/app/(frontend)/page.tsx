@@ -1,6 +1,6 @@
 import { getPayloadClient, safeQuery } from "@/lib/payload";
 import type { Project } from "@/payload-types";
-import { getServices, getAchievements, getCompanySettings, getTestimonials } from "@/lib/content";
+import { getServices, getAchievements, getCompanySettings, getTestimonials, getProcessSteps } from "@/lib/content";
 import { Hero } from "@/components/home/Hero";
 import { TechMarquee } from "@/components/home/TechMarquee";
 import { ServicesOverview } from "@/components/home/ServicesOverview";
@@ -14,7 +14,7 @@ import { Testimonials } from "@/components/home/Testimonials";
 export const revalidate = 60; // ISR — revalidate every 60 s
 
 export default async function Home() {
-  const [stats, featured, services, cs, testimonials] = await Promise.all([
+  const [stats, featured, services, cs, testimonials, processSteps] = await Promise.all([
     getAchievements(),
     safeQuery(async () => {
       const payload = await getPayloadClient();
@@ -30,6 +30,7 @@ export default async function Home() {
     getServices(),
     getCompanySettings(),
     getTestimonials(),
+    getProcessSteps(),
   ]);
 
   return (
@@ -46,10 +47,10 @@ export default async function Home() {
       ) : (
         <FeaturedScreenshots />
       )}
-      <ProcessSection />
+      <ProcessSection steps={processSteps} />
       <WhyChooseUs />
       {testimonials.length > 0 && <Testimonials items={testimonials} />}
-      <HomeCta />
+      <HomeCta promises={cs?.ctaPromises?.map((p) => p.text).filter(Boolean) ?? []} />
     </main>
   );
 }

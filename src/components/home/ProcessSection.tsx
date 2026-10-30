@@ -1,45 +1,58 @@
-import { Search, PenTool, Code2, Rocket, LifeBuoy } from "lucide-react";
+import { Search, PenTool, Code2, Rocket, LifeBuoy, type LucideIcon } from "lucide-react";
 import { Reveal } from "@/components/shared/Reveal";
+import type { UIProcessStep } from "@/lib/fallbacks";
 
-const STEPS = [
+// Fallback steps used only when no CMS data is available
+const FALLBACK_STEPS = [
   {
     num: "01",
-    icon: Search,
+    icon: Search as LucideIcon,
     label: "Discovery",
     description:
       "We learn your business, audience, and goals. Scope, timeline, and budget are agreed upfront — no surprises.",
   },
   {
     num: "02",
-    icon: PenTool,
+    icon: PenTool as LucideIcon,
     label: "Design",
     description:
       "Wire-frames and high-fidelity UI prototypes in your brand style. You approve before a single line of code is written.",
   },
   {
     num: "03",
-    icon: Code2,
+    icon: Code2 as LucideIcon,
     label: "Build",
     description:
       "Iterative two-week sprints with live demos. Full-stack engineering, CI/CD pipelines, and automated tests.",
   },
   {
     num: "04",
-    icon: Rocket,
+    icon: Rocket as LucideIcon,
     label: "Launch",
     description:
       "Zero-downtime deployment, performance tuning, SEO basics, and a handover session so your team is confident.",
   },
   {
     num: "05",
-    icon: LifeBuoy,
+    icon: LifeBuoy as LucideIcon,
     label: "Support",
     description:
       "Ongoing monitoring, updates, and clear SLAs. We stay reachable — not just until go-live.",
   },
 ];
 
-export function ProcessSection() {
+interface Props {
+  steps?: UIProcessStep[];
+}
+
+export function ProcessSection({ steps }: Props) {
+  const displaySteps = (steps && steps.length > 0 ? steps : FALLBACK_STEPS).map((s, i) => ({
+    num: String(i + 1).padStart(2, "0"),
+    icon: s.icon,
+    label: s.label,
+    description: s.description,
+  }));
+
   return (
     <section className="border-t border-white/[0.06] py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -59,7 +72,7 @@ export function ProcessSection() {
 
         {/* Step cards */}
         <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5">
-          {STEPS.map((step, i) => (
+          {displaySteps.map((step, i) => (
             <Reveal key={step.num} delay={i * 0.07}>
               <div className="group relative flex h-full flex-col rounded-2xl border border-[#1e2d42] bg-[#111827] p-6 transition-all duration-300 hover:border-[var(--brand-teal)]/50 hover:shadow-[0_0_32px_-12px_var(--brand-teal)]">
                 {/* Faint step number watermark */}
