@@ -1,12 +1,19 @@
 import {
+  Award,
+  BookOpen,
   Building2,
+  CalendarCheck,
   Cloud,
   Code,
   Globe,
+  Globe2,
   GraduationCap,
+  Handshake,
   HeartPulse,
   Landmark,
   LayoutDashboard,
+  Lightbulb,
+  MessagesSquare,
   Palette,
   Rocket,
   Search,
@@ -16,22 +23,30 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-/** Maps a stored icon-name (from a Payload select) to a lucide component. */
+/** Maps a stored icon-name (from a Payload select or CMS text field) to a lucide component. */
 export const ICONS: Record<string, LucideIcon> = {
-  Globe,
-  Smartphone,
-  Code,
-  Palette,
-  Cloud,
-  LayoutDashboard,
-  HeartPulse,
+  // General UI
+  Award,
+  BookOpen,
   Building2,
-  ShoppingCart,
-  Landmark,
+  CalendarCheck,
+  Cloud,
+  Code,
+  Globe,
+  Globe2,
   GraduationCap,
-  Truck,
-  Search,
+  Handshake,
+  HeartPulse,
+  Landmark,
+  LayoutDashboard,
+  Lightbulb,
+  MessagesSquare,
+  Palette,
   Rocket,
+  Search,
+  ShoppingCart,
+  Smartphone,
+  Truck,
 };
 
 export const iconByName = (name?: string | null, fallback: LucideIcon = Globe): LucideIcon =>

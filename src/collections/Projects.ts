@@ -10,7 +10,13 @@ export const Projects: CollectionConfig = {
     description:
       "Paste a live URL and save — the title, description, slug, and screenshot are auto-filled. Everything else is optional.",
   },
-  access: { read: () => true },
+  access: {
+    create: ({ req }) => !!req.user,
+    read: ({ req }) =>
+      req.user ? true : { published: { equals: true } },
+    update: ({ req }) => !!req.user,
+    delete: ({ req }) => !!req.user,
+  },
   hooks: { beforeChange: [enrichProjectFromUrl] },
   fields: [
     // Only the URL is required — paste it and save; the rest auto-fills.
@@ -137,8 +143,17 @@ export const Projects: CollectionConfig = {
     {
       type: "row",
       fields: [
-        { name: "featured", type: "checkbox", admin: { width: "50%" } },
-        { name: "order", type: "number", defaultValue: 0, admin: { width: "50%" } },
+        { name: "featured", type: "checkbox", admin: { width: "33%" } },
+        {
+          name: "published",
+          type: "checkbox",
+          defaultValue: true,
+          admin: {
+            width: "33%",
+            description: "Uncheck to hide this project from the public site.",
+          },
+        },
+        { name: "order", type: "number", defaultValue: 0, admin: { width: "34%" } },
       ],
     },
   ],

@@ -12,6 +12,7 @@ const LINKS = [
   { label: "Services", href: "/services" },
   { label: "Projects", href: "/portfolio" },
   { label: "About", href: "/about" },
+  { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -28,7 +29,11 @@ export function Navbar() {
   }, []);
 
   // Close the mobile menu whenever the route changes.
-  useEffect(() => setOpen(false), [pathname]);
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  if (pathname !== prevPathname) {
+    setPrevPathname(pathname);
+    setOpen(false);
+  }
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -71,7 +76,7 @@ export function Navbar() {
           {/* CTA (desktop) */}
           <Link
             href="/contact"
-            className="hidden rounded-full bg-[var(--brand-teal)] px-5 py-2 text-sm font-semibold text-white transition-transform hover:-translate-y-0.5 md:inline-flex"
+            className="hidden rounded-full bg-[var(--brand-teal)] px-5 py-2 text-sm font-semibold text-white shadow-md shadow-[var(--brand-teal)]/20 transition-all hover:-translate-y-0.5 hover:shadow-[var(--brand-teal)]/40 md:inline-flex"
           >
             Get a Quote
           </Link>

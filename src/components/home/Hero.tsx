@@ -1,16 +1,15 @@
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import type { UIAchievement } from "@/lib/content";
 import { Reveal } from "@/components/shared/Reveal";
-import { CountUp } from "./CountUp";
 import { TypingWords } from "./TypingWords";
 import { HeroSlideshow } from "./HeroSlideshow";
 
 export function Hero({
-  stats,
   ctaText,
   ctaLink,
 }: {
-  stats: UIAchievement[];
+  stats?: UIAchievement[];
   ctaText: string;
   ctaLink: string;
 }) {
@@ -31,52 +30,32 @@ export function Hero({
       <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 md:grid-cols-2 md:gap-10 md:px-8">
         {/* ── Left: text ── */}
         <div className="text-center md:text-left">
+
           <h1 className="font-display text-4xl font-bold leading-[1.1] text-white sm:text-5xl md:text-[3.25rem]">
-            We build <TypingWords />
+            Ship <TypingWords />
             <br />
-            that move your business forward.
+            <span className="text-[var(--brand-teal)]">faster than your competition.</span>
           </h1>
 
           <p className="mx-auto mt-6 max-w-xl text-lg text-white/60 md:mx-0">
-            Web apps, mobile apps, and custom ERP systems engineered for performance,
-            built for the UAE market and beyond.
+            From concept to production in weeks, not months. Full-stack teams, no hand-offs, one accountability. 50+ businesses trust us with their mission-critical systems.
           </p>
 
           <div className="mt-8 flex flex-wrap justify-center gap-4 md:justify-start">
             <Link
               href={ctaLink}
-              className="rounded-full bg-[var(--brand-teal)] px-7 py-3 font-semibold text-white shadow-lg shadow-[var(--brand-teal)]/25 transition-transform hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 rounded-full bg-[var(--brand-teal)] px-7 py-3 font-semibold text-white shadow-lg shadow-[var(--brand-teal)]/25 transition-all hover:-translate-y-0.5 hover:shadow-[var(--brand-teal)]/45"
             >
               {ctaText}
+              <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               href="/portfolio"
-              className="rounded-full border-2 border-white/30 px-7 py-3 font-semibold text-white transition-colors hover:border-white"
+              className="rounded-full border border-white/20 px-7 py-3 font-semibold text-white/90 transition-colors hover:border-white/50 hover:text-white"
             >
               View Our Work
             </Link>
           </div>
-
-          {/* ── Inline stats ── */}
-          {stats.length > 0 && (
-            <div className="mt-10 flex flex-wrap justify-center gap-x-10 gap-y-6 md:justify-start">
-              {stats.map((s) => (
-                <div key={s.label} className="text-center md:text-left">
-                  <div className="text-3xl font-bold text-[var(--brand-teal)] md:text-4xl">
-                    {typeof s.value === "number" ? (
-                      <>
-                        <CountUp value={s.value} />
-                        {s.suffix}
-                      </>
-                    ) : (
-                      s.text
-                    )}
-                  </div>
-                  <div className="mt-1 text-sm text-white/60">{s.label}</div>
-                </div>
-              ))}
-            </div>
-          )}
         </div>
 
         {/* ── Right: rotating browser mockup slideshow (desktop only) ── */}

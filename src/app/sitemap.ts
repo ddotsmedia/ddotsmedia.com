@@ -1,3 +1,4 @@
+
 import type { MetadataRoute } from "next";
 import { getPayloadClient, safeQuery } from "@/lib/payload";
 

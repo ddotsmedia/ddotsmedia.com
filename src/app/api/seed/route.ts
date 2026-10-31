@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getPayloadClient } from "@/lib/payload";
 import { SERVICES } from "@/lib/data/services";
+import { PORTFOLIO } from "@/lib/data/portfolio";
 import type { Service } from "@/payload-types";
 
 export const dynamic = "force-dynamic";
@@ -42,12 +43,10 @@ const SERVICE_META: Record<
   "erp-systems": { icon: "LayoutDashboard", category: "erp" },
 };
 
-const TEAM = [
-  { name: "Mohammed Al Rashid", role: "CEO", order: 1 },
-  { name: "Priya Nair", role: "Lead Developer", order: 2 },
-  { name: "Omar Hassan", role: "UI/UX Designer", order: 3 },
-  { name: "Aisha Karimi", role: "Project Manager", order: 4 },
-];
+// ⚠️  REAL DATA REQUIRED — add actual team members here before running /api/seed.
+// Leave empty: the About page hides the "Our Team" section when this collection is empty,
+// which is preferable to showing placeholder names that don't match real staff.
+const TEAM: { name: string; role: string; order: number }[] = [];
 
 const FAQS: { question: string; answer: string }[] = [
   {
@@ -142,50 +141,34 @@ const PRICING = [
   },
 ];
 
-const TESTIMONIALS = [
-  {
-    author: "Ahmed Al Mansouri",
-    role: "CEO",
-    company: "TechVentures Dubai",
-    quote:
-      "Ddotsmedia delivered our platform ahead of schedule and exceeded every expectation. A genuine technology partner, not just a vendor.",
-  },
-  {
-    author: "Sarah Johnson",
-    role: "Founder",
-    company: "StartupAE",
-    quote:
-      "From idea to launch, the team was professional, responsive, and deeply skilled. Our app has been flawless since day one.",
-  },
-  {
-    author: "Khalid Ibrahim",
-    role: "CTO",
-    company: "Gulf Solutions LLC",
-    quote:
-      "Their ERP transformed how we operate. Reliable, well-architected, and supported every step of the way. Highly recommended.",
-  },
-];
+// ⚠️  REAL DATA REQUIRED — replace with actual client testimonials (with permission)
+// before running /api/seed. Never publish invented quotes attributed to real people.
+// The Testimonials section is not displayed on any page until real entries exist.
+const TESTIMONIALS: { author: string; role: string; company: string; quote: string }[] = [];
 
 const STATS_ITEMS = [
   { label: "Projects", value: 150, suffix: "+" },
   { label: "Clients", value: 80, suffix: "+" },
   { label: "Enterprise Apps", value: 50, suffix: "+" },
-  { label: "Years", value: 9, suffix: "+" },
+  { label: "Years", value: 10, suffix: "+" },   // Founded 2016 → 2026
   { label: "Countries", value: 12, suffix: "+" },
   { label: "Support", value: 24, suffix: "/7" },
 ];
 
+// Industries & sectors Ddotsmedia has built software for.
+// These are shown as a scrolling marquee under the heading "Industries we build for".
+// Replace with actual client names only if you have their permission to be named publicly.
 const TRUST_NAMES = [
-  "Dubai Municipality",
-  "ADNOC",
-  "Sharjah Media City",
-  "DubaiSME",
-  "RAKEZ",
-  "SHAMS",
-  "Ajman Free Zone",
-  "Dubai Silicon Oasis",
-  "Abu Dhabi SME Hub",
-  "UAE Ministry of Economy",
+  "Healthcare & Clinics",
+  "Real Estate & Property",
+  "E-commerce & Retail",
+  "Government & PRO Services",
+  "Education & EdTech",
+  "Trading & Logistics",
+  "Hospitality & F&B",
+  "HR & Payroll Systems",
+  "Finance & Accounting",
+  "Startups & SMEs",
 ];
 
 const PROCESS = [
@@ -221,6 +204,34 @@ export async function GET(req: Request) {
   const result: Record<string, string> = {};
   try {
     const payload = await getPayloadClient();
+
+    // 0. PROJECTS
+    if ((await payload.count({ collection: "projects" })).totalDocs > 0) {
+      result.projects = "skipped (not empty)";
+    } else {
+      for (let i = 0; i < PORTFOLIO.length; i++) {
+        const item = PORTFOLIO[i];
+        await payload.create({
+          collection: "projects",
+          data: {
+            liveUrl: item.url,
+            title: item.title,
+            slug: item.name,
+            category: item.category === "Web" ? "Web"
+              : item.category === "Desktop" ? "Desktop"
+              : item.category === "ERP" ? "ERP"
+              : item.category === "iOS" ? "iOS"
+              : "Android",
+            shortDescription: item.description,
+            techStack: (item.tags ?? []).map((tech, j) => ({ tech, id: String(j) })),
+            featured: i < 2,
+            order: i + 1,
+            status: "Live",
+          },
+        });
+      }
+      result.projects = `seeded ${PORTFOLIO.length}`;
+    }
 
     // 1. SERVICES
     if ((await payload.count({ collection: "services" })).totalDocs > 0) {

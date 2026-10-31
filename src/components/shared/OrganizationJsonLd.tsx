@@ -9,7 +9,12 @@ export function OrganizationJsonLd() {
         __html: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Organization",
-          name: "Ddotsmedia IT Solutions",
+          name: "Ddotsmedia Technologies LLC",
+          address: {
+            "@type": "PostalAddress",
+            addressLocality: "Sharjah",
+            addressCountry: "AE",
+          },
           url: siteUrl,
           description:
             "Software, web, and mobile development studio building custom apps and ERP systems for UAE businesses.",

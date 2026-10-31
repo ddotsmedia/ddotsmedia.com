@@ -6,10 +6,10 @@ import { useCallback, useEffect, useState } from "react";
 const PROJECTS = [
   { name: "Ddotsmedia Jobs", url: "ddotsmediajobs.com", image: "/projects/ddotsmediajobs.png" },
   { name: "Ddotsmedia ERP", url: "ddotsmediaerp.com", image: "/projects/ddotsmediaerp.png" },
-  { name: "AyurConnect", url: "ayurconnect.com", image: "/projects/ayurconnect.png" },
+  { name: "AyurConnect", url: "ayurconnect.com", image: "/projects/ayurconnect.webp" },
   { name: "Gayathi", url: "gayathi.ae", image: "/projects/gayathi.png" },
   { name: "Ddotshop", url: "ddotshop.com", image: "/projects/ddotshop.png" },
-  { name: "Milisa UH", url: "milisauh.ae", image: "/projects/milisauh.png" },
+  { name: "Milisa UH", url: "milisauh.ae", image: "/projects/milisauh.webp" },
 ];
 
 /** Auto-rotating browser mockup that crossfades through real project screenshots. */

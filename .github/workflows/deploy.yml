@@ -1,0 +1,257 @@
+name: Deploy ddotsmedia.com
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      image-sha: ${{ steps.meta.outputs.image-sha }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Build
+        run: pnpm build
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/ddotsmedia.com:${{ github.sha }}
+            ghcr.io/${{ github.repository_owner }}/ddotsmedia.com:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Extract image SHA
+        id: meta
+        run: echo "image-sha=${{ github.sha }}" >> $GITHUB_OUTPUT
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: success()
+    steps:
+      - name: Decode base64 SSH key
+        id: ssh_key
+        run: |
+          DECODED_KEY=$(echo "${{ secrets.VPS_DEPLOY_KEY }}" | base64 -d 2>/dev/null || echo "${{ secrets.VPS_DEPLOY_KEY }}")
+          echo "key<<EOF" >> $GITHUB_OUTPUT
+          echo "$DECODED_KEY" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Setup SSH key
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ steps.ssh_key.outputs.key }}
+
+      - name: Deploy to VPS
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+        run: |
+          SSH_OPTS="-o StrictHostKeyChecking=no -o ConnectTimeout=20 -o ServerAliveInterval=15 -o ServerAliveCountMax=8"
+          # Retry connect: transient timeouts / fail2ban hiccups shouldn't fail the deploy
+          for i in 1 2 3 4; do
+            ssh $SSH_OPTS "$VPS_USER@$VPS_HOST" true && break
+            echo "[WARN] SSH connect attempt $i failed, retrying in 20s..."
+            [ $i -eq 4 ] && { echo "[ERROR] Cannot reach VPS over SSH"; exit 1; }
+            sleep 20
+          done
+
+          # Quoted heredoc: nothing expands on the runner; GitHub expressions are filled in by Actions
+          ssh $SSH_OPTS "$VPS_USER@$VPS_HOST" 'bash -s' << 'DEPLOY_EOF'
+          set -e
+          mkdir -p /opt/ddotsmedia && cd /opt/ddotsmedia
+          umask 077
+
+          # docker compose auto-loads .env from this dir (also makes manual compose commands work)
+          cat > .env << 'ENVEOF'
+          IMAGE=ghcr.io/ddotsmedia/ddotsmedia.com:${{ needs.build.outputs.image-sha }}
+          DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+          PAYLOAD_SECRET=${{ secrets.PAYLOAD_SECRET }}
+          BETTER_AUTH_SECRET=${{ secrets.BETTER_AUTH_SECRET }}
+          ENVEOF
+          set -a; . ./.env; set +a
+          umask 022
+
+          cat > docker-compose.yml << 'COMPOSEEOF'
+          name: ddotsmedia
+          services:
+            ddotsmedia-db:
+              image: postgres:16-alpine
+              container_name: ddotsmedia-db
+              environment:
+                POSTGRES_DB: ddotsmedia
+                POSTGRES_USER: ddotsmedia
+                POSTGRES_PASSWORD: ${DB_PASSWORD}
+              volumes:
+                - ddotsmedia-db-data:/var/lib/postgresql/data
+              networks: [ddotsmedia-network]
+              restart: unless-stopped
+              healthcheck:
+                test: ["CMD-SHELL", "pg_isready -U ddotsmedia -d ddotsmedia"]
+                interval: 5s
+                timeout: 3s
+                retries: 20
+
+            ddotsmedia-web:
+              image: ${IMAGE}
+              container_name: ddotsmedia-web
+              depends_on:
+                ddotsmedia-db:
+                  condition: service_healthy
+              environment:
+                NODE_ENV: production
+                PAYLOAD_PUBLIC_SERVER_URL: https://ddotsmedia.com
+                DATABASE_URL: postgresql://ddotsmedia:${DB_PASSWORD}@ddotsmedia-db:5432/ddotsmedia
+                PAYLOAD_SECRET: ${PAYLOAD_SECRET}
+                BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+              ports:
+                - "127.0.0.1:3025:3000"
+              volumes:
+                - ./data/media:/app/media
+              networks: [ddotsmedia-network]
+              restart: unless-stopped
+              healthcheck:
+                test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000/api/health || exit 1"]
+                interval: 10s
+                timeout: 5s
+                retries: 5
+                start_period: 30s
+              logging:
+                driver: json-file
+                options: { max-size: "50m", max-file: "5" }
+
+          volumes:
+            ddotsmedia-db-data:
+          networks:
+            ddotsmedia-network:
+          COMPOSEEOF
+          mkdir -p data/media && chown -R 1001:1001 data/media
+
+          PREV_IMAGE=$(docker inspect ddotsmedia-web --format '{{.Config.Image}}' 2>/dev/null || true)
+
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          echo "[INFO] Pulling $IMAGE"
+          docker pull "$IMAGE"
+
+          # Remove leftovers from old deploy layouts (only ddotsmedia-* containers; DB data is kept)
+          for c in ddotsmedia-web ddotsmedia-web-fallback; do docker rm -f "$c" >/dev/null 2>&1 || true; done
+          if [ "$(docker inspect ddotsmedia-db --format '{{index .Config.Labels "com.docker.compose.project"}}' 2>/dev/null)" != "ddotsmedia" ]; then
+            docker rm -f ddotsmedia-db >/dev/null 2>&1 || true
+          fi
+
+          echo "[INFO] Starting database"
+          docker compose up -d --wait ddotsmedia-db
+          # Keep DB user password in sync with the GitHub secret (local socket = trusted, no wipe needed)
+          docker exec ddotsmedia-db psql -q -U ddotsmedia -d ddotsmedia -c "ALTER USER ddotsmedia WITH PASSWORD '$DB_PASSWORD';"
+
+          echo "[INFO] Starting web"
+          docker compose up -d ddotsmedia-web
+
+          HEALTH_OK=false
+          for i in $(seq 1 30); do
+            if curl -sf -m 5 http://127.0.0.1:3025/api/health >/dev/null; then
+              echo "[OK] Health check passed (attempt $i)"; HEALTH_OK=true; break
+            fi
+            echo "[WAIT] Health attempt $i/30..."
+            sleep 5
+          done
+
+          if [ "$HEALTH_OK" != true ]; then
+            echo "[ERROR] Health check failed. Diagnostics:"
+            docker compose ps -a
+            docker compose logs --tail=150 --no-color ddotsmedia-web
+            docker compose logs --tail=40 --no-color ddotsmedia-db
+            if [ -n "$PREV_IMAGE" ] && [ "$PREV_IMAGE" != "$IMAGE" ]; then
+              echo "[ROLLBACK] Restoring $PREV_IMAGE"
+              IMAGE="$PREV_IMAGE" docker compose up -d ddotsmedia-web || true
+            fi
+            exit 1
+          fi
+
+          echo "[$(date '+%F %T')] Deployed $IMAGE" >> deployments.log
+
+          # Nginx: create site once only, never overwrite (certbot adds SSL to this file)
+          if [ ! -f /etc/nginx/sites-available/ddotsmedia.com ]; then
+            cat > /etc/nginx/sites-available/ddotsmedia.com << 'NGINXEOF'
+          server {
+              listen 80;
+              server_name ddotsmedia.com www.ddotsmedia.com;
+              client_max_body_size 20m;
+              location / {
+                  proxy_pass http://127.0.0.1:3025;
+                  proxy_http_version 1.1;
+                  proxy_set_header Upgrade $http_upgrade;
+                  proxy_set_header Connection 'upgrade';
+                  proxy_set_header Host $host;
+                  proxy_set_header X-Real-IP $remote_addr;
+                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                  proxy_set_header X-Forwarded-Proto $scheme;
+                  proxy_cache_bypass $http_upgrade;
+              }
+          }
+          NGINXEOF
+            ln -sf /etc/nginx/sites-available/ddotsmedia.com /etc/nginx/sites-enabled/ddotsmedia.com
+            # reload (not restart) so other sites on this VPS are never interrupted
+            nginx -t && systemctl reload nginx
+          fi
+          echo "[SUCCESS] Deployment complete"
+          DEPLOY_EOF
+
+      - name: Deployment Success
+        if: success()
+        run: |
+          echo "✅ ddotsmedia.com deployed successfully"
+          echo "Commit: ${{ github.sha }}"
+          echo "Timestamp: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+
+      - name: Deployment Failure
+        if: failure()
+        run: |
+          echo "❌ Deployment failed and rolled back"
+          echo "Commit: ${{ github.sha }}"
+          exit 1
