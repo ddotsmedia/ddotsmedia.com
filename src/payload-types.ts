@@ -78,6 +78,11 @@ export interface Config {
     'faq-items': FaqItem;
     industries: Industry;
     'pricing-tiers': PricingTier;
+    'contact-submissions': ContactSubmission;
+    'newsletter-subscribers': NewsletterSubscriber;
+    'blog-categories': BlogCategory;
+    awards: Award;
+    partners: Partner;
     'job-listings': JobListing;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -97,7 +102,12 @@ export interface Config {
     'faq-items': FaqItemsSelect<false> | FaqItemsSelect<true>;
     industries: IndustriesSelect<false> | IndustriesSelect<true>;
     'pricing-tiers': PricingTiersSelect<false> | PricingTiersSelect<true>;
-    'job-listings': JobListingSelect<false> | JobListingSelect<true>;
+    'contact-submissions': ContactSubmissionsSelect<false> | ContactSubmissionsSelect<true>;
+    'newsletter-subscribers': NewsletterSubscribersSelect<false> | NewsletterSubscribersSelect<true>;
+    'blog-categories': BlogCategoriesSelect<false> | BlogCategoriesSelect<true>;
+    awards: AwardsSelect<false> | AwardsSelect<true>;
+    partners: PartnersSelect<false> | PartnersSelect<true>;
+    'job-listings': JobListingsSelect<false> | JobListingsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -112,12 +122,20 @@ export interface Config {
     stats: Stat;
     'trust-bar': TrustBar;
     'process-steps': ProcessStep;
+    'homepage-hero': HomepageHero;
+    navigation: Navigation;
+    'footer-settings': FooterSetting;
+    'seo-defaults': SeoDefault;
   };
   globalsSelect: {
     'company-settings': CompanySettingsSelect<false> | CompanySettingsSelect<true>;
     stats: StatsSelect<false> | StatsSelect<true>;
     'trust-bar': TrustBarSelect<false> | TrustBarSelect<true>;
     'process-steps': ProcessStepsSelect<false> | ProcessStepsSelect<true>;
+    'homepage-hero': HomepageHeroSelect<false> | HomepageHeroSelect<true>;
+    navigation: NavigationSelect<false> | NavigationSelect<true>;
+    'footer-settings': FooterSettingsSelect<false> | FooterSettingsSelect<true>;
+    'seo-defaults': SeoDefaultsSelect<false> | SeoDefaultsSelect<true>;
   };
   locale: null;
   widgets: {
@@ -283,6 +301,10 @@ export interface Project {
   testimonialAuthor?: string | null;
   testimonialRole?: string | null;
   featured?: boolean | null;
+  /**
+   * Uncheck to hide this project from the public site.
+   */
+  published?: boolean | null;
   order?: number | null;
   updatedAt: string;
   createdAt: string;
@@ -510,19 +532,137 @@ export interface PricingTier {
   createdAt: string;
 }
 /**
+ * Inbound leads and contact form submissions.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-submissions".
+ */
+export interface ContactSubmission {
+  id: number;
+  name: string;
+  email: string;
+  phone?: string | null;
+  company?: string | null;
+  serviceInterest?:
+    | (
+        | 'web-development'
+        | 'mobile-apps'
+        | 'custom-software'
+        | 'ui-ux-design'
+        | 'cloud-devops'
+        | 'erp-systems'
+        | 'other'
+      )
+    | null;
+  message: string;
+  status?: ('new' | 'read' | 'replied' | 'archived') | null;
+  /**
+   * Internal notes (not visible to client)
+   */
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Email newsletter subscribers.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "newsletter-subscribers".
+ */
+export interface NewsletterSubscriber {
+  id: number;
+  email: string;
+  name?: string | null;
+  status?: ('active' | 'unsubscribed') | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Categories for blog posts.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-categories".
+ */
+export interface BlogCategory {
+  id: number;
+  name: string;
+  /**
+   * URL-friendly identifier, e.g. web-development
+   */
+  slug: string;
+  description?: string | null;
+  /**
+   * Hex color for this category badge, e.g. #17A697
+   */
+  color?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Awards, recognitions, and certifications.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "awards".
+ */
+export interface Award {
+  id: number;
+  title: string;
+  organization?: string | null;
+  year?: number | null;
+  order?: number | null;
+  description?: string | null;
+  image?: (number | null) | Media;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Technology, business, and community partners.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "partners".
+ */
+export interface Partner {
+  id: number;
+  name: string;
+  logo?: (number | null) | Media;
+  website?: string | null;
+  type?: ('technology' | 'business' | 'media' | 'community') | null;
+  order?: number | null;
+  active?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Open positions at Ddotsmedia.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "job-listings".
  */
 export interface JobListing {
   id: number;
   title: string;
+  /**
+   * URL slug, auto-fill from title
+   */
   slug?: string | null;
   department?: ('engineering' | 'design' | 'project-management' | 'sales' | 'marketing' | 'operations') | null;
   locationType?: ('onsite' | 'remote' | 'hybrid') | null;
   employmentType?: ('full-time' | 'part-time' | 'freelance' | 'internship') | null;
+  /**
+   * e.g. "Dubai, UAE"
+   */
   location?: string | null;
+  /**
+   * e.g. "AED 8,000 - 12,000/mo"
+   */
   salaryRange?: string | null;
+  /**
+   * One-line summary shown in job listings
+   */
   shortDescription?: string | null;
+  /**
+   * Full job description - role, responsibilities, about the team
+   */
   description?: {
     root: {
       type: string;
@@ -538,6 +678,9 @@ export interface JobListing {
     };
     [k: string]: unknown;
   } | null;
+  /**
+   * Required skills, experience, qualifications
+   */
   requirements?: {
     root: {
       type: string;
@@ -553,6 +696,9 @@ export interface JobListing {
     };
     [k: string]: unknown;
   } | null;
+  /**
+   * Show this listing on the careers page
+   */
   active?: boolean | null;
   order?: number | null;
   updatedAt: string;
@@ -625,6 +771,30 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'pricing-tiers';
         value: number | PricingTier;
+      } | null)
+    | ({
+        relationTo: 'contact-submissions';
+        value: number | ContactSubmission;
+      } | null)
+    | ({
+        relationTo: 'newsletter-subscribers';
+        value: number | NewsletterSubscriber;
+      } | null)
+    | ({
+        relationTo: 'blog-categories';
+        value: number | BlogCategory;
+      } | null)
+    | ({
+        relationTo: 'awards';
+        value: number | Award;
+      } | null)
+    | ({
+        relationTo: 'partners';
+        value: number | Partner;
+      } | null)
+    | ({
+        relationTo: 'job-listings';
+        value: number | JobListing;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -739,6 +909,7 @@ export interface ProjectsSelect<T extends boolean = true> {
   testimonialAuthor?: T;
   testimonialRole?: T;
   featured?: T;
+  published?: T;
   order?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -929,9 +1100,76 @@ export interface PricingTiersSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-submissions_select".
+ */
+export interface ContactSubmissionsSelect<T extends boolean = true> {
+  name?: T;
+  email?: T;
+  phone?: T;
+  company?: T;
+  serviceInterest?: T;
+  message?: T;
+  status?: T;
+  notes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "newsletter-subscribers_select".
+ */
+export interface NewsletterSubscribersSelect<T extends boolean = true> {
+  email?: T;
+  name?: T;
+  status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-categories_select".
+ */
+export interface BlogCategoriesSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  description?: T;
+  color?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "awards_select".
+ */
+export interface AwardsSelect<T extends boolean = true> {
+  title?: T;
+  organization?: T;
+  year?: T;
+  order?: T;
+  description?: T;
+  image?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "partners_select".
+ */
+export interface PartnersSelect<T extends boolean = true> {
+  name?: T;
+  logo?: T;
+  website?: T;
+  type?: T;
+  order?: T;
+  active?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "job-listings_select".
  */
-export interface JobListingSelect<T extends boolean = true> {
+export interface JobListingsSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
   department?: T;
@@ -946,7 +1184,6 @@ export interface JobListingSelect<T extends boolean = true> {
   order?: T;
   updatedAt?: T;
   createdAt?: T;
-  id?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1041,6 +1278,90 @@ export interface CompanySetting {
    * e.g. "/contact"
    */
   ctaButtonLink?: string | null;
+  /**
+   * Short trust badges shown in the bottom CTA section (e.g. 'Free consultation')
+   */
+  ctaPromises?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Paragraphs for the 'Our Story' section on the About page
+   */
+  storyParagraphs?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Items shown in the 'Partners & Certifications' section on the About page
+   */
+  trustBadges?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Office/presence cards shown on the About page
+   */
+  officeLocations?:
+    | {
+        city: string;
+        /**
+         * e.g. "Headquarters" or "Office"
+         */
+        tag?: string | null;
+        body?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Milestone entries for the 'Our Journey' section on the About page
+   */
+  timeline?:
+    | {
+        year: string;
+        title: string;
+        body?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Value cards for the 'What We Stand For' section on the About page
+   */
+  companyValues?:
+    | {
+        /**
+         * Lucide icon name, e.g. Award, Handshake, Lightbulb
+         */
+        icon?: string | null;
+        title: string;
+        body?: string | null;
+        /**
+         * CSS color, e.g. "var(--brand-teal)"
+         */
+        accent?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Cards for the 'How We Work' culture section on the About page
+   */
+  cultureItems?:
+    | {
+        /**
+         * Lucide icon name, e.g. Globe2, CalendarCheck
+         */
+        icon?: string | null;
+        title: string;
+        body?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1097,6 +1418,160 @@ export interface ProcessStep {
   createdAt?: string | null;
 }
 /**
+ * Content for the homepage hero section.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "homepage-hero".
+ */
+export interface HomepageHero {
+  id: number;
+  /**
+   * Small label above headline, e.g. "Trusted by 80+ UAE businesses"
+   */
+  badgeText?: string | null;
+  /**
+   * Main headline -- plain part
+   */
+  headline?: string | null;
+  /**
+   * Highlighted/coloured word(s) inside the headline
+   */
+  headlineHighlight?: string | null;
+  subheading?: string | null;
+  /**
+   * e.g. "Get Free Quote"
+   */
+  ctaPrimaryText?: string | null;
+  /**
+   * e.g. "/contact"
+   */
+  ctaPrimaryLink?: string | null;
+  /**
+   * e.g. "View Portfolio"
+   */
+  ctaSecondaryText?: string | null;
+  /**
+   * e.g. "/portfolio"
+   */
+  ctaSecondaryLink?: string | null;
+  /**
+   * Optional background video URL (mp4). Leave empty to use the default particle/gradient background.
+   */
+  videoBgUrl?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Header navigation menu links and CTA.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "navigation".
+ */
+export interface Navigation {
+  id: number;
+  /**
+   * Top-level nav links.
+   */
+  menuItems?:
+    | {
+        label: string;
+        link: string;
+        openInNewTab?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Button label, e.g. "Get Free Quote"
+   */
+  ctaText?: string | null;
+  /**
+   * e.g. "/contact"
+   */
+  ctaLink?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Footer tagline, links, and copyright.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer-settings".
+ */
+export interface FooterSetting {
+  id: number;
+  /**
+   * Short tagline shown under the logo in the footer.
+   */
+  tagline?: string | null;
+  /**
+   * Quick navigation links column.
+   */
+  quickLinks?:
+    | {
+        label: string;
+        link: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Services column links.
+   */
+  serviceLinks?:
+    | {
+        label: string;
+        link: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Bottom-bar legal links (Privacy Policy, Terms, etc.).
+   */
+  legalLinks?:
+    | {
+        label: string;
+        link: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * e.g. "2025 Ddotsmedia IT Solutions LLC. All rights reserved."
+   */
+  copyrightText?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Site-wide SEO defaults applied when page-level meta is absent.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "seo-defaults".
+ */
+export interface SeoDefault {
+  id: number;
+  /**
+   * Appended to every page title, e.g. "-- Ddotsmedia IT Solutions"
+   */
+  metaTitleSuffix?: string | null;
+  /**
+   * Fallback meta description (155 chars max recommended).
+   */
+  defaultDescription?: string | null;
+  /**
+   * Default Open Graph / social share image (1200x630px recommended).
+   */
+  defaultOgImage?: (number | null) | Media;
+  /**
+   * Twitter/X handle without @, e.g. "ddotsmedia"
+   */
+  twitterHandle?: string | null;
+  /**
+   * Google Search Console verification meta content value.
+   */
+  googleVerification?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "company-settings_select".
  */
@@ -1126,6 +1601,57 @@ export interface CompanySettingsSelect<T extends boolean = true> {
   officeHoursNote?: T;
   ctaButtonText?: T;
   ctaButtonLink?: T;
+  ctaPromises?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  storyParagraphs?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  trustBadges?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  officeLocations?:
+    | T
+    | {
+        city?: T;
+        tag?: T;
+        body?: T;
+        id?: T;
+      };
+  timeline?:
+    | T
+    | {
+        year?: T;
+        title?: T;
+        body?: T;
+        id?: T;
+      };
+  companyValues?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
+        body?: T;
+        accent?: T;
+        id?: T;
+      };
+  cultureItems?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
+        body?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -1175,6 +1701,89 @@ export interface ProcessStepsSelect<T extends boolean = true> {
         icon?: T;
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "homepage-hero_select".
+ */
+export interface HomepageHeroSelect<T extends boolean = true> {
+  badgeText?: T;
+  headline?: T;
+  headlineHighlight?: T;
+  subheading?: T;
+  ctaPrimaryText?: T;
+  ctaPrimaryLink?: T;
+  ctaSecondaryText?: T;
+  ctaSecondaryLink?: T;
+  videoBgUrl?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "navigation_select".
+ */
+export interface NavigationSelect<T extends boolean = true> {
+  menuItems?:
+    | T
+    | {
+        label?: T;
+        link?: T;
+        openInNewTab?: T;
+        id?: T;
+      };
+  ctaText?: T;
+  ctaLink?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer-settings_select".
+ */
+export interface FooterSettingsSelect<T extends boolean = true> {
+  tagline?: T;
+  quickLinks?:
+    | T
+    | {
+        label?: T;
+        link?: T;
+        id?: T;
+      };
+  serviceLinks?:
+    | T
+    | {
+        label?: T;
+        link?: T;
+        id?: T;
+      };
+  legalLinks?:
+    | T
+    | {
+        label?: T;
+        link?: T;
+        id?: T;
+      };
+  copyrightText?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "seo-defaults_select".
+ */
+export interface SeoDefaultsSelect<T extends boolean = true> {
+  metaTitleSuffix?: T;
+  defaultDescription?: T;
+  defaultOgImage?: T;
+  twitterHandle?: T;
+  googleVerification?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
