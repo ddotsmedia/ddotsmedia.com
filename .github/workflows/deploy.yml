@@ -104,7 +104,7 @@ jobs:
           # Quoted heredoc: nothing expands on the runner; GitHub expressions are filled in by Actions
           ssh $SSH_OPTS "$VPS_USER@$VPS_HOST" 'bash -s' << 'DEPLOY_EOF'
           set -e
-          mkdir -p /opt/ddotsmedia && cd /opt/ddotsmedia
+          mkdir -p /opt/ddotsmedia-web && cd /opt/ddotsmedia-web
           umask 077
 
           # docker compose auto-loads .env from this dir (also makes manual compose commands work)
