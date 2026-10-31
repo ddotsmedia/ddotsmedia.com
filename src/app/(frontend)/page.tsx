@@ -2,7 +2,6 @@ import { getPayloadClient, safeQuery } from "@/lib/payload";
 import type { Project } from "@/payload-types";
 import { getServices, getAchievements, getCompanySettings, getTestimonials, getProcessSteps, getFaqs } from "@/lib/content";
 import { Hero } from "@/components/home/Hero";
-import { ClientLogos } from "@/components/home/ClientLogos";
 import { TechMarquee } from "@/components/home/TechMarquee";
 import { ServicesOverview } from "@/components/home/ServicesOverview";
 import { FeaturedProjects } from "@/components/home/FeaturedProjects";
@@ -45,9 +44,7 @@ export default async function Home() {
         stats={stats}
         ctaText={cs?.ctaButtonText || "Get a Free Quote"}
         ctaLink={cs?.ctaButtonLink || "/contact"}
-      />
-      <ClientLogos />
-      <TechMarquee />
+      />      <TechMarquee />
       {services.length > 0 && <ServicesOverview services={services} />}
       {featured.length > 0 ? (
         <FeaturedProjects projects={featured} />
