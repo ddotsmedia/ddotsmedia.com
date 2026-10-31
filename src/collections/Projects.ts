@@ -11,8 +11,11 @@ export const Projects: CollectionConfig = {
       "Paste a live URL and save — the title, description, slug, and screenshot are auto-filled. Everything else is optional.",
   },
   access: {
+    create: ({ req }) => !!req.user,
     read: ({ req }) =>
       req.user ? true : { published: { equals: true } },
+    update: ({ req }) => !!req.user,
+    delete: ({ req }) => !!req.user,
   },
   hooks: { beforeChange: [enrichProjectFromUrl] },
   fields: [
