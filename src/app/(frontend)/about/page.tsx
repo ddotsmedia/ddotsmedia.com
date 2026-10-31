@@ -36,7 +36,7 @@ const FALLBACK_STORY = [
   "Ddotsmedia began in Dubai in 2016 as a one-person freelance practice — a single developer taking on web projects for local businesses who needed something better than an off-the-shelf template.",
   "Word spread. As the projects grew more ambitious, so did the team: designers, mobile developers, and ERP specialists came on board, and what started as a freelance habit became a proper software studio.",
   "What set us apart was a focus on what UAE businesses actually need — WPS-compliant payroll, VAT-ready invoicing, Arabic-friendly interfaces, and systems that respect local compliance from day one.",
-  "Today that same studio ships web, mobile, and ERP products for clients across the UAE and GCC — but we still build every project the way we built the very first one: carefully, and like it's our own.",
+  "Today that same studio ships web, mobile, and ERP products for clients across the UAE and GCC — but we still build every project the way we built the very first one: carefully, and like it&apos;s our own.",
 ];
 
 const FALLBACK_VALUES: { icon: LucideIcon; title: string; body: string; accent: string }[] = [
@@ -55,7 +55,7 @@ const FALLBACK_VALUES: { icon: LucideIcon; title: string; body: string; accent: 
   {
     icon: Handshake,
     title: "Client Partnership",
-    body: "We're not a vendor you brief and forget — we're a partner invested in your outcome. We learn your business, challenge assumptions, and stay long after launch. Your success is how we measure ours.",
+    body: "We're not a vendor you brief and forget — we&apos;re a partner invested in your outcome. We learn your business, challenge assumptions, and stay long after launch. Your success is how we measure ours.",
     accent: "var(--brand-accent-green)",
   },
   {
@@ -411,7 +411,7 @@ export default async function AboutPage() {
               </span>
               <h2 className="mt-5 text-2xl font-bold text-white">Want to work with us?</h2>
               <p className="mt-2 text-sm text-white/70">
-                Tell us about your project and we'll help you bring it to life.
+                Tell us about your project and we&apos;ll help you bring it to life.
               </p>
               <span className="mt-5 text-sm font-semibold text-white group-hover:underline">
                 Get in Touch &rarr;
