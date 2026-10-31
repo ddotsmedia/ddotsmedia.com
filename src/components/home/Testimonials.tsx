@@ -32,6 +32,11 @@ export function Testimonials({ items }: { items: UITestimonial[] }) {
           {data.map((t, i) => (
             <Reveal key={`${t.author}-${i}`} delay={i * 0.08}>
               <figure className="relative flex h-full flex-col rounded-2xl border border-[#1e2d42] bg-[#111827] p-6 transition-all duration-300 hover:border-[var(--brand-teal)]/40 hover:shadow-[0_0_36px_-16px_var(--brand-teal)]">
+                {i === 0 && (
+                  <div className="absolute top-4 right-4 inline-flex items-center gap-1 rounded-full bg-[var(--brand-accent-yellow)]/10 px-3 py-1">
+                    <span className="text-xs font-semibold text-[var(--brand-accent-yellow)]">Featured Client</span>
+                  </div>
+                )}
                 {/* Decorative quote mark */}
                 <Quote
                   className="absolute right-5 top-5 h-10 w-10 rotate-180 text-[var(--brand-teal)]/8"

@@ -32,14 +32,13 @@ export function Hero({
         <div className="text-center md:text-left">
 
           <h1 className="font-display text-4xl font-bold leading-[1.1] text-white sm:text-5xl md:text-[3.25rem]">
-            We build <TypingWords />
+            Ship <TypingWords />
             <br />
-            that move your business forward.
+            <span className="text-[var(--brand-teal)]">faster than your competition.</span>
           </h1>
 
           <p className="mx-auto mt-6 max-w-xl text-lg text-white/60 md:mx-0">
-            Web apps, mobile apps, and custom ERP systems engineered for performance,
-            built for the UAE market and beyond.
+            From concept to production in weeks, not months. Full-stack teams, no hand-offs, one accountability. 50+ businesses trust us with their mission-critical systems.
           </p>
 
           <div className="mt-8 flex flex-wrap justify-center gap-4 md:justify-start">
