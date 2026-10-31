@@ -414,7 +414,7 @@ export default async function AboutPage() {
                 Tell us about your project and we'll help you bring it to life.
               </p>
               <span className="mt-5 text-sm font-semibold text-white group-hover:underline">
-                Get in Touch →
+                Get in Touch &rarr;
               </span>
             </Link>
           </Reveal>
