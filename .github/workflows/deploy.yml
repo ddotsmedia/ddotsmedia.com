@@ -191,6 +191,10 @@ jobs:
 
           echo "[INFO] Starting web"
           docker compose up -d ddotsmedia-web
+          sleep 3
+          echo "[INFO] Running Payload migrations"
+          docker exec ddotsmedia-web pnpm payload migrate || { echo "[ERROR] Migration failed"; exit 1; }
+          echo "[OK] Migrations complete"
 
           HEALTH_OK=false
           for i in $(seq 1 30); do
