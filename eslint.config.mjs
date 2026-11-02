@@ -18,7 +18,15 @@ const eslintConfig = [
       "out/**",
       "build/**",
       "next-env.d.ts",
+      "_legacy/**",
     ],
+  },
+  {
+    // Admin components use Payload CMS routes — <a> is intentional there
+    files: ["src/components/admin/**/*.{ts,tsx}", "src/app/(admin)/**/*.{ts,tsx}"],
+    rules: {
+      "@next/next/no-html-link-for-pages": "off",
+    },
   },
 ];
 

@@ -1,6 +1,6 @@
 import type { ComponentType } from "react";
 import Link from "next/link";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { ArrowRight, Mail, MapPin, Phone } from "lucide-react";
 import { FourDotLogo } from "@/components/shared/FourDotLogo";
 import { getCompanySettings } from "@/lib/content";
 
@@ -13,6 +13,15 @@ const QUICK = [
   { label: "Portfolio", href: "/portfolio" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
+];
+
+const SERVICES = [
+  { label: "Web Development", href: "/services" },
+  { label: "Mobile Apps", href: "/services" },
+  { label: "Custom Software", href: "/services" },
+  { label: "UI/UX Design", href: "/services" },
+  { label: "Cloud & DevOps", href: "/services" },
+  { label: "ERP Systems", href: "/services" },
 ];
 
 /* Brand glyphs — lucide-react no longer ships social/brand icons. */
@@ -46,30 +55,71 @@ export async function Footer() {
   const address = cs?.address || "SHAMS Free Zone, Sharjah, UAE";
   const social = cs?.socialLinks ?? null;
   const SOCIAL: { icon: ComponentType<IconProps>; label: string; href: string }[] = [
-    { icon: LinkedInIcon, label: "LinkedIn", href: social?.linkedin || "#" },
-    { icon: XIcon, label: "Twitter / X", href: social?.twitter || "#" },
-    { icon: InstagramIcon, label: "Instagram", href: social?.instagram || "#" },
-    { icon: GitHubIcon, label: "GitHub", href: social?.github || "#" },
+    ...(social?.linkedin ? [{ icon: LinkedInIcon, label: "LinkedIn", href: social.linkedin }] : []),
+    ...(social?.twitter ? [{ icon: XIcon, label: "Twitter / X", href: social.twitter }] : []),
+    ...(social?.instagram ? [{ icon: InstagramIcon, label: "Instagram", href: social.instagram }] : []),
+    ...(social?.github ? [{ icon: GitHubIcon, label: "GitHub", href: social.github }] : []),
   ];
 
   return (
-    <footer className="w-full border-t border-white/10 bg-[#0a0e17] py-16">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Company */}
+    <footer className="w-full bg-[#0a0e17]">
+      {/* Pre-footer CTA strip */}
+      <div className="relative overflow-hidden border-t border-white/10">
+        <div
+          className="pointer-events-none absolute inset-0 opacity-40"
+          style={{
+            background:
+              "radial-gradient(60% 120% at 50% 0%, color-mix(in srgb, var(--brand-teal) 18%, transparent), transparent)",
+          }}
+        />
+        <div className="relative mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-4 py-10 sm:flex-row sm:px-6 lg:px-8">
           <div>
+            <p className="text-lg font-semibold text-white">Have a project in mind?</p>
+            <p className="mt-1 text-sm text-white/55">We scope, design, and ship — from idea to production.</p>
+          </div>
+          <Link
+            href="/contact"
+            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-[var(--brand-teal)] px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[var(--brand-teal)]/20 transition-transform hover:-translate-y-0.5"
+          >
+            Get a Free Quote
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </div>
+
+      {/* Main footer grid */}
+      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-5">
+          {/* Company — 2 cols wide */}
+          <div className="lg:col-span-2">
             <div className="flex items-center gap-2">
               <FourDotLogo size={24} />
-              <span className="text-lg font-bold text-white">Ddotsmedia IT Solutions</span>
+              <span className="text-lg font-bold text-white">Ddotsmedia</span>
             </div>
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/60">
-              Building tomorrow&apos;s digital solutions today.
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/55">
+              Software studio helping UAE and GCC businesses build web apps, mobile apps, and enterprise systems — from first line of code to production.
             </p>
+            {SOCIAL.length > 0 && (
+              <div className="mt-6 flex gap-2.5">
+                {SOCIAL.map((s) => (
+                  <a
+                    key={s.label}
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={s.label}
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/[0.03] text-white/55 transition-colors hover:border-[var(--brand-teal)] hover:text-[var(--brand-teal)]"
+                  >
+                    <s.icon className="h-4 w-4" />
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-sm font-semibold text-white">Quick Links</h3>
+            <h3 className="text-sm font-semibold uppercase tracking-widest text-white/40">Company</h3>
             <ul className="mt-4 space-y-2.5 text-sm">
               {QUICK.map((l) => (
                 <li key={l.href}>
@@ -81,62 +131,68 @@ export async function Footer() {
             </ul>
           </div>
 
+          {/* Services */}
+          <div>
+            <h3 className="text-sm font-semibold uppercase tracking-widest text-white/40">Services</h3>
+            <ul className="mt-4 space-y-2.5 text-sm">
+              {SERVICES.map((l) => (
+                <li key={l.label}>
+                  <Link href={l.href} className="text-white/60 transition-colors hover:text-[var(--brand-teal)]">
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
           {/* Contact Info */}
           <div>
-            <h3 className="text-sm font-semibold text-white">Contact</h3>
+            <h3 className="text-sm font-semibold uppercase tracking-widest text-white/40">Contact</h3>
             <ul className="mt-4 space-y-3 text-sm text-white/60">
-              <li>
-                <a href={phoneHref} className="inline-flex items-center gap-2 transition-colors hover:text-[var(--brand-teal)]">
-                  <Phone className="h-4 w-4 shrink-0 text-[var(--brand-teal)]" />
-                  {phone}
-                </a>
-              </li>
-              <li>
-                <a href={`mailto:${email}`} className="inline-flex items-center gap-2 transition-colors hover:text-[var(--brand-teal)]">
-                  <Mail className="h-4 w-4 shrink-0 text-[var(--brand-teal)]" />
-                  {email}
-                </a>
-              </li>
-              <li className="flex items-start gap-2">
-                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[var(--brand-teal)]" />
-                {address}
-              </li>
+              {phone && (
+                <li>
+                  <a href={phoneHref} className="inline-flex items-center gap-2 transition-colors hover:text-[var(--brand-teal)]">
+                    <Phone className="h-4 w-4 shrink-0 text-[var(--brand-teal)]" />
+                    {phone}
+                  </a>
+                </li>
+              )}
+              {email && (
+                <li>
+                  <a href={`mailto:${email}`} className="inline-flex items-center gap-2 transition-colors hover:text-[var(--brand-teal)]">
+                    <Mail className="h-4 w-4 shrink-0 text-[var(--brand-teal)]" />
+                    {email}
+                  </a>
+                </li>
+              )}
+              {address && (
+                <li className="flex items-start gap-2">
+                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[var(--brand-teal)]" />
+                  <span>{address}</span>
+                </li>
+              )}
               <li>
                 <a
                   href={MAPS_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 transition-colors hover:text-[var(--brand-teal)]"
+                  className="text-[var(--brand-teal)] transition-opacity hover:opacity-80"
                 >
-                  <MapPin className="h-4 w-4 shrink-0 text-[var(--brand-teal)]" />
-                  View on Google Maps
+                  View on Google Maps →
                 </a>
               </li>
             </ul>
           </div>
-
-          {/* Social */}
-          <div>
-            <h3 className="text-sm font-semibold text-white">Follow Us</h3>
-            <div className="mt-4 flex gap-3">
-              {SOCIAL.map((s) => (
-                <a
-                  key={s.label}
-                  href={s.href}
-                  aria-label={s.label}
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/[0.03] text-white/60 transition-colors hover:border-[var(--brand-teal)] hover:text-[var(--brand-teal)]"
-                >
-                  <s.icon className="h-4 w-4" />
-                </a>
-              ))}
-            </div>
-          </div>
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-xs text-white/40 sm:flex-row">
-          <p>© 2024 Ddotsmedia IT Solutions. All rights reserved.</p>
-          <p>SHAMS Free Zone Licensed</p>
+        <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-xs text-white/35 sm:flex-row">
+          <p>© {new Date().getFullYear()} Ddotsmedia IT Solutions LLC. All rights reserved.</p>
+          <p className="flex items-center gap-3">
+            <span>SHAMS Free Zone · Sharjah · UAE</span>
+            <span className="h-3 w-px bg-white/20" />
+            <Link href="/contact" className="transition-colors hover:text-white/60">Privacy</Link>
+          </p>
         </div>
       </div>
     </footer>

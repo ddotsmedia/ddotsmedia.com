@@ -1,1 +1,531 @@
-/* Add Payload admin style overrides here. */
+/* ══════════════════════════════════════════════════════════════════
+   DDOTSMEDIA — Modern Admin Theme
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ─── Brand tokens ─────────────────────────────────────────────── */
+:root {
+  --dd-accent:       #2563EB;
+  --dd-accent-hover: #1D4ED8;
+  --dd-accent-light: #EFF6FF;
+  --dd-navy:         #0F172A;
+  --dd-navy-2:       #1E293B;
+  --dd-navy-3:       #334155;
+  --dd-slate:        #64748B;
+  --dd-border:       #E2E8F0;
+  --dd-surface:      #F8FAFC;
+  --dd-white:        #FFFFFF;
+  --dd-radius:       10px;
+  --dd-radius-sm:    6px;
+  --dd-shadow-sm:    0 1px 3px rgba(0,0,0,.07), 0 1px 2px rgba(0,0,0,.05);
+  --dd-shadow-md:    0 4px 12px rgba(0,0,0,.09);
+  --dd-focus-ring:   0 0 0 3px rgba(37,99,235,.15);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   1. SIDEBAR — dark navy
+   ══════════════════════════════════════════════════════════════════ */
+.nav__wrap {
+  background: var(--dd-navy) !important;
+  border-right: 1px solid var(--dd-navy-2) !important;
+}
+
+.nav__header {
+  background: var(--dd-navy) !important;
+  border-bottom: 1px solid var(--dd-navy-2) !important;
+  padding: 18px 16px !important;
+}
+
+.nav__scroll {
+  padding: 10px 10px !important;
+}
+
+/* Nav links */
+.nav__link {
+  border-radius: var(--dd-radius-sm) !important;
+  margin: 2px 0 !important;
+  padding: 8px 12px !important;
+  transition: background 0.15s, color 0.15s !important;
+
+  .nav__link-label {
+    color: #94A3B8 !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+  }
+
+  .nav__link-indicator {
+    background: transparent !important;
+  }
+
+  &:hover .nav__link-label {
+    color: #F1F5F9 !important;
+  }
+
+  &.nav__link--active,
+  &[aria-current="page"] {
+    background: rgba(37,99,235,.18) !important;
+
+    .nav__link-label {
+      color: #60A5FA !important;
+      font-weight: 600 !important;
+    }
+
+    .nav__link-indicator {
+      background: var(--dd-accent) !important;
+    }
+  }
+}
+
+/* Nav group labels */
+.nav-group__label {
+  color: #475569 !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: .1em !important;
+  padding: 14px 12px 4px !important;
+}
+
+.nav-group__toggle {
+  border-radius: var(--dd-radius-sm) !important;
+  padding: 8px 12px !important;
+  color: #94A3B8 !important;
+
+  &:hover {
+    background: rgba(255,255,255,.06) !important;
+    color: #F1F5F9 !important;
+  }
+}
+
+/* Log out link */
+.nav__log-out {
+  color: #64748B !important;
+  border-top: 1px solid var(--dd-navy-2) !important;
+  margin-top: 8px !important;
+  padding-top: 8px !important;
+
+  &:hover { color: #94A3B8 !important; }
+}
+
+.nav__controls {
+  background: var(--dd-navy) !important;
+  border-top: 1px solid var(--dd-navy-2) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   2. TOP APP HEADER
+   ══════════════════════════════════════════════════════════════════ */
+.app-header__bg {
+  background: var(--dd-white) !important;
+  border-bottom: 1px solid var(--dd-border) !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,.05) !important;
+}
+
+.app-header__wrapper {
+  padding: 0 24px !important;
+}
+
+/* Breadcrumb / step nav */
+.step-nav {
+  font-size: 13px !important;
+  color: var(--dd-slate) !important;
+
+  a, .step-nav__home {
+    color: var(--dd-slate) !important;
+    &:hover { color: var(--dd-accent) !important; }
+  }
+
+  .step-nav__last {
+    color: var(--dd-navy-2) !important;
+    font-weight: 600 !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   3. DOC HEADER + CONTROLS
+   ══════════════════════════════════════════════════════════════════ */
+.doc-header {
+  padding: 20px 24px 0 !important;
+}
+
+.doc-controls {
+  background: var(--dd-white) !important;
+  border-bottom: 1px solid var(--dd-border) !important;
+  padding: 12px 24px !important;
+}
+
+/* Save button */
+.form-submit {
+  .btn--style-primary {
+    background: var(--dd-accent) !important;
+    color: #fff !important;
+    border-radius: var(--dd-radius-sm) !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    padding: 9px 20px !important;
+    border: none !important;
+    box-shadow: 0 1px 2px rgba(37,99,235,.3) !important;
+    transition: background 0.15s, box-shadow 0.15s, transform 0.1s !important;
+
+    &:hover {
+      background: var(--dd-accent-hover) !important;
+      box-shadow: 0 4px 12px rgba(37,99,235,.35) !important;
+      transform: translateY(-1px) !important;
+    }
+
+    &:active {
+      transform: translateY(0) !important;
+    }
+
+    .btn__label { color: #fff !important; }
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   4. SIDEBAR (right panel — Slug, Status, Order…)
+   ══════════════════════════════════════════════════════════════════ */
+.document-fields__sidebar {
+  background: var(--dd-surface) !important;
+  border-left: 1px solid var(--dd-border) !important;
+}
+
+.document-fields__sidebar-fields {
+  padding: 20px 16px !important;
+
+  /* Give each sidebar field a subtle card look */
+  > .field-type {
+    background: var(--dd-white);
+    border: 1px solid var(--dd-border);
+    border-radius: var(--dd-radius) !important;
+    padding: 12px 14px !important;
+    margin-bottom: 10px !important;
+    box-shadow: var(--dd-shadow-sm);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   5. TABS
+   ══════════════════════════════════════════════════════════════════ */
+.tabs-field__tabs {
+  border-bottom: 2px solid var(--dd-border) !important;
+  gap: 2px !important;
+  padding: 0 4px !important;
+  margin-bottom: 24px !important;
+}
+
+.tabs-field__tab-button {
+  position: relative !important;
+  border: none !important;
+  background: transparent !important;
+  border-radius: var(--dd-radius) var(--dd-radius) 0 0 !important;
+  padding: 10px 18px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: var(--dd-slate) !important;
+  cursor: pointer !important;
+  transition: color 0.15s, background 0.15s !important;
+  border-bottom: 2px solid transparent !important;
+  margin-bottom: -2px !important;
+
+  &:hover {
+    color: var(--dd-accent) !important;
+    background: var(--dd-accent-light) !important;
+  }
+
+  &.tabs-field__tab-button--active {
+    color: var(--dd-accent) !important;
+    font-weight: 700 !important;
+    border-bottom-color: var(--dd-accent) !important;
+    background: transparent !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   6. COLLAPSIBLE FIELDS — card style
+   ══════════════════════════════════════════════════════════════════ */
+.collapsible-field__collapsible.collapsible {
+  border: 1px solid var(--dd-border) !important;
+  border-radius: var(--dd-radius) !important;
+  overflow: hidden !important;
+  margin-bottom: 10px !important;
+  box-shadow: var(--dd-shadow-sm) !important;
+  transition: box-shadow 0.15s !important;
+
+  &:hover {
+    box-shadow: var(--dd-shadow-md) !important;
+  }
+}
+
+.collapsible__header-wrap {
+  background: var(--dd-surface) !important;
+  padding: 13px 16px !important;
+  cursor: pointer !important;
+  transition: background 0.15s !important;
+  border-bottom: 1px solid var(--dd-border);
+
+  &:hover {
+    background: #EEF2FF !important;
+  }
+
+  label, .row-label {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: var(--dd-navy-2) !important;
+    cursor: pointer !important;
+  }
+}
+
+.collapsible__content {
+  padding: 18px 16px !important;
+  background: var(--dd-white) !important;
+}
+
+.collapsible__indicator svg {
+  color: var(--dd-slate) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   7. FORM FIELDS
+   ══════════════════════════════════════════════════════════════════ */
+/* Text / number / url inputs */
+.field-type.text input,
+.field-type.number input,
+.field-type.email input,
+.field-type.textarea textarea {
+  border-radius: var(--dd-radius-sm) !important;
+  border: 1px solid #CBD5E1 !important;
+  font-size: 14px !important;
+  padding: 9px 12px !important;
+  transition: border-color 0.15s, box-shadow 0.15s !important;
+  background: var(--dd-white) !important;
+
+  &:focus {
+    border-color: var(--dd-accent) !important;
+    box-shadow: var(--dd-focus-ring) !important;
+    outline: none !important;
+  }
+}
+
+/* Field labels */
+label.field-label {
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  color: #1E293B !important;
+  letter-spacing: .01em !important;
+  margin-bottom: 5px !important;
+  display: block;
+}
+
+/* Field description / help text */
+.field-description {
+  font-size: 11.5px !important;
+  color: var(--dd-slate) !important;
+  margin-top: 4px !important;
+  line-height: 1.5 !important;
+}
+
+/* Required asterisk */
+.required {
+  color: #EF4444 !important;
+  margin-left: 3px !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   8. REACT-SELECT (category, status dropdowns)
+   ══════════════════════════════════════════════════════════════════ */
+.rs__control {
+  border-radius: var(--dd-radius-sm) !important;
+  border: 1px solid #CBD5E1 !important;
+  min-height: 38px !important;
+  font-size: 14px !important;
+  box-shadow: none !important;
+  transition: border-color 0.15s, box-shadow 0.15s !important;
+
+  &:hover { border-color: #94A3B8 !important; }
+
+  &.rs__control--is-focused {
+    border-color: var(--dd-accent) !important;
+    box-shadow: var(--dd-focus-ring) !important;
+  }
+}
+
+.rs__menu {
+  border-radius: var(--dd-radius) !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,.12), 0 2px 6px rgba(0,0,0,.08) !important;
+  border: 1px solid var(--dd-border) !important;
+  overflow: hidden !important;
+  margin-top: 4px !important;
+}
+
+.rs__option {
+  font-size: 13.5px !important;
+  padding: 9px 14px !important;
+  cursor: pointer !important;
+
+  &.rs__option--is-selected {
+    background: var(--dd-accent) !important;
+    color: #fff !important;
+  }
+
+  &.rs__option--is-focused:not(.rs__option--is-selected) {
+    background: var(--dd-accent-light) !important;
+    color: var(--dd-accent) !important;
+  }
+}
+
+.rs__multi-value {
+  border-radius: 5px !important;
+  background: var(--dd-accent-light) !important;
+
+  .rs__multi-value__label {
+    color: var(--dd-accent) !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+  }
+
+  .rs__multi-value__remove {
+    border-radius: 0 5px 5px 0 !important;
+    color: var(--dd-accent) !important;
+    &:hover { background: #BFDBFE !important; }
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   9. CHECKBOX
+   ══════════════════════════════════════════════════════════════════ */
+.checkbox-input__input:checked + .checkbox-input__icon {
+  background: var(--dd-accent) !important;
+  border-color: var(--dd-accent) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   10. COLLECTION LIST VIEW (table)
+   ══════════════════════════════════════════════════════════════════ */
+.collection-list {
+  padding: 20px 24px !important;
+}
+
+.table-wrap {
+  border: 1px solid var(--dd-border) !important;
+  border-radius: var(--dd-radius) !important;
+  overflow: hidden !important;
+  box-shadow: var(--dd-shadow-sm) !important;
+}
+
+table th {
+  background: var(--dd-surface) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: .07em !important;
+  color: var(--dd-slate) !important;
+  padding: 12px 16px !important;
+  border-bottom: 1px solid var(--dd-border) !important;
+}
+
+table td {
+  padding: 12px 16px !important;
+  font-size: 13.5px !important;
+  border-bottom: 1px solid #F1F5F9 !important;
+  vertical-align: middle !important;
+}
+
+table tr:hover td {
+  background: var(--dd-accent-light) !important;
+  cursor: pointer;
+}
+
+table tr:last-child td {
+  border-bottom: none !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   11. "CREATE NEW" BUTTON + PILL BADGES
+   ══════════════════════════════════════════════════════════════════ */
+.btn--style-primary {
+  background: var(--dd-accent) !important;
+  border-radius: var(--dd-radius-sm) !important;
+  font-weight: 600 !important;
+  border: none !important;
+  transition: background 0.15s, box-shadow 0.15s !important;
+
+  &:hover {
+    background: var(--dd-accent-hover) !important;
+    box-shadow: 0 4px 12px rgba(37,99,235,.25) !important;
+  }
+
+  .btn__label { color: #fff !important; }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   12. UPLOAD / MEDIA FIELDS
+   ══════════════════════════════════════════════════════════════════ */
+.upload__toggable-button,
+.file-details {
+  border-radius: var(--dd-radius) !important;
+  border: 2px dashed var(--dd-border) !important;
+  background: var(--dd-surface) !important;
+  transition: border-color 0.15s, background 0.15s !important;
+
+  &:hover {
+    border-color: var(--dd-accent) !important;
+    background: var(--dd-accent-light) !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   13. RICHTEXT (Lexical editor)
+   ══════════════════════════════════════════════════════════════════ */
+.rich-text .editor-shell {
+  border-radius: var(--dd-radius-sm) !important;
+  border: 1px solid #CBD5E1 !important;
+
+  &:focus-within {
+    border-color: var(--dd-accent) !important;
+    box-shadow: var(--dd-focus-ring) !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   14. RENDER TITLE (field title "[Untitled]")
+   ══════════════════════════════════════════════════════════════════ */
+.render-title {
+  font-size: 22px !important;
+  font-weight: 800 !important;
+  color: var(--dd-navy) !important;
+  margin-bottom: 4px !important;
+}
+
+.collection-edit .doc-controls__description {
+  color: var(--dd-slate) !important;
+  font-size: 13px !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   15. ROW FIELDS spacing
+   ══════════════════════════════════════════════════════════════════ */
+.row__fields {
+  gap: 14px !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   16. MAIN CONTENT AREA — light gray bg
+   ══════════════════════════════════════════════════════════════════ */
+.template-default__wrap {
+  background: var(--dd-surface) !important;
+}
+
+.collection-edit__main-wrapper,
+.collection-list__main {
+  background: var(--dd-surface) !important;
+}
+
+.collection-edit__form > .gutter {
+  background: var(--dd-white) !important;
+  border-radius: var(--dd-radius) !important;
+  box-shadow: var(--dd-shadow-sm) !important;
+  border: 1px solid var(--dd-border) !important;
+  margin: 16px !important;
+  padding: 20px 24px !important;
+  overflow: hidden !important;
+}
+

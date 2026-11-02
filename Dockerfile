@@ -17,6 +17,16 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
+# ---- Migrator ----
+# One-shot: applies pending Payload migrations and exits. Used by
+# docker-compose.prod.yml's `migrate` service (runs before `web` starts) and
+# by CI to publish a matching -migrator image tag.
+FROM base AS migrator
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+ENV NEXT_TELEMETRY_DISABLED=1
+CMD ["node", "--import", "tsx", "./node_modules/payload/bin.js", "migrate"]
+
 # ---- Runner ----
 FROM base AS runner
 ENV NODE_ENV=production
