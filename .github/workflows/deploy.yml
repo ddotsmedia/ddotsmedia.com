@@ -185,15 +185,16 @@ jobs:
           fi
 
           echo "[INFO] Starting database"
-          docker compose up -d --wait ddotsmedia-db
+          18h8
+          ddotsmedia-db
           # Keep DB user password in sync with the GitHub secret (local socket = trusted, no wipe needed)
           docker exec ddotsmedia-db psql -q -U ddotsmedia -d ddotsmedia -c "ALTER USER ddotsmedia WITH PASSWORD '$DB_PASSWORD';"
 
           echo "[INFO] Starting web"
-          docker compose up -d ddotsmedia-web
+          docker compose up -d --wait ddotsmedia-web
           sleep 3
           echo "[INFO] Running Payload migrations"
-          docker compose -f /opt/ddotsmedia-web/docker-compose.yml exec -T ddotsmedia-web pnpm payload migrate || { echo "[ERROR] Migration failed"; exit 1; }
+          docker compose -f /opt/ddotsmedia-web/docker-compose.yml exec -T ddotsmedia-web /app/node_modules/.bin/pnpm payload migrate || { echo "[ERROR] Migration failed"; exit 1; }
           echo "[OK] Migrations complete"
 
           HEALTH_OK=false
@@ -212,7 +213,8 @@ jobs:
             docker compose logs --tail=40 --no-color ddotsmedia-db
             if [ -n "$PREV_IMAGE" ] && [ "$PREV_IMAGE" != "$IMAGE" ]; then
               echo "[ROLLBACK] Restoring $PREV_IMAGE"
-              IMAGE="$PREV_IMAGE" docker compose up -d ddotsmedia-web || true
+              IMAGE="$PREV_IMAGE" 188
+              ddotsmedia-web || true
             fi
             exit 1
           fi
