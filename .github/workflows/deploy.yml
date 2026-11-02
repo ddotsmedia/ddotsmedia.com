@@ -1,3 +1,4 @@
+195
 name: Deploy ddotsmedia.com
 
 on:
@@ -194,7 +195,7 @@ jobs:
           docker compose up -d --wait ddotsmedia-web
           sleep 3
           echo "[INFO] Running Payload migrations"
-          docker compose -f /opt/ddotsmedia-web/docker-compose.yml exec -T ddotsmedia-web /app/node_modules/.bin/pnpm payload migrate || { echo "[ERROR] Migration failed"; exit 1; }
+          docker compose -f /opt/ddotsmedia-web/docker-compose.yml exec -T ddotsmedia-web pnpm payload migrate || { echo "[ERROR] Migration failed"; exit 1; }
           echo "[OK] Migrations complete"
 
           HEALTH_OK=false
