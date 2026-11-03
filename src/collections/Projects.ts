@@ -10,8 +10,17 @@ export const Projects: CollectionConfig = {
     description:
       "Paste a live URL and save — the title, description, slug, and screenshot are auto-filled. Everything else is optional.",
   },
-  access: { read: () => true },
-  hooks: { beforeChange: [enrichProjectFromUrl] },
+  access: {
+        read: ({ req }) => {
+                // Public read on frontend, but require auth in admin panel
+                if (req.user) return true;
+                // Allow public API access for frontend
+                return !req.url?.includes('/admin');
+        },
+        create: ({ req }) => !!req.user,
+        update: ({ req }) => !!req.user,
+        delete: ({ req }) => !!req.user,
+  },hooks: { beforeChange: [enrichProjectFromUrl] },
   fields: [
     // Only the URL is required — paste it and save; the rest auto-fills.
     {
