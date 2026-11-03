@@ -12,8 +12,10 @@ export const Projects: CollectionConfig = {
   },
   access: {
     create: ({ req }) => !!req.user,
-    read: ({ req }) =>
-      req.user ? true : { published: { equals: true } },
+    read: ({ req }) => {
+      if (req.user) return true;
+      return { published: { equals: true } };
+    },
     update: ({ req }) => !!req.user,
     delete: ({ req }) => !!req.user,
   },
