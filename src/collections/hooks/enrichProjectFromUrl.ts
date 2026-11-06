@@ -115,9 +115,12 @@ export const enrichProjectFromUrl: CollectionBeforeChangeHook = async ({ data, r
     }
   }
 
-  // (c) SLUG — derive from title or hostname when empty.
+  // (c) SLUG + TITLE FALLBACK — use hostname when both are empty.
+  // This prevents a DB NOT NULL violation when meta fetch fails.
+  const host = hostnameOf(liveUrl);
+  if (!data.title && host) data.title = host;
   if (!data.slug) {
-    const base = (typeof data.title === "string" && data.title) || hostnameOf(liveUrl);
+    const base = (typeof data.title === "string" && data.title) || host;
     if (base) data.slug = toSlug(base);
   }
 
