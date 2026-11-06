@@ -3,6 +3,7 @@ import * as migration_20260621_084417_content_collections from './20260621_08441
 import * as migration_20260622_111054_company_settings_fields from './20260622_111054_company_settings_fields';
 import * as migration_20261022_120000_new_collections from './20261022_120000_new_collections';
 import * as migration_20261024_100000_projects_missing_columns from './20261024_100000_projects_missing_columns';
+import * as migration_20261105_100000_projects_published_column from './20261105_100000_projects_published_column';
 
 export const migrations = [
   {
@@ -29,5 +30,10 @@ export const migrations = [
     up: migration_20261024_100000_projects_missing_columns.up,
     down: migration_20261024_100000_projects_missing_columns.down,
     name: '20261024_100000_projects_missing_columns',
+  },
+  {
+    up: migration_20261105_100000_projects_published_column.up,
+    down: migration_20261105_100000_projects_published_column.down,
+    name: '20261105_100000_projects_published_column',
   },
 ];
