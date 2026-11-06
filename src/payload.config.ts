@@ -101,22 +101,26 @@ export default buildConfig({
           limit: 1,
         });
         if (existing.totalDocs > 0) continue;
-        await payload.create({
-          collection: "projects",
-          data: {
-            liveUrl: item.url,
-            title: item.title,
-            slug: item.name,
-            category: item.category as "Web" | "iOS" | "Android" | "Desktop" | "ERP",
-            shortDescription: item.description,
-            techStack: (item.tags ?? []).map((tech, j) => ({ tech, id: String(j) })),
-            featured: i < 2,
-            order: i + 1,
-            status: "Live" as const,
-            published: true,
-          },
-        });
-        seeded++;
+        try {
+          await payload.create({
+            collection: "projects",
+            data: {
+              liveUrl: item.url,
+              title: item.title,
+              slug: item.name,
+              category: item.category as "Web" | "iOS" | "Android" | "Desktop" | "ERP",
+              shortDescription: item.description,
+              techStack: (item.tags ?? []).map((tech, j) => ({ tech, id: String(j) })),
+              featured: i < 2,
+              order: i + 1,
+              status: "Live" as const,
+              published: true,
+            },
+          });
+          seeded++;
+        } catch (itemErr) {
+          payload.logger.warn(`[seed] Failed to seed project "${item.name}": ${String(itemErr)}`);
+        }
       }
       if (seeded > 0) payload.logger.info(`[seed] Seeded ${seeded} missing portfolio projects`);
     } catch (err) {
