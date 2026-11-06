@@ -87,33 +87,40 @@ export default buildConfig({
     prodMigrations: migrations,
   }),
   onInit: async (payload) => {
-    // Auto-seed portfolio projects on first boot if the collection is empty.
-    // Idempotent: skips if any project already exists. Errors are logged, never thrown.
+    // Seed portfolio projects that don't exist yet (by slug).
+    // Idempotent: each slug is checked individually — works even when the
+    // collection already has some entries (e.g. a partial seed from earlier).
     try {
-      const { totalDocs } = await payload.count({ collection: "projects" });
-      if (totalDocs === 0) {
-        const { PORTFOLIO } = await import("./lib/data/portfolio");
-        for (let i = 0; i < PORTFOLIO.length; i++) {
-          const item = PORTFOLIO[i];
-          await payload.create({
-            collection: "projects",
-            data: {
-              liveUrl: item.url,
-              title: item.title,
-              slug: item.name,
-              category: item.category as "Web" | "iOS" | "Android" | "Desktop" | "ERP",
-              shortDescription: item.description,
-              techStack: (item.tags ?? []).map((tech, j) => ({ tech, id: String(j) })),
-              featured: i < 2,
-              order: i + 1,
-              status: "Live" as const,
-            },
-          });
-        }
-        payload.logger.info(`[seed] Auto-seeded ${PORTFOLIO.length} portfolio projects`);
+      const { PORTFOLIO } = await import("./lib/data/portfolio");
+      let seeded = 0;
+      for (let i = 0; i < PORTFOLIO.length; i++) {
+        const item = PORTFOLIO[i];
+        const existing = await payload.find({
+          collection: "projects",
+          where: { slug: { equals: item.name } },
+          limit: 1,
+        });
+        if (existing.totalDocs > 0) continue;
+        await payload.create({
+          collection: "projects",
+          data: {
+            liveUrl: item.url,
+            title: item.title,
+            slug: item.name,
+            category: item.category as "Web" | "iOS" | "Android" | "Desktop" | "ERP",
+            shortDescription: item.description,
+            techStack: (item.tags ?? []).map((tech, j) => ({ tech, id: String(j) })),
+            featured: i < 2,
+            order: i + 1,
+            status: "Live" as const,
+            published: true,
+          },
+        });
+        seeded++;
       }
+      if (seeded > 0) payload.logger.info(`[seed] Seeded ${seeded} missing portfolio projects`);
     } catch (err) {
-      payload.logger.warn(`[seed] Project auto-seed failed: ${String(err)}`);
+      payload.logger.warn(`[seed] Project seed failed: ${String(err)}`);
     }
   },
   sharp,
