@@ -6,6 +6,7 @@ import * as migration_20261024_100000_projects_missing_columns from './20261024_
 import * as migration_20261105_100000_projects_published_column from './20261105_100000_projects_published_column';
 import * as migration_20261106_120000_projects_nullable_title_category from './20261106_120000_projects_nullable_title_category';
 import * as migration_20261107_090000_seed_portfolio_projects from './20261107_090000_seed_portfolio_projects';
+import * as migration_20261107_120000_projects_nullable_slug from './20261107_120000_projects_nullable_slug';
 
 export const migrations = [
   {
