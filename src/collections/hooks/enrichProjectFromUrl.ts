@@ -1,4 +1,5 @@
 import type { CollectionAfterChangeHook, CollectionBeforeChangeHook } from "payload";
+import { revalidatePath } from "next/cache";
 import { toSlug } from "../../lib/slugify";
 
 const META_TIMEOUT_MS = 5_000;
@@ -69,6 +70,9 @@ export const enrichProjectAfterSave: CollectionAfterChangeHook = async ({ doc, r
   const needsMeta = !doc.title || doc.title === hostnameOf(liveUrl) || !doc.shortDescription;
   const needsShot = !doc.coverImage;
   if (!urlChanged && !needsMeta && !needsShot) return doc;
+
+  // Bust ISR cache immediately so new/updated project appears on the site right away.
+  try { revalidatePath("/portfolio"); revalidatePath("/"); } catch { /* ignore */ }
 
   // Fire and forget — don't block the response.
   setImmediate(async () => {
