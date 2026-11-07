@@ -5,9 +5,14 @@ import { Reveal } from "@/components/shared/Reveal";
 import { getPayloadClient } from "@/lib/payload";
 
 export const metadata: Metadata = {
-  title: "Careers",
+  title: "Careers at Ddotsmedia — IT Jobs in UAE",
   description:
-    "Join the Ddotsmedia team. We build web, mobile, and ERP products for clients across the UAE and GCC.",
+    "Join the Ddotsmedia team in Sharjah, UAE. We're hiring web developers, mobile developers, and designers. Build products for clients across the UAE and GCC.",
+  openGraph: {
+    title: "Careers at Ddotsmedia — IT Jobs in UAE",
+    description: "Join our software development team in Sharjah, UAE.",
+    images: [{ url: "/og-image", width: 1200, height: 630 }],
+  },
 };
 
 const DEPT_LABELS: Record<string, string> = {

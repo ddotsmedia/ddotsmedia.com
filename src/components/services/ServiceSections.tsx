@@ -88,12 +88,20 @@ export function ServiceSections({ services }: { services: Service[] }) {
                   ))}
                 </div>
 
-                <Link
-                  href="/contact"
-                  className="mt-7 inline-flex rounded-full bg-[var(--brand-teal)] px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[var(--brand-teal)]/25 transition-transform hover:-translate-y-0.5"
-                >
-                  Get a Quote
-                </Link>
+                <div className="mt-7 flex flex-wrap gap-3">
+                  <Link
+                    href="/contact"
+                    className="inline-flex rounded-full bg-[var(--brand-teal)] px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[var(--brand-teal)]/25 transition-transform hover:-translate-y-0.5"
+                  >
+                    Get a Quote
+                  </Link>
+                  <Link
+                    href={`/services/${s.slug}`}
+                    className="inline-flex rounded-full border border-[#1e2d42] px-6 py-2.5 text-sm font-semibold text-white/70 transition-all hover:border-[var(--brand-teal)] hover:text-white"
+                  >
+                    Learn More →
+                  </Link>
+                </div>
               </Reveal>
             </div>
           </section>

@@ -9,9 +9,14 @@ import { Reveal } from "@/components/shared/Reveal";
 export const revalidate = 60; // ISR
 
 export const metadata: Metadata = {
-  title: "Blog",
+  title: "Blog — UAE Software Development Insights",
   description:
-    "Engineering notes, UAE business-tech guides, and product insights from the Ddotsmedia team.",
+    "Engineering notes, UAE business-tech guides, web and mobile development tutorials, and product insights from the Ddotsmedia team in Sharjah, UAE.",
+  openGraph: {
+    title: "Ddotsmedia Blog — UAE Tech & Software Insights",
+    description: "Engineering notes, UAE business-tech guides, and product insights from our team.",
+    images: [{ url: "/og-image", width: 1200, height: 630 }],
+  },
 };
 
 export default async function BlogPage() {

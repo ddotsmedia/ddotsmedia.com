@@ -1,8 +1,8 @@
-
 import type { MetadataRoute } from "next";
 import { getPayloadClient, safeQuery } from "@/lib/payload";
+import { SERVICES } from "@/lib/data/services";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ddotsmedia.com";
 
 export const revalidate = 3600;
 
@@ -17,20 +17,31 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }, [empty, empty]);
 
   const staticRoutes: MetadataRoute.Sitemap = [
-    "",
-    "/portfolio",
-    "/services",
-    "/about",
-    "/contact",
-    "/blog",
-  ].map((path) => ({ url: `${siteUrl}${path}`, changeFrequency: "monthly", priority: path === "" ? 1 : 0.7 }));
+    { path: "", priority: 1.0 },
+    { path: "/services", priority: 0.9 },
+    { path: "/portfolio", priority: 0.9 },
+    { path: "/about", priority: 0.8 },
+    { path: "/contact", priority: 0.8 },
+    { path: "/blog", priority: 0.7 },
+    { path: "/careers", priority: 0.6 },
+  ].map(({ path, priority }) => ({
+    url: `${siteUrl}${path}`,
+    changeFrequency: "monthly" as const,
+    priority,
+  }));
+
+  const serviceRoutes: MetadataRoute.Sitemap = SERVICES.map((s) => ({
+    url: `${siteUrl}/services/${s.slug}`,
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }));
 
   const projectRoutes: MetadataRoute.Sitemap = projects.docs
     .filter((p) => p.slug)
     .map((p) => ({
       url: `${siteUrl}/portfolio/${p.slug}`,
       lastModified: p.updatedAt,
-      changeFrequency: "monthly",
+      changeFrequency: "monthly" as const,
       priority: 0.8,
     }));
 
@@ -39,9 +50,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .map((p) => ({
       url: `${siteUrl}/blog/${p.slug}`,
       lastModified: p.updatedAt,
-      changeFrequency: "monthly",
+      changeFrequency: "monthly" as const,
       priority: 0.6,
     }));
 
-  return [...staticRoutes, ...projectRoutes, ...postRoutes];
+  return [...staticRoutes, ...serviceRoutes, ...projectRoutes, ...postRoutes];
 }

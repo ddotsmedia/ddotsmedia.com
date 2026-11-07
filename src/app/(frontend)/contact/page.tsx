@@ -34,9 +34,14 @@ const CHIP =
   "inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[var(--brand-teal)]/30 bg-[var(--brand-teal)]/10 text-[var(--brand-teal)]";
 
 export const metadata: Metadata = {
-  title: "Contact",
+  title: "Contact Ddotsmedia — UAE Software Development Company",
   description:
-    "Get in touch with Ddotsmedia — web, software, mobile, and ERP solutions for the UAE and GCC.",
+    "Contact Ddotsmedia for web development, mobile apps, custom software, and ERP solutions in Dubai, Sharjah, and across the UAE. Free consultation available.",
+  openGraph: {
+    title: "Contact Ddotsmedia — Get a Free Consultation",
+    description: "Reach our team in Sharjah, UAE for a free consultation on web, mobile, and ERP projects.",
+    images: [{ url: "/og-image", width: 1200, height: 630 }],
+  },
 };
 
 export default async function ContactPage() {

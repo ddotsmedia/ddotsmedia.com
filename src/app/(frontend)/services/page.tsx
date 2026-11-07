@@ -12,11 +12,17 @@ import { PricingTeaser } from "@/components/services/PricingTeaser";
 import { FaqAccordion } from "@/components/services/FaqAccordion";
 import { getServices, getIndustries, getPricing, getFaqs, getProcessSteps } from "@/lib/content";
 import { cn } from "@/lib/utils";
+import { WebPageJsonLd } from "@/components/shared/WebPageJsonLd";
 
 export const metadata: Metadata = {
-  title: "Services",
+  title: "Web Development, Mobile Apps & ERP Services in UAE",
   description:
-    "Web development, mobile apps, custom software, UI/UX design, cloud & DevOps, and ERP systems — built for UAE businesses.",
+    "Web development, mobile apps, custom software, UI/UX design, cloud & DevOps, and ERP systems for businesses in Dubai, Sharjah, and across the UAE.",
+  openGraph: {
+    title: "Our Services — Ddotsmedia IT Solutions UAE",
+    description: "Full-stack web, mobile, and ERP development services for UAE businesses.",
+    images: [{ url: "/og-image", width: 1200, height: 630 }],
+  },
 };
 
 const CARD =
@@ -85,6 +91,12 @@ export default async function ServicesPage() {
 
   return (
     <main className="min-h-screen bg-navy">
+      <WebPageJsonLd
+        path="/services"
+        name="Web Development, Mobile Apps & ERP Services in UAE — Ddotsmedia"
+        description="Web development, mobile apps, custom software, UI/UX design, cloud & DevOps, and ERP systems for businesses in Dubai, Sharjah, and across the UAE."
+        breadcrumb={[{ name: "Services", item: "/services" }]}
+      />
       {/* 1. HERO */}
       <section className="relative overflow-hidden pt-36 pb-16">
         <div

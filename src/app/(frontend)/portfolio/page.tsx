@@ -23,7 +23,7 @@ const STATIC_PROJECTS: Project[] = PORTFOLIO.map((item, i) => ({
 export const revalidate = 60; // ISR
 
 export const metadata: Metadata = {
-  title: "Portfolio — Ddotsmedia",
+  title: "Portfolio — UAE Web & Mobile Projects",
   description:
     "Real software we've built for UAE businesses — web apps, mobile apps, desktop tools, and ERP systems.",
 };

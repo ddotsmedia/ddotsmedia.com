@@ -23,9 +23,14 @@ import { cn } from "@/lib/utils";
 export const revalidate = 60; // ISR — revalidate every 60 s
 
 export const metadata: Metadata = {
-  title: "About Us",
+  title: "About Ddotsmedia — UAE IT Company Since 2016",
   description:
-    "Ddotsmedia is a UAE-based IT company delivering web, software, mobile, and ERP solutions to businesses across the UAE and GCC.",
+    "Ddotsmedia Technologies LLC — UAE-based software studio delivering web, mobile, and ERP solutions for businesses across Dubai, Sharjah, and the GCC since 2016.",
+  openGraph: {
+    title: "About Ddotsmedia — UAE Software Development Company",
+    description: "SHAMS Free Zone licensed IT company building custom software for UAE businesses since 2016.",
+    images: [{ url: "/og-image", width: 1200, height: 630 }],
+  },
 };
 
 const CARD =

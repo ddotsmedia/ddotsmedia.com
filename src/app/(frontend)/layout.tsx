@@ -20,14 +20,36 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
     default: "Ddotsmedia IT Solutions — Software, Web & Mobile Development in the UAE",
-    template: "%s — Ddotsmedia",
+    template: "%s — Ddotsmedia IT Solutions",
   },
   description:
-    "Ddotsmedia builds high-performance web apps, mobile apps, and custom ERP software for businesses across the UAE.",
+    "Ddotsmedia builds high-performance web apps, mobile apps, and custom ERP software for businesses in Dubai, Sharjah, Abu Dhabi, and across the UAE.",
+  keywords: [
+    "web development UAE",
+    "mobile app development Dubai",
+    "custom software UAE",
+    "ERP systems Dubai",
+    "IT company UAE",
+    "Next.js development UAE",
+    "React Native Dubai",
+  ],
   openGraph: {
-    siteName: "Ddotsmedia",
+    siteName: "Ddotsmedia IT Solutions",
     type: "website",
     url: siteUrl,
+    images: [
+      {
+        url: "/og-image",
+        width: 1200,
+        height: 630,
+        alt: "Ddotsmedia IT Solutions — Web, Mobile & ERP Development in the UAE",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: "@ddotsmedia",
+    images: ["/og-image"],
   },
 };
 
