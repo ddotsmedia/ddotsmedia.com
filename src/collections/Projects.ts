@@ -1,6 +1,6 @@
 import type { CollectionConfig } from "payload";
 import { slugField } from "../lib/slugify";
-import { enrichProjectFromUrl } from "./hooks/enrichProjectFromUrl";
+import { enrichProjectFromUrl, enrichProjectAfterSave } from "./hooks/enrichProjectFromUrl";
 
 export const Projects: CollectionConfig = {
   slug: "projects",
@@ -19,7 +19,7 @@ export const Projects: CollectionConfig = {
     update: ({ req }) => !!req.user,
     delete: ({ req }) => !!req.user,
   },
-  hooks: { beforeChange: [enrichProjectFromUrl] },
+  hooks: { beforeChange: [enrichProjectFromUrl], afterChange: [enrichProjectAfterSave] },
   fields: [
     // Only the URL is required — paste it and save; the rest auto-fills.
     {
