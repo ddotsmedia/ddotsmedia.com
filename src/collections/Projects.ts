@@ -58,7 +58,7 @@ export const Projects: CollectionConfig = {
       type: "text",
       unique: true,
       index: true,
-      admin: { position: "sidebar" },
+      admin: { position: "sidebar", readOnly: true, description: "Auto-generated from title — do not edit" },
       hooks: { beforeValidate: [slugField("title")] },
     },
     { name: "shortDescription", type: "textarea" },

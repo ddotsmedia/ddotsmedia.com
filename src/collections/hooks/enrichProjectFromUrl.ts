@@ -50,7 +50,12 @@ export const enrichProjectFromUrl: CollectionBeforeChangeHook = async ({ data })
   if (!data.title && host) data.title = host;
   if (!data.slug) {
     const base = (typeof data.title === "string" && data.title) || host;
-    if (base) data.slug = toSlug(base);
+    if (base) {
+      // Append a short random suffix to avoid unique constraint violations
+      // when multiple projects share the same domain.
+      const suffix = Math.random().toString(36).slice(2, 6);
+      data.slug = toSlug(base) + "-" + suffix;
+    }
   }
 
   return data;
