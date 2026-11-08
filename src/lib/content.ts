@@ -231,3 +231,35 @@ export async function getCompanySettings(): Promise<UICompany | null> {
     return g as UICompany;
   }, null);
 }
+
+export type UIPageHero = {
+  overline?: string | null;
+  heading?: string | null;
+  subtext?: string | null;
+};
+
+export type UIPageContent = {
+  about: UIPageHero;
+  services: UIPageHero;
+  contact: UIPageHero;
+  portfolio: UIPageHero;
+  blog: UIPageHero;
+  careers: UIPageHero;
+};
+
+const EMPTY_HERO: UIPageHero = {};
+
+export async function getPageContent(): Promise<UIPageContent> {
+  return safeQuery(async () => {
+    const payload = await getPayloadClient();
+    const g = await payload.findGlobal({ slug: "page-content" });
+    return {
+      about: { overline: (g as any).about?.overline, heading: (g as any).about?.heading, subtext: (g as any).about?.subtext },
+      services: { overline: (g as any).services?.overline, heading: (g as any).services?.heading, subtext: (g as any).services?.subtext },
+      contact: { overline: (g as any).contact?.overline, heading: (g as any).contact?.heading, subtext: (g as any).contact?.subtext },
+      portfolio: { overline: (g as any).portfolio?.overline, heading: (g as any).portfolio?.heading, subtext: (g as any).portfolio?.subtext },
+      blog: { overline: (g as any).blog?.overline, heading: (g as any).blog?.heading, subtext: (g as any).blog?.subtext },
+      careers: { overline: (g as any).careers?.overline, heading: (g as any).careers?.heading, subtext: (g as any).careers?.subtext },
+    };
+  }, { about: EMPTY_HERO, services: EMPTY_HERO, contact: EMPTY_HERO, portfolio: EMPTY_HERO, blog: EMPTY_HERO, careers: EMPTY_HERO });
+}

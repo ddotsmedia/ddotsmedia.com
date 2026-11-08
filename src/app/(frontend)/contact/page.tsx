@@ -3,7 +3,7 @@ import type { ComponentType } from "react";
 import { Building2, Clock, Globe, Mail, MapPin, MessageCircle, Phone, type LucideIcon } from "lucide-react";
 import { Reveal } from "@/components/shared/Reveal";
 import { ContactForm } from "@/components/contact/ContactForm";
-import { getCompanySettings } from "@/lib/content";
+import { getCompanySettings, getPageContent } from "@/lib/content";
 
 /** Brand glyphs — lucide-react no longer ships social/brand icons. */
 type IconProps = { className?: string };
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ContactPage() {
-  const cs = await getCompanySettings();
+  const [cs, pc] = await Promise.all([getCompanySettings(), getPageContent()]);
 
   const phone = cs?.phone ?? "";
   const phoneHref = phone ? `tel:${phone.replace(/[^\d+]/g, "")}` : "#";
@@ -86,13 +86,13 @@ export default async function ContactPage() {
         />
         <div className="relative mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
           <span className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--brand-teal)]">
-            Contact Us
+            {pc.contact.overline || "Contact Us"}
           </span>
           <h1 className="mt-3 text-4xl font-bold text-white sm:text-6xl md:text-7xl">
-            Let&apos;s Build Together
+            {pc.contact.heading || "Let’s Build Together"}
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-lg text-white/60">
-            Tell us about your project and we&apos;ll get back to you within one business day.
+            {pc.contact.subtext || "Tell us about your project and we’ll get back to you within one business day."}
           </p>
           {cs?.responseTime && (
             <p className="mx-auto mt-4 inline-flex items-center gap-2 rounded-full border border-[var(--brand-teal)]/30 bg-[var(--brand-teal)]/10 px-4 py-1.5 text-sm text-white/70">

@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { Reveal } from "@/components/shared/Reveal";
 import { CountUp } from "@/components/home/CountUp";
-import { getTeam, getAchievements, getCompanySettings } from "@/lib/content";
+import { getTeam, getAchievements, getCompanySettings, getPageContent } from "@/lib/content";
 import { iconByName } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 
@@ -130,10 +130,11 @@ function SectionHead({ overline, title, subtext }: { overline: string; title: st
 }
 
 export default async function AboutPage() {
-  const [dbTeam, dbAchievements, cs] = await Promise.all([
+  const [dbTeam, dbAchievements, cs, pc] = await Promise.all([
     getTeam(),
     getAchievements(),
     getCompanySettings(),
+    getPageContent(),
   ]);
 
   // CMS data with fallbacks
@@ -183,18 +184,13 @@ export default async function AboutPage() {
         />
         <div className="relative mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
           <span className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--brand-teal)]">
-            About Us
+            {pc.about.overline || "About Us"}
           </span>
           <h1 className="mt-3 text-4xl font-bold text-white sm:text-6xl md:text-7xl">
-            Building UAE&apos;s Digital Future
+            {pc.about.heading || "Building UAE’s Digital Future"}
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-white/65">
-            Ddotsmedia Technologies LLC is a UAE-based IT company delivering web development, custom software,
-            mobile apps, and ERP systems to businesses across the UAE and the wider GCC.
-          </p>
-          <p className="mx-auto mt-4 max-w-2xl text-white/55">
-            We pair deep technical expertise with a real understanding of local business — from
-            WPS-compliant payroll to high-traffic platforms, we build solutions that keep working.
+            {pc.about.subtext || "Ddotsmedia Technologies LLC is a UAE-based IT company delivering web development, custom software, mobile apps, and ERP systems to businesses across the UAE and the wider GCC."}
           </p>
         </div>
       </section>

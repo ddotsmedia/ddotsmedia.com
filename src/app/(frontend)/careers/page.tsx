@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Briefcase, MapPin, Clock, Users } from "lucide-react";
 import { Reveal } from "@/components/shared/Reveal";
 import { getPayloadClient } from "@/lib/payload";
+import { getPageContent } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Careers at Ddotsmedia — IT Jobs in UAE",
@@ -53,7 +54,7 @@ async function getJobs() {
 }
 
 export default async function CareersPage() {
-  const jobs = await getJobs();
+  const [jobs, pc] = await Promise.all([getJobs(), getPageContent()]);
 
   return (
     <main className="min-h-screen bg-navy">
@@ -68,15 +69,13 @@ export default async function CareersPage() {
         />
         <div className="relative mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
           <span className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--brand-teal)]">
-            Careers
+            {pc.careers.overline || "Careers"}
           </span>
           <h1 className="mt-3 text-4xl font-bold text-white sm:text-6xl">
-            Build the UAE&apos;s Digital Future
+            {pc.careers.heading || "Build the UAE’s Digital Future"}
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-white/65">
-            We&apos;re a team of developers, designers, and project managers shipping real products
-            for clients across the UAE and GCC. If you care about your craft, we&apos;d love to
-            hear from you.
+            {pc.careers.subtext || "We’re a team of developers, designers, and project managers shipping real products for clients across the UAE and GCC. If you care about your craft, we’d love to hear from you."}
           </p>
         </div>
       </section>

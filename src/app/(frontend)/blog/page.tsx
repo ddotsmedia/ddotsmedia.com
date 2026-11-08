@@ -1,6 +1,7 @@
 
 import type { Metadata } from "next";
 import { getPayloadClient, safeQuery } from "@/lib/payload";
+import { getPageContent } from "@/lib/content";
 import type { Post } from "@/payload-types";
 import { PostCard } from "@/components/blog/PostCard";
 import { EmptyState } from "@/components/shared/EmptyState";
@@ -20,7 +21,8 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogPage() {
-  const posts = await safeQuery(async () => {
+  const [posts, pc] = await Promise.all([
+  safeQuery(async () => {
     const payload = await getPayloadClient();
     const res = await payload.find({
       collection: "posts",
@@ -29,18 +31,20 @@ export default async function BlogPage() {
       depth: 1,
     });
     return res.docs;
-  }, [] as Post[]);
+  }, [] as Post[]),
+  getPageContent(),
+  ]);
 
   return (
     <main className="min-h-screen bg-navy pt-28">
       <section className="border-b border-white/10 pb-12">
         <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
           <span className="mb-3 block text-xs font-semibold uppercase tracking-widest text-[var(--brand-teal)]">
-            Insights
+            {pc.blog.overline || "Insights"}
           </span>
-          <h1 className="mb-4 text-4xl font-bold text-white md:text-6xl">Blog</h1>
+          <h1 className="mb-4 text-4xl font-bold text-white md:text-6xl">{pc.blog.heading || "Blog"}</h1>
           <p className="mx-auto max-w-xl text-lg text-white/60">
-            Notes on building software for the UAE and the web.
+            {pc.blog.subtext || "Notes on building software for the UAE and the web."}
           </p>
         </div>
       </section>

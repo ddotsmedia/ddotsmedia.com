@@ -10,7 +10,7 @@ import { ServiceSections } from "@/components/services/ServiceSections";
 import { Industries } from "@/components/services/Industries";
 import { PricingTeaser } from "@/components/services/PricingTeaser";
 import { FaqAccordion } from "@/components/services/FaqAccordion";
-import { getServices, getIndustries, getPricing, getFaqs, getProcessSteps } from "@/lib/content";
+import { getServices, getIndustries, getPricing, getFaqs, getProcessSteps, getPageContent } from "@/lib/content";
 import { cn } from "@/lib/utils";
 import { WebPageJsonLd } from "@/components/shared/WebPageJsonLd";
 
@@ -79,12 +79,13 @@ function TechBadges({ tech }: { tech: string[] }) {
 }
 
 export default async function ServicesPage() {
-  const [dbServices, dbIndustries, dbPricing, dbFaqs, dbSteps] = await Promise.all([
+  const [dbServices, dbIndustries, dbPricing, dbFaqs, dbSteps, pc] = await Promise.all([
     getServices(),
     getIndustries(),
     getPricing(),
     getFaqs("services"),
     getProcessSteps(),
+    getPageContent(),
   ]);
   const serviceList = dbServices;
   const stepList = dbSteps;
@@ -108,14 +109,13 @@ export default async function ServicesPage() {
         />
         <div className="relative mx-auto max-w-5xl px-4 text-center sm:px-6 lg:px-8">
           <span className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--brand-teal)]">
-            What We Do
+            {pc.services.overline || "What We Do"}
           </span>
           <h1 className="mt-3 text-4xl font-bold text-white sm:text-6xl md:text-7xl">
-            Our Services
+            {pc.services.heading || "Our Services"}
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-lg text-white/60">
-            From first line of code to production and beyond — design, engineering, and
-            infrastructure built for the UAE market and beyond.
+            {pc.services.subtext || "From first line of code to production and beyond — design, engineering, and infrastructure built for the UAE market and beyond."}
           </p>
           <div className="mx-auto mt-10 grid max-w-2xl grid-cols-3 gap-4">
             <div>

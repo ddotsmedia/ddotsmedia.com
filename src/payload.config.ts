@@ -29,6 +29,7 @@ import { HomepageHero } from "./globals/HomepageHero";
 import { Navigation } from "./globals/Navigation";
 import { FooterSettings } from "./globals/FooterSettings";
 import { SeoDefaults } from "./globals/SeoDefaults";
+import { PageContent } from "./globals/PageContent";
 import { migrations } from "./migrations";
 
 const filename = fileURLToPath(import.meta.url);
@@ -71,7 +72,7 @@ export default buildConfig({
     Partners,
     JobListings,
   ],
-  globals: [CompanySettings, Stats, TrustBar, ProcessSteps, HomepageHero, Navigation, FooterSettings, SeoDefaults],
+  globals: [CompanySettings, Stats, TrustBar, ProcessSteps, HomepageHero, Navigation, FooterSettings, SeoDefaults, PageContent],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "",
   typescript: { outputFile: path.resolve(dirname, "payload-types.ts") },

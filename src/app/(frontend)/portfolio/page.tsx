@@ -1,6 +1,7 @@
 
 import type { Metadata } from "next";
 import { getPayloadClient, safeQuery } from "@/lib/payload";
+import { getPageContent } from "@/lib/content";
 import type { Project } from "@/payload-types";
 import { PortfolioGrid } from "@/components/portfolio/PortfolioGrid";
 import { PORTFOLIO } from "@/lib/data/portfolio";
@@ -29,7 +30,8 @@ export const metadata: Metadata = {
 };
 
 export default async function PortfolioPage() {
-  const projects = await safeQuery(async () => {
+  const [projects, pc] = await Promise.all([
+  safeQuery(async () => {
     const payload = await getPayloadClient();
     const res = await payload.find({
       collection: "projects",
@@ -39,7 +41,9 @@ export default async function PortfolioPage() {
       depth: 1,
     });
     return res.docs;
-  }, [] as Project[]);
+  }, [] as Project[]),
+  getPageContent(),
+  ]);
 
   return (
     <main className="min-h-screen bg-navy">
@@ -54,13 +58,13 @@ export default async function PortfolioPage() {
         />
         <div className="relative mx-auto max-w-5xl px-4 text-center sm:px-6 lg:px-8">
           <span className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--brand-teal)]">
-            Our Work
+            {pc.portfolio.overline || "Our Work"}
           </span>
           <h1 className="mt-3 text-4xl font-bold text-white sm:text-6xl md:text-7xl">
-            Portfolio
+            {pc.portfolio.heading || "Portfolio"}
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-lg text-white/60">
-            Real software, real businesses — web apps, mobile apps, ERPs, and more built across the UAE and GCC.
+            {pc.portfolio.subtext || "Real software, real businesses — web apps, mobile apps, ERPs, and more built across the UAE and GCC."}
           </p>
         </div>
       </section>
