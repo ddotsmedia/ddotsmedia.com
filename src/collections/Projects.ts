@@ -6,7 +6,7 @@ export const Projects: CollectionConfig = {
   slug: "projects",
   admin: {
     useAsTitle: "title",
-    defaultColumns: ["title", "category", "status", "featured", "order"],
+    defaultColumns: ["title", "category", "status", "featured", "published", "order"],
     description:
       "Paste a live URL and save — the title, description, slug, and screenshot are auto-filled. Everything else is optional.",
   },
@@ -14,7 +14,7 @@ export const Projects: CollectionConfig = {
     create: ({ req }) => !!req.user,
     read: ({ req }) => {
       if (req.user) return true;
-      return { published: { equals: true } };
+      return { published: { not_equals: false } };
     },
     update: ({ req }) => !!req.user,
     delete: ({ req }) => !!req.user,

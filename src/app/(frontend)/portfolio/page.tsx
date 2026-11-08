@@ -35,7 +35,7 @@ export default async function PortfolioPage() {
     const payload = await getPayloadClient();
     const res = await payload.find({
       collection: "projects",
-      where: { published: { equals: true } },
+      where: { published: { not_equals: false } },
       sort: ["order", "-createdAt"],
       limit: 100,
       depth: 1,
