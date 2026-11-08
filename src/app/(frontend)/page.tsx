@@ -15,7 +15,7 @@ import { HomeCta } from "@/components/home/HomeCta";
 import { Testimonials } from "@/components/home/Testimonials";
 import { FaqSchema } from "@/components/shared/FaqSchema";
 
-export const revalidate = 60; // ISR — revalidate every 60 s
+export const dynamic = 'force-dynamic';
 
 export default async function Home() {
   const [stats, featured, services, cs, testimonials, processSteps, faqs] = await Promise.all([

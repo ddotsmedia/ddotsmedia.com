@@ -20,7 +20,7 @@ const STATIC_PROJECTS: Project[] = PORTFOLIO.map((item, i) => ({
   createdAt: "2024-01-01T00:00:00.000Z",
 }));
 
-export const revalidate = 60; // ISR
+export const dynamic = 'force-dynamic'; // always fetch fresh — projects update in real time
 
 export const metadata: Metadata = {
   title: "Portfolio — UAE Web & Mobile Projects",
