@@ -10,7 +10,6 @@ import { ProcessSection } from "@/components/home/ProcessSection";
 import { IndustryVerticals } from "@/components/home/IndustryVerticals";
 import { TeamPreview } from "@/components/home/TeamPreview";
 import { WhyChooseUs } from "@/components/home/WhyChooseUs";
-import { EngagementModels } from "@/components/home/EngagementModels";
 import { HomeCta } from "@/components/home/HomeCta";
 import { Testimonials } from "@/components/home/Testimonials";
 import { FaqSchema } from "@/components/shared/FaqSchema";
@@ -56,7 +55,6 @@ export default async function Home() {
       <TeamPreview />
       <WhyChooseUs />
       {testimonials.length > 0 && <Testimonials items={testimonials} />}
-      <EngagementModels />
       <HomeCta promises={cs?.ctaPromises?.map((p) => p.text).filter(Boolean) ?? []} />
       {faqs.length > 0 && <FaqSchema items={faqs} />}
     </main>
